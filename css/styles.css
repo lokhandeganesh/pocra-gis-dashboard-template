@@ -11693,19 +11693,44 @@ body {
 /* Custom styles */
 
 /* Hide element on extra small devices */
+.title-bar {
+  --bs-gutter-x: none;
+  align-items: center;
+}
+
 @media (max-width: 576px) {
   .title-bar {
     display: none;
   }
 }
 
-.title-grid {
-  text-align: center;
-}
-
 .title-logo {
   height: 55px;
   width: 55px;
+}
+
+@media (max-width: 991px) {
+  .title-grid #title {
+    font-size: 1rem;
+  }
+  .title-grid #sub-title {
+    font-size: 0.5rem;
+  }
+  .title-logo {
+    height: 25px;
+    width: 25px;
+  }
+}
+
+.logo-div {
+  display: flex;
+  justify-content: space-between;
+
+  /* margin-bottom: 1rem; */
+}
+
+.title-grid {
+  text-align: center;
 }
 
 /* card for PoCRA Juridiction count */

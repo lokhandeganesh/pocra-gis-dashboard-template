@@ -49,12 +49,6 @@
       </button>
       <!-- Navbar Title-->
       <div class="pos-f-t">
-        <div class="collapse" id="navbarToggleExternalContent">
-          <div class="bg-dark p-4">
-            <h5 class="text-white h4">Collapsed content</h5>
-            <span class="text-muted">Toggleable via the navbar brand.</span>
-          </div>
-        </div>
         <nav class="navbar navbar-dark bg-dark">
           <button
             class="navbar-toggler"
@@ -70,12 +64,19 @@
         </nav>
       </div>
 
-      <div class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4 title-bar">
-        <div class="title-grid" id="title-grid">
-          <h2 id="title">नानाजी देशमुख कृषि संजीवनी प्रकल्प</h2>
-          <span class="text-muted">कृषी विभाग, महाराष्ट्र शासन</span>
+      <div class="row title-bar" style="width: 100%">
+        <div
+          class="col-lg-10 col-md-10 col-sm-9 col-xs-8 title-grid"
+          id="title-grid"
+        >
+          <h2 id="title">
+            नानाजी देशमुख कृषि संजीवनी प्रकल्प
+            <h6 class="text-muted" id="sub-title">
+              कृषी विभाग, महाराष्ट्र शासन
+            </h6>
+          </h2>
         </div>
-        <div class="top-menu">
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 logo-div">
           <ul class="navbar-nav">
             <li class="">
               <img
@@ -87,31 +88,31 @@
                 src="./assets/logo/agri-logo.png"
               />
             </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                id="navbarDropdown"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                ><i class="fas fa-user fa-fw"></i
+              ></a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="#!">Logout</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              ><i class="fas fa-user fa-fw"></i
-            ></a>
-            <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdown"
-            >
-              <li><a class="dropdown-item" href="#!">Settings</a></li>
-              <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#!">Logout</a></li>
-            </ul>
-          </li>
-        </ul>
       </div>
+
+      <div class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4 title-bar"></div>
 
       <!-- Navbar-->
     </nav>
