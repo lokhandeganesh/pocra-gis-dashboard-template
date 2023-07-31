@@ -11694,14 +11694,9 @@ body {
 
 /* Hide element on extra small devices */
 .title-bar {
+  width: 100%;
   --bs-gutter-x: none;
   align-items: center;
-}
-
-@media (max-width: 576px) {
-  .title-bar {
-    display: none;
-  }
 }
 
 .title-logo {
@@ -11709,24 +11704,10 @@ body {
   width: 55px;
 }
 
-@media (max-width: 991px) {
-  .title-grid #title {
-    font-size: 1rem;
-  }
-  .title-grid #sub-title {
-    font-size: 0.5rem;
-  }
-  .title-logo {
-    height: 25px;
-    width: 25px;
-  }
-}
-
 .logo-div {
   display: flex;
-  justify-content: space-between;
-
-  /* margin-bottom: 1rem; */
+  /* flex-direction: row-reverse; */
+  justify-content: center;
 }
 
 .title-grid {
@@ -11758,4 +11739,41 @@ body {
 .administrative-map {
   width: 100%;
   height: 50rem;
+}
+
+@media (max-width: 991px) {
+  .sb-topnav .navbar-brand {
+    width: auto;
+    margin: 0;
+  }
+  .title-grid #title {
+    font-size: 1rem;
+  }
+  .title-grid #sub-title {
+    font-size: 0.5rem;
+  }
+  .title-logo {
+    height: 40px;
+    width: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .sb-topnav .navbar-brand {
+    width: auto;
+    margin: 0;
+  }
+
+  .logo-div {
+    display: none;
+  }
+  .brand-title {
+    font-size: small;
+  }
+  .title-grid #title {
+    font-size: 0.8rem;
+  }
+  .title-grid #sub-title {
+    font-size: 0.5rem;
+  }
 }
