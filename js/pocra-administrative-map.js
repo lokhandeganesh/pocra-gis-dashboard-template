@@ -5,8 +5,8 @@ window.onload = init;
 function init() {
   const map = new ol.Map({
     view: new ol.View({
-      center: [75.96, 19.12],
-      zoom: 7,
+      center: [77.5, 18.95],
+      zoom: 7.2,
       projection: 'EPSG:4326'
     }),
     // layers: [
@@ -22,69 +22,11 @@ function init() {
   //   console.log(e.coordinate);
   // })
 
-  // Layer Group //
-  // OSM Standard Map
-  // const OSM_StandardMap = new ol.layer.Tile({
-  //   source: new ol.source.OSM(),
-  //   visible: false,
-  //   title: 'Standard Map'
-  // })
-
-  // Stamen Terrain Map
-  // const stamenTerrain = new ol.layer.Tile({
-  //   source: new ol.source.XYZ({
-  //     url: 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg'
-  //   }),
-  //   visible: true,
-  //   title: 'Stamen Terrain Map'
-  // })
-
-  // OSM Humanitarian Map
-  // const OSM_HumanitarianMap = new ol.layer.Tile({
-  //   source: new ol.source.OSM({
-  //     url: 'https://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
-  //   }),
-  //   visible: false,
-  //   title: 'Humanitarian Map'
-  // })
-
-  // Hybrid Map
-  // const Hybrid = new ol.layer.Tile({
-  //   source: new ol.source.XYZ({
-  //     url: 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
-  //   }),
-  //   visible: false,
-  //   title: 'Satellite Map'
-  // })
-
-
-
-  // Adding Specific Single Layer  to Map
-  // map.addLayer(OSM_StandardMap);
-
-  // Adding Layer Group to Map
-  // const baseLayerGroup = new ol.layer.Group({
-  //   layers: [
-  //     stamenTerrain, OSM_StandardMap,
-  //     OSM_HumanitarianMap, Hybrid
-  //   ]
-  // })
-
-  // map.addLayer(baseLayerGroup);
-
   // Adding control to layer switcher
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
     openInLayerSwitcher: true,
     layers: [
-      new ol.layer.Tile({
-        source: new ol.source.OSM({
-          url: 'https://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
-        }),
-        baseLayer: false,
-        visible: false,
-        title: 'Humanitarian Map'
-      }),
       new ol.layer.Tile({
         source: new ol.source.XYZ({
           url: 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
@@ -101,20 +43,44 @@ function init() {
       }),
       new ol.layer.Tile({
         source: new ol.source.XYZ({
-          url: 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg'
+          attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
+            'rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+            'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+          crossOrigin: 'Anonymous',
         }),
         visible: true,
         baseLayer: false,
-        title: 'Stamen Terrain Map'
+        title: 'World Topo Map',
+        type: 'base',
+
+      }),
+      new ol.layer.Tile({
+        title: "PoCRA Districts",
+        baseLayer: false,
+        source: new ol.source.TileWMS({
+          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
+          crossOrigin: 'Anonymous',
+          serverType: 'geoserver',
+          visible: true,
+          params: {
+            'LAYERS': 'PoCRA:MahaDist',
+            'TILED': true,
+          }
+        })
       }),
     ]
   })
+
 
   // Adding Base Layer to Map
   map.addLayer(baseLayerGroup);
 
   // Layer Switcher Extention
-  const layerSwitcher = new ol.control.LayerSwitcher();
+  const layerSwitcher = new ol.control.LayerSwitcher({
+    collapsed: false,
+    // mouseover: true
+  });
   map.addControl(layerSwitcher);
 
   // Legend Control Extention
@@ -126,7 +92,7 @@ function init() {
   });
   var legendCtrl = new ol.control.Legend({
     legend: legend,
-    collapsed: true
+    collapsed: false
   });
   map.addControl(legendCtrl);
 
