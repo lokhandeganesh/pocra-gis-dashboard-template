@@ -1,7 +1,5 @@
 window.onload = init;
 
-
-
 function init() {
   const map = new ol.Map({
     view: new ol.View({
