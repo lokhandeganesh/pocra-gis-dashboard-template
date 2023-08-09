@@ -8,12 +8,7 @@ function init() {
       zoom: 7.2,
       projection: 'EPSG:4326'
     }),
-    // layers: [
-    //   new ol.layer.Tile({
-    //     source: new ol.source.OSM()
-    //   })
-    // ],
-    target: 'pocra-administrative-map'
+    target: 'pocra-dbt-nrm-map'
   })
 
 
@@ -53,21 +48,50 @@ function init() {
         title: 'World Topo Map',
         type: 'base',
 
-      }),     
-      new ol.layer.Tile({
-        title: "PoCRA Districts",
-
+      }),
+      new ol.layer.Tile({        
+        source: new ol.source.TileWMS({
+          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
+          crossOrigin: 'Anonymous',
+          serverType: 'geoserver',          
+          params: {
+            'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_existing_structures',
+            'TILED': true,
+          }
+        }),
+        visible: false,
+        baseLayer: false,
+        title: "NRM Existing Structures",
+      }),
+      new ol.layer.Tile({        
+        source: new ol.source.TileWMS({
+          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
+          crossOrigin: 'Anonymous',
+          serverType: 'geoserver',
+          
+          params: {
+            'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_pocra_structures',
+            'TILED': true,
+          }
+        }),
+        visible: false,
+        baseLayer: false,
+        title: "NRM PoCRA Structures",
+      }),
+      new ol.layer.Tile({       
         source: new ol.source.TileWMS({
           url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
           crossOrigin: 'Anonymous',
           serverType: 'geoserver',
-          visible: true,
-          baseLayer: false,
+          
           params: {
             'LAYERS': 'PoCRA:MahaDist',
             'TILED': true,
           }
-        })
+        }),
+        visible: true,
+        baseLayer: false,
+        title: "PoCRA Districts",
       }),
     ]
   })

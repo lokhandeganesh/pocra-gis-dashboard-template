@@ -8,12 +8,7 @@ function init() {
       zoom: 7.2,
       projection: 'EPSG:4326'
     }),
-    // layers: [
-    //   new ol.layer.Tile({
-    //     source: new ol.source.OSM()
-    //   })
-    // ],
-    target: 'pocra-administrative-map'
+    target: 'pocra-dbt-farmer-map'
   })
 
 
@@ -53,7 +48,7 @@ function init() {
         title: 'World Topo Map',
         type: 'base',
 
-      }),     
+      }),      
       new ol.layer.Tile({
         title: "PoCRA Districts",
 
