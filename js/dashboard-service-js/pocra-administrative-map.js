@@ -1,6 +1,7 @@
 window.onload = init;
 
 function init() {
+
   const map = new ol.Map({
     view: new ol.View({
       center: [77.5, 18.95],
@@ -54,13 +55,44 @@ function init() {
 
       }),
       new ol.layer.Tile({
+        title: "NRM Existing Structures",
+
+        source: new ol.source.TileWMS({
+          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
+          crossOrigin: 'Anonymous',
+          serverType: 'geoserver',
+
+          visible: false,
+          baseLayer: false,
+          params: {
+            'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_existing_structures',
+            'TILED': true,
+          }
+        })
+      }),
+      new ol.layer.Tile({
+        title: "NRM PoCRA Structures",
+        source: new ol.source.TileWMS({
+          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
+          crossOrigin: 'Anonymous',
+          serverType: 'geoserver',
+          visible: false,
+          baseLayer: false,
+          params: {
+            'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_pocra_structures',
+            'TILED': true,
+          }
+        })
+      }),
+      new ol.layer.Tile({
         title: "PoCRA Districts",
-        baseLayer: false,
+
         source: new ol.source.TileWMS({
           url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
           crossOrigin: 'Anonymous',
           serverType: 'geoserver',
           visible: true,
+          baseLayer: false,
           params: {
             'LAYERS': 'PoCRA:MahaDist',
             'TILED': true,
@@ -95,3 +127,4 @@ function init() {
   map.addControl(legendCtrl);
 
 }
+
