@@ -111,6 +111,7 @@
     Segoe UI Symbol, Noto Color Emoji;
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
+  --bs-bold-font-weight: bold;
   --bs-body-line-height: 1.5;
   --bs-body-color: #69707a;
   --bs-body-bg: #fff;
@@ -7158,11 +7159,6 @@ fieldset:disabled .btn {
   background-color: RGBA(33, 37, 41, var(--bs-bg-opacity, 1)) !important;
 }
 
-.bg-green {
-  --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-green-rgb), var(--bs-bg-opacity)) !important;
-}
-
 .link-primary {
   color: #0d6efd !important;
 }
@@ -11822,6 +11818,18 @@ body {
   width: 100%;
   --bs-gutter-x: none;
   align-items: center;
+  /* background: linear-gradient(
+    90deg,
+    rgba(153, 48, 222, 1) 0%,
+    rgba(255, 95, 95, 1) 30%,
+    rgba(252, 176, 69, 1) 90%
+  ); */
+  background: linear-gradient(
+    90deg,
+    rgba(255, 149, 0, 1) 15%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(69, 252, 124, 1) 80%
+  );
 }
 
 .title-logo {
@@ -11839,10 +11847,12 @@ body {
   text-align: center;
 }
 
+#title {
+  color: blue;
+}
+
 #sub-title {
-  color: red;
-  font-weight: bolder;
-  /* background-color: yellow; */
+  color: black;
 }
 /* card for PoCRA Juridiction count */
 .center {
@@ -11854,6 +11864,7 @@ body {
   clear: both;
   font-size: 2rem;
   text-align-last: center;
+  color: blue;
 }
 
 .card_pocra_count {
@@ -11886,6 +11897,10 @@ body {
   border-radius: var(--bs-card-border-radius);
 }
 
+.card-footer-pocra-count-bg-blue {
+  background: #063970;
+}
+
 /* .pocra-taluka {
   float: left;
 } */
@@ -11893,7 +11908,6 @@ body {
 /* footer updating date */
 #updatedOn {
   color: red;
-  font-weight: bold;
 }
 
 /* Dashboard Map */
