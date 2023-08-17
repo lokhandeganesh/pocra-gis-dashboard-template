@@ -10,34 +10,32 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>PoCRA GIS Dashboard</title>
-    <!--  -->
-    <!-- <base href="" /> -->
-    <!--  -->
-    <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
-    <link href="../../css/styles.css" rel="stylesheet" />
+
+    <!-- JQuery JS file -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+      integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./assets/logo/favicon.ico" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
+      rel="stylesheet"
+    />
+    <link href="css/styles.css" rel="stylesheet" />
+
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
       crossorigin="anonymous"
     ></script>
-
-    <!-- Open Layer Library -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css"
-    />
-    <!-- Open Layer Extention -->
-    <link rel="stylesheet" href="../../libs/dist/ol-ext.min.css" />
-    <!-- JQuery and Bootstrap -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
       <!-- Navbar Brand-->
-      <a class="navbar-brand ps-3" href="../../index.html"
-        ><img
-          class="title-logo pocra-logo"
-          src="../../assets/logo/pocra-logo.png"
+      <a class="navbar-brand ps-3" href="index.html"
+        ><img class="title-logo pocra-logo" src="./assets/logo/pocra-logo.png"
       /></a>
       <!-- Sidebar Toggle-->
       <button
@@ -48,7 +46,6 @@
         <i class="fas fa-bars"></i>
       </button>
       <!-- Navbar Title-->
-
       <div class="row title-bar">
         <div
           class="col-lg-10 col-md-10 col-sm-9 col-xs-8 title-grid"
@@ -66,13 +63,13 @@
             <li class="">
               <img
                 class="title-logo emblum-logo"
-                src="../../assets/logo/emblum-logo.png"
+                src="./assets/logo/emblum-logo.png"
               />
             </li>
             <li>
               <img
                 class="title-logo agri-logo"
-                src="../../assets/logo/agri-logo.png"
+                src="./assets/logo/agri-logo.png"
               />
             </li>
             <li class="nav-item dropdown">
@@ -98,7 +95,6 @@
           </ul>
         </div>
       </div>
-
       <!-- Navbar-->
     </nav>
     <div id="layoutSidenav">
@@ -107,7 +103,7 @@
           <div class="sb-sidenav-menu">
             <div class="nav">
               <div class="sb-sidenav-menu-heading">Core</div>
-              <a class="nav-link" href="../../index.html">
+              <a class="nav-link" href="index.html">
                 <div class="sb-nav-link-icon">
                   <i class="fas fa-tachometer-alt"></i>
                 </div>
@@ -139,19 +135,25 @@
                   data-bs-parent="#sidenavAccordion"
                 >
                   <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="./dbt-farmer.html">
+                    <a
+                      class="nav-link"
+                      href="./html/dbt-services/dbt-farmer.html"
+                    >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-tractor"></i>
                       </div>
                       Farmer Category
                     </a>
-                    <a class="nav-link" href="./dbt-nrm.html">
+                    <a class="nav-link" href="./html/dbt-services/dbt-nrm.html">
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-people-group"></i>
                       </div>
                       NRM Category
                     </a>
-                    <a class="nav-link" href="./dbt-fpc-fpo.html">
+                    <a
+                      class="nav-link"
+                      href="./html/dbt-services/dbt-fpc-fpo.html"
+                    >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-industry"></i>
                       </div>
@@ -188,7 +190,7 @@
                   <nav class="sb-sidenav-menu-nested nav">
                     <a
                       class="nav-link"
-                      href="../weather-services/weather-forecast.html"
+                      href="./html/weather-services/weather-forecast.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-cloud-sun-rain"></i>
@@ -197,7 +199,7 @@
                     >
                     <a
                       class="nav-link"
-                      href="../weather-services/weather-realtime.html"
+                      href="./html/weather-services/weather-realtime.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-cloud-showers-water"></i>
@@ -207,8 +209,6 @@
                   </nav>
                 </div>
               </div>
-
-              <!--  -->
               <!-- Soil Pages -->
               <div class="soil-pages">
                 <div class="sb-sidenav-menu-heading">Soil</div>
@@ -237,7 +237,7 @@
                   <nav class="sb-sidenav-menu-nested nav">
                     <a
                       class="nav-link"
-                      href="../soil-services/soil-soil-health-card.html"
+                      href="./html/soil-services/soil-soil-health-card.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-file-invoice"></i>
@@ -247,7 +247,6 @@
                   </nav>
                 </div>
               </div>
-
               <!-- Make My Map Pages -->
               <div class="make-my-map-pages">
                 <div class="sb-sidenav-menu-heading">Make My Map</div>
@@ -276,7 +275,7 @@
                   <nav class="sb-sidenav-menu-nested nav">
                     <a
                       class="nav-link"
-                      href="../map-services/map-export-map.html"
+                      href="./html/map-services/map-export-map.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-file-export"></i>
@@ -317,65 +316,116 @@
           </div>
         </nav>
       </div>
-
+      <!-- Page content -->
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h5 class="mt-4">DBT- NRM Dashboard</h5>
-            <!-- Dropdown Div -->
-            <div class="row mb-4">
-              <p class="">Selection Menu</p>
-              <!-- Activity Dropdown -->
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select"
-                  aria-label="Default select "
-                  id="select-activity"
-                  onchange="getNrmActivity(this.value);"
-                >
-                  <option selected value="-1">--Select Activity--</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <!-- District Dropdown -->
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select"
-                  aria-label="Default select "
-                  id="select-district"
-                  onchange="getDistrict(this.value);"
-                ></select>
-              </div>
-              <!-- Taluka Dropdown -->
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select"
-                  aria-label="Default select "
-                  id="select-taluka"
-                  onchange="getTaluka(this.value);"
-                ></select>
-              </div>
-              <!-- Village Dropdown -->
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select"
-                  aria-label="Default select "
-                  id="select-village"
-                  onchange="getVillage(this.value)"
-                ></select>
+            <h5 class="mt-4">Project Reports</h5>
+            <!-- Ifram section -->
+            <div class="mb-4" id="bannerContainer">
+              <div class="banner container">
+                <style>
+                  .tabs .nav-link {
+                    color: black !important;
+
+                    font-size: 20px;
+                  }
+                  .tabs .nav-link.active {
+                    font-weight: bold;
+                  }
+                </style>
+
+                <ul class="nav nav-tabs tabs">
+                  <li class="nav-item pbi-item">
+                    <a
+                      id="tab1"
+                      class="nav-link active"
+                      data-toggle="tab"
+                      aria-current="page"
+                      href="#content-1"
+                      >प्रकल्प अर्थसहाय्य</a
+                    >
+                  </li>
+                  <li class="nav-item pbi-item">
+                    <a
+                      id="tab2"
+                      class="nav-link"
+                      data-toggle="tab"
+                      aria-current="page"
+                      href="#content-2"
+                      >वैयक्तिक घटक</a
+                    >
+                  </li>
+                  <li class="nav-item pbi-item">
+                    <a
+                      id="tab3"
+                      class="nav-link"
+                      href="#content-3"
+                      data-toggle="tab"
+                      >कृषि व्यवसाय घटक</a
+                    >
+                  </li>
+                </ul>
+                <!-- tab-content -->
+                <div class="tab-content">
+                  <div class="tab-pane active" id="content-1">
+                    <div class="banner">
+                      <iframe
+                        height="750px"
+                        width="100%"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiOTE4MDZkNGEtZmU3Mi00Zjc1LTljYjItNzcwNjQxODVjNWI1IiwidCI6IjFlZmQ0Yzk2LWVlZjQtNGEyZS1iNDcyLTBlZDQzZDk0MDQ0YiJ9"
+                        title="प्रकल्प अर्थसहाय्य"
+                      ></iframe>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="content-2">
+                    <div class="banner">
+                      <iframe
+                        height="750px"
+                        width="100%"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiMzUyOWJkZDctY2RmMy00MTc0LTk0YmUtMjBmMmI3ZDViNWI5IiwidCI6IjFlZmQ0Yzk2LWVlZjQtNGEyZS1iNDcyLTBlZDQzZDk0MDQ0YiJ9"
+                        title="Farmers dashboard"
+                      ></iframe>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="content-3">
+                    <div class="banner">
+                      <iframe
+                        height="750px"
+                        width="100%"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiN2U2ODViNjUtYWNhMS00YjExLTk5YzgtYmM1ZjY0ODJiMDNhIiwidCI6IjFlZmQ0Yzk2LWVlZjQtNGEyZS1iNDcyLTBlZDQzZDk0MDQ0YiJ9"
+                        title="FPC"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- Map Div -->
-            <div class="card mb-4">
-              <div class="card-header">
-                <i class="fa-regular fa-map"></i>
-                PoCRA Juridiction
-              </div>
-              <div id="map-div" class="map"></div>
-              <div id="pocra-dbt-nrm-map" class="dbt-nrm-map"></div>
-            </div>
+            <!-- end Ifram section -->
+
+            <!-- click event JQuery -->
+            <script>
+              $(".pbi-item").on("click", "a", function () {
+                //$(this).addClass("active").siblings().removeClass("active");
+                $(".pbi-item a.active").removeClass("active");
+                $(this).addClass("active");
+
+                //Handling <!-- tab-content -->
+                if ($(this).prop("id") === "tab1") {
+                  $(".tab-content #content-2").removeClass("active");
+                  $(".tab-content #content-3").removeClass("active");
+                  $(".tab-content #content-1").addClass("active");
+                } else if ($(this).prop("id") === "tab2") {
+                  $(".tab-content #content-1").removeClass("active");
+                  $(".tab-content #content-3").removeClass("active");
+                  $(".tab-content #content-2").addClass("active");
+                } else if ($(this).prop("id") === "tab3") {
+                  $(".tab-content #content-1").removeClass("active");
+                  $(".tab-content #content-2").removeClass("active");
+                  $(".tab-content #content-3").addClass("active");
+                }
+              });
+            </script>
           </div>
         </main>
         <!-- Footer -->
@@ -405,15 +455,13 @@
       </div>
     </div>
     <!-- external JS files -->
-    <!-- Open Layer js Files -->
-    <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
-    <!-- Open Layer Extention -->
-    <script src="../../libs/dist/ol-ext.min.js"></script>
-    <!-- Internal JS file -->
-    <script src="../../js/dbt-service-js/pocra-dbt-nrm-map.js"></script>
+    <!-- bootstrap and other required JS files -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/scripts.js"></script>
     <!-- Active js -->
-    <script src="../../js/scripts.js"></script>
-    <!-- <script src="../../js/custom.js"></script> -->
-    <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script>
+    <script src="./js/project-report-js/project-report.js"></script>
   </body>
 </html>

@@ -9,8 +9,8 @@ var extentforLayer;
 var popup = new ol.Overlay.Popup({
     popupClass: "default", //"tooltips", "warning" "black" "default", "tips", "shadow",
     closeBox: true,
-    onshow: function() { console.log("You opened the box"); },
-    onclose: function() { console.log("You close the box"); },
+    onshow: function () { console.log("You opened the box"); },
+    onclose: function () { console.log("You close the box"); },
     positioning: 'top-center',
     autoPan: true,
     autoPanAnimation: { duration: 250 }
@@ -22,13 +22,13 @@ function getDistrict() {
     ele.innerHTML = `<option value='-1'>--Select District--</option>`;
     $.ajax({
         url: "http://gis.mahapocra.gov.in/weatherservices/meta/districts",
-        success: function(result) {
+        success: function (result) {
             for (var i = 0; i < result.district.length; i++) {
                 ele.innerHTML = `${ele.innerHTML}<option value=${result.district[i]["dtncode"]}>${result.district[i]["dtename"]}</option>`;
             }
         }
     });
-    
+
 }
 
 // Marathi District Name
@@ -37,7 +37,7 @@ function getDistrictm() {
     ele.innerHTML = "<option value='-1'>--जिल्हा निवडा--</option>";
     $.ajax({
         url: "http://gis.mahapocra.gov.in/weatherservices/meta/districts",
-        success: function(result) {
+        success: function (result) {
             for (var i = 0; i < result.district.length; i++) {
                 ele.innerHTML = ele.innerHTML +
                     '<option value="' + result.district[i]["dtncode"] + '">' + result.district[i]["dtnname"].charAt(0).toUpperCase() + result.district[i]["dtnname"].slice(1).toLowerCase() + '</option>';
@@ -107,7 +107,7 @@ function addMapTolayer1(lName, type) {
 
     });
     if (district !== "-1" && subdivision === "-1" && taluka === "-1" && village === "-1") {
-        map.getLayers().forEach(function(layer, i) {
+        map.getLayers().forEach(function (layer, i) {
             if (map.getLayers().item(i).get('title') === type) {
                 map.removeLayer(layer)
             }
@@ -115,7 +115,7 @@ function addMapTolayer1(lName, type) {
         map.addLayer(layer)
         croplayer(lName, "District", "dtncode", district);
     } else if (district !== "-1" && subdivision !== "-1" && taluka === "-1" && village === "-1") {
-        map.getLayers().forEach(function(layer, i) {
+        map.getLayers().forEach(function (layer, i) {
             if (map.getLayers().item(i).get('title') === type) {
                 map.removeLayer(layer)
             }
@@ -123,7 +123,7 @@ function addMapTolayer1(lName, type) {
         map.addLayer(layer)
         croplayer(lName, "Subdivision", "sdcode", subdivision);
     } else if (district !== "-1" && subdivision !== "-1" && taluka !== "-1" && village === "-1") {
-        map.getLayers().forEach(function(layer, i) {
+        map.getLayers().forEach(function (layer, i) {
             if (map.getLayers().item(i).get('title') === type) {
                 map.removeLayer(layer)
             }
@@ -131,7 +131,7 @@ function addMapTolayer1(lName, type) {
         map.addLayer(layer)
         croplayer(lName, "Taluka", "thncode", taluka);
     } else if (district !== "-1" && subdivision !== "-1" && taluka !== "-1" && village !== "-1") {
-        map.getLayers().forEach(function(layer, i) {
+        map.getLayers().forEach(function (layer, i) {
             if (map.getLayers().item(i).get('title') === type) {
                 map.removeLayer(layer)
             }
@@ -150,7 +150,7 @@ function getSubdivision(dtncode) {
     ele.innerHTML = "<option value='-1'>--Select Subdivision--</option>";
     $.ajax({
         url: "http://gis.mahapocra.gov.in/weatherservices/meta/subdivision?dtncode=" + dtncode,
-        success: function(result) {
+        success: function (result) {
             console.log(result)
             for (var i = 0; i < result.taluka.length; i++) {
                 ele.innerHTML = ele.innerHTML +
@@ -161,13 +161,13 @@ function getSubdivision(dtncode) {
     });
 }
 
-// Marathi Taluka Name
+// English Taluka Name
 function getTaluka(dtncode) {
     var ele = document.getElementById("taluka");
     ele.innerHTML = "<option value='-1'>--Select Taluka--</option>";
     $.ajax({
         url: "http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=" + dtncode,
-        success: function(result) {
+        success: function (result) {
             for (var i = 0; i < result.taluka.length; i++) {
                 ele.innerHTML = ele.innerHTML +
                     '<option value="' + result.taluka[i]["thncode"] + '">' + result.taluka[i]["thnname"] + '</option>';
@@ -188,7 +188,7 @@ function getTalukam(dtncode) {
     ele.innerHTML = "<option value='-1'>--तालुका निवडा--</option>";
     $.ajax({
         url: "http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=" + dtncode,
-        success: function(result) {
+        success: function (result) {
             for (var i = 0; i < result.taluka.length; i++) {
                 ele.innerHTML = ele.innerHTML +
                     '<option value="' + result.taluka[i]["thncode"] + '">' + result.taluka[i]["thnname"] + '</option>';
@@ -204,7 +204,7 @@ function getVillage(thncode) {
     ele.innerHTML = "<option value='-1'>--Select Village--</option>";
     $.ajax({
         url: "http://gis.mahapocra.gov.in/weatherservices/meta/village?thncode=" + thncode,
-        success: function(result) {
+        success: function (result) {
             for (var i = 0; i < result.village.length; i++) {
                 ele.innerHTML = ele.innerHTML +
                     '<option value="' + result.village[i]["vincode"] + '">' + result.village[i]["vinname"] + '</option>';
@@ -226,7 +226,7 @@ function getVillagem(thncode) {
     ele.innerHTML = "<option value='-1'>--गाव निवडा--</option>";
     $.ajax({
         url: "http://gis.mahapocra.gov.in/weatherservices/meta/village?thncode=" + thncode,
-        success: function(result) {
+        success: function (result) {
             for (var i = 0; i < result.village.length; i++) {
                 ele.innerHTML = ele.innerHTML +
                     '<option value="' + result.village[i]["vincode"] + '">' + result.village[i]["vinname"] + '</option>';
@@ -257,7 +257,7 @@ function wms_layers() {
         var modal = document.getElementById("myModal");
         modal.style.display = "block";
         var span = document.getElementsByClassName("close")[0];
-        span.onclick = function() {
+        span.onclick = function () {
             modal.style.display = "none";
         }
     }
@@ -405,7 +405,7 @@ var villageStyle = [villageBoundaryStyle, villageLabelStyle];
 
 
 function query(layerName, paramName, paramValue, labelname) {
-    map.getLayers().forEach(function(layer, i) {
+    map.getLayers().forEach(function (layer, i) {
         if (map.getLayers().item(i).get('title') === "State") {
             map.removeLayer(layer);
         }
@@ -428,7 +428,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -478,7 +478,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -518,14 +518,14 @@ function query(layerName, paramName, paramValue, labelname) {
                 return subdivisionStyle;
             },
         });
-        geojson.getSource().on('addfeature', function() {
+        geojson.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             map.getView().fit(
                 geojson.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
             );
         });
 
-        geojson1.getSource().on('addfeature', function() {
+        geojson1.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             map.getView().fit(
                 geojson1.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
@@ -543,7 +543,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -595,7 +595,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -639,14 +639,14 @@ function query(layerName, paramName, paramValue, labelname) {
                 return talukaStyle;
             },
         });
-        geojson.getSource().on('addfeature', function() {
+        geojson.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             map.getView().fit(
                 geojson.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
             );
         });
 
-        geojson1.getSource().on('addfeature', function() {
+        geojson1.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             map.getView().fit(
                 geojson1.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
@@ -663,7 +663,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -715,7 +715,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -754,7 +754,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 return villageStyle;
             },
         });
-        geojson.getSource().on('addfeature', function() {
+        geojson.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             map.getView().fit(
                 geojson.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
@@ -762,7 +762,7 @@ function query(layerName, paramName, paramValue, labelname) {
         });
 
 
-        geojson1.getSource().on('addfeature', function() {
+        geojson1.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             map.getView().fit(
                 geojson1.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
@@ -778,7 +778,7 @@ function query(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -822,7 +822,7 @@ function query(layerName, paramName, paramValue, labelname) {
             },
         });
 
-        geojson.getSource().on('addfeature', function() {
+        geojson.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             map.getView().fit(
                 geojson.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
@@ -833,7 +833,7 @@ function query(layerName, paramName, paramValue, labelname) {
 }
 
 function querym(layerName, paramName, paramValue, labelname) {
-    map.getLayers().forEach(function(layer, i) {
+    map.getLayers().forEach(function (layer, i) {
         if (mapm.getLayers().item(i).get('title') === "State") {
             mapm.removeLayer(layer);
         }
@@ -850,7 +850,7 @@ function querym(layerName, paramName, paramValue, labelname) {
                 url: url,
                 format: new ol.format.GeoJSON()
             }),
-            style: function(feature) {
+            style: function (feature) {
                 var geometry = feature.getGeometry();
                 if (geometry.getType() == 'MultiPolygon') {
                     // Only render label for the widest polygon of a multipolygon
@@ -894,7 +894,7 @@ function querym(layerName, paramName, paramValue, labelname) {
             },
         });
 
-        geojsonm.getSource().on('addfeature', function() {
+        geojsonm.getSource().on('addfeature', function () {
             //alert(geojson.getSource().getExtent());
             mapm.getView().fit(
                 geojsonm.getSource().getExtent(), { duration: 1590, size: mapm.getSize() - 100 }
@@ -966,7 +966,7 @@ function croplayer(name, lname, paramName, paramValue) {
         map.removeLayer(geojson);
     }
 
-    map.getLayers().forEach(function(layer, i) {
+    map.getLayers().forEach(function (layer, i) {
         // if (map.getLayers().item(i).get('title') === lname ) {
         //     map.removeLayer(layer)
         // }
@@ -978,7 +978,7 @@ function croplayer(name, lname, paramName, paramValue) {
                     url: url,
                     format: new ol.format.GeoJSON()
                 }),
-                style: function(feature) {
+                style: function (feature) {
                     var geometry = feature.getGeometry();
                     if (geometry.getType() == 'MultiPolygon') {
                         // Only render label for the widest polygon of a multipolygon
@@ -1042,7 +1042,7 @@ function croplayer(name, lname, paramName, paramValue) {
                 },
             });
 
-            geojson.getSource().on('addfeature', function() {
+            geojson.getSource().on('addfeature', function () {
                 map.getView().fit(
                     geojson.getSource().getExtent(), { duration: 1590, size: map.getSize() - 100 }
                 );
@@ -1099,7 +1099,7 @@ function addRow() {
     // var img = '<img src="./legend/District.png" >';
     for (var i = 1; i < map.getLayers().get('length'); i++) {
         var img = '<img src="http://gis.mahapocra.gov.in/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=' + map.getLayers().item(i).get('title') + '" >'
-            // alert(img)
+        // alert(img)
         row.insertCell(0).innerHTML = img;
         // imagesListData["imag" + i] = "http://gis.mahapocra.gov.in/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=" + map.getLayers().item(i).get('title');
     }
@@ -1117,7 +1117,7 @@ function closediv(divid) {
 }
 
 
-map.on('singleclick', function(evt) {
+map.on('singleclick', function (evt) {
     closediv('mydiva');
     // document.getElementById('info').innerHTML = '';
     var sel = document.getElementById("district");
@@ -1125,7 +1125,7 @@ map.on('singleclick', function(evt) {
 
     var layerName = document.getElementById("district").value;
     var viewResolution = /** @type {number} */ (view.getResolution());
-    map.getLayers().forEach(function(layer, i) {
+    map.getLayers().forEach(function (layer, i) {
         if (map.getLayers().item(i).get('title') === layerName) {
 
             var url = layer.getSource().getFeatureInfoUrl(
@@ -1136,21 +1136,21 @@ map.on('singleclick', function(evt) {
             // console.log(url)
             if (url) {
                 fetch(url)
-                    .then(function(response) {
+                    .then(function (response) {
                         // console.log(response.text());
                         return response.text();
                     })
-                    .then(function(html) {
+                    .then(function (html) {
                         var jsondata = JSON.parse(html);
 
                         loadshcDetails1(jsondata.features[0].properties.pin1)
-                            //   document.getElementById('info').innerHTML = html;
+                        //   document.getElementById('info').innerHTML = html;
                     });
             }
         }
     });
 });
-mapm.on('singleclick', function(evt) {
+mapm.on('singleclick', function (evt) {
     closediv('mydiva');
     // document.getElementById('info').innerHTML = '';
     var sel = document.getElementById("districtm");
@@ -1158,7 +1158,7 @@ mapm.on('singleclick', function(evt) {
 
     var layerName = document.getElementById("districtm").value;
     var viewResolution = /** @type {number} */ (view.getResolution());
-    mapm.getLayers().forEach(function(layer, i) {
+    mapm.getLayers().forEach(function (layer, i) {
         if (mapm.getLayers().item(i).get('title') === layerName) {
 
             var url = layer.getSource().getFeatureInfoUrl(
@@ -1169,15 +1169,15 @@ mapm.on('singleclick', function(evt) {
             // console.log(url)
             if (url) {
                 fetch(url)
-                    .then(function(response) {
+                    .then(function (response) {
                         // console.log(response.text());
                         return response.text();
                     })
-                    .then(function(html) {
+                    .then(function (html) {
                         var jsondata = JSON.parse(html);
 
                         loadshcDetails1m(jsondata.features[0].properties.pin1)
-                            //   document.getElementById('info').innerHTML = html;
+                        //   document.getElementById('info').innerHTML = html;
                     });
             }
         }
@@ -1197,12 +1197,11 @@ function el(id) {
     return document.getElementById(id);
 }
 
-el('locbutton').addEventListener('click', function() {
+el('locbutton').addEventListener('click', function () {
     geolocation.setTracking(true);
 });
 
 // update the HTML page when the position changes.
-
 function loaddiv() {
     opendiv("container");
     opendiv("mydiv");
