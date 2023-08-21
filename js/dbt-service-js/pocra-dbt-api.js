@@ -1,44 +1,62 @@
-getDistrict();
-getTaluka();
+// Set up a Select2 control
+$('.multi-select').select2();
 
-// English District Name
+//Select2 initialize parameters
+$(".multi-select").select2({
+  theme: "bootstrap-5",
+  width: $(this).data("width")
+    ? $(this).data("width")
+    : $(this).hasClass("w-100")
+      ? "100%"
+      : "style",
+  placeholder: $(this).data("placeholder"),
+  closeOnSelect: false,
+  allowClear: true,
+});
+
+// Add change event to activity drop-down and log its values.
+$("#select-activity").on("change", function (e) {
+  // Access to full data
+  // console.log($(this).select2('data'));
+  // Access to value
+  let activityCode = $(this).val();
+  console.log(activityCode);
+});
+
+// Calling getDistrict funtion initially to load district names into dropdown menu
+getDistrict();
+// District Name to Drop Down
 function getDistrict() {
   var ele = document.getElementById("select-district");
-  ele.innerHTML = `<option value='-1'>--Select District--</option>`;
+  ele.innerHTML = `<option value='-1' disabled selected>--Select District--</option>`;
+  // Marathi District Name 
+  // ele.innerHTML = "<option value='-1'>--जिल्हा निवडा--</option>";
   $.ajax({
     url: "http://gis.mahapocra.gov.in/weatherservices/meta/districts",
     success: function (result) {
       for (var i = 0; i < result.district.length; i++) {
         ele.innerHTML += `<option value= ${result.district[i]["dtncode"]}>${result.district[i]["dtename"]}</option>`;
+        // Marathi District Name 
+        // ele.innerHTML += `<option value=${result.district[i]["dtncode"]}>${result.district[i]["dtnname"]}</option>`;
       }
     }
   });
 }
 
-// Marathi District Name 
-function getDistrictm() {
-  var ele = document.getElementById("select-districtm");
-  ele.innerHTML = "<option value='-1'>--जिल्हा निवडा--</option>";
-  $.ajax({
-    url: "http://gis.mahapocra.gov.in/weatherservices/meta/districts",
-    success: function (result) {
-      for (var i = 0; i < result.district.length; i++) {
-        ele.innerHTML += `<option value=${result.district[i]["dtncode"]}>${result.district[i]["dtnname"]}</option>`;
-      }
-    }
-  });
 
-}
-
-// English Taluka Name
+// Taluka Name Drop Down
 function getTaluka(dtncode) {
   var ele = document.getElementById("select-taluka");
-  ele.innerHTML = "<option value='-1'>--Select Taluka--</option>";
+  ele.innerHTML = "<option value='-1' disabled selected>--Select Taluka--</option>";
+  // Marathi Taluka Name
+  // ele.innerHTML = "<option value='-1'>--तालुका निवडा--</option>";
   $.ajax({
     url: `http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=${dtncode}`,
     success: function (result) {
       for (var i = 0; i < result.taluka.length; i++) {
         ele.innerHTML += `<option value=${result.taluka[i]["thncode"]}>${result.taluka[i]["thename"]}</option>`;
+        // Marathi Taluka Name
+        // ele.innerHTML += `<option value=${result.taluka[i]["thncode"]}>${result.taluka[i]["thnname"]}</option>`;
       }
     }
   });
@@ -50,60 +68,37 @@ function getTaluka(dtncode) {
   // addMapTolayer("Taluka", "dtncode='" + dtncode + "'");
 }
 
-// Marathi Taluka Name
-function getTalukam(dtncode = 501) {
-  var ele = document.getElementById("select-talukam");
-  ele.innerHTML = "<option value='-1'>--तालुका निवडा--</option>";
-  $.ajax({
-    url: `http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=${dtncode}`,
-    success: function (result) {
-      for (var i = 0; i < result.taluka.length; i++) {
-        ele.innerHTML += `<option value=${result.taluka[i]["thncode"]}>${result.taluka[i]["thnname"]}</option>`;
-      }
-    }
-  });
-}
 
-// English Village Name
+// Village Name Drop Down
 function getVillage(thncode) {
   var ele = document.getElementById("select-village");
-  ele.innerHTML = "<option value='-1'>--Select Village--</option>";
+  ele.innerHTML = "<option value='-1' disabled selected>--Select Village--</option>";
+  // Marathi Village Name
+  // ele.innerHTML = "<option value='-1'>--गाव निवडा--</option>";
   $.ajax({
-    url: "http://gis.mahapocra.gov.in/weatherservices/meta/village?thncode=" + thncode,
+    url: `http://gis.mahapocra.gov.in/weatherservices/meta/village?thncode=${thncode}`,
     success: function (result) {
       for (var i = 0; i < result.village.length; i++) {
-        ele.innerHTML = ele.innerHTML +
-          '<option value="' + result.village[i]["vincode"] + '">' + result.village[i]["vinname"] + '</option>';
+        ele.innerHTML +=
+          `<option value=${result.village[i]["vincode"]}>${result.village[i]["vinename"]}</option>`;
+        // Marathi Village Name
+        // `<option value=${result.village[i]["vincode"]}>${result.village[i]["vinname"]}</option>`;        
       }
-
     }
+
   });
   // query('Taluka', 'thncode', thncode, 'thnname');
   //legend();
   // addMapTolayer("Taluka", "thncode='" + thncode + "'");
   // addMapTolayer("Village", "thncode='" + thncode + "'");
-  // alert("kh")
-
+  // alert("kh")  
 }
 
-// Marathi Village Name
-function getVillagem(thncode) {
-  var ele = document.getElementById("select-villagem");
-  ele.innerHTML = "<option value='-1'>--गाव निवडा--</option>";
-  $.ajax({
-    url: "http://gis.mahapocra.gov.in/weatherservices/meta/village?thncode=" + thncode,
-    success: function (result) {
-      for (var i = 0; i < result.village.length; i++) {
-        ele.innerHTML = ele.innerHTML +
-          '<option value="' + result.village[i]["vincode"] + '">' + result.village[i]["vinname"] + '</option>';
-      }
+function getNrmActivity(activityCode) {
+  var result = [];
+  // console.log(activityCode);
+}
 
-    }
-  });
-  // query('Taluka', 'thncode', thncode, 'thnname');
-  //legend();
-  // addMapTolayer("Taluka", "thncode='" + thncode + "'");
-  // addMapTolayer("Village", "thncode='" + thncode + "'");
-  // alert("kh")
-
+function getVincode(vincode) {
+  console.log(vincode);
 }

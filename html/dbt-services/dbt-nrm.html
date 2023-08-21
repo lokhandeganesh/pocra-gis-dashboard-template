@@ -15,11 +15,14 @@
     <!--  -->
     <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
     <link href="../../css/styles.css" rel="stylesheet" />
+    <!-- JQuery and Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Font-Awesome -->
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
       crossorigin="anonymous"
     ></script>
-
     <!-- Open Layer Library -->
     <link
       rel="stylesheet"
@@ -27,9 +30,23 @@
     />
     <!-- Open Layer Extention -->
     <link rel="stylesheet" href="../../libs/dist/ol-ext.min.css" />
-    <!-- JQuery and Bootstrap -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Multi-Select Libraries -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+    />
+    <!--  -->
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
@@ -48,7 +65,6 @@
         <i class="fas fa-bars"></i>
       </button>
       <!-- Navbar Title-->
-
       <div class="row title-bar">
         <div
           class="col-lg-10 col-md-10 col-sm-9 col-xs-8 title-grid"
@@ -98,7 +114,6 @@
           </ul>
         </div>
       </div>
-
       <!-- Navbar-->
     </nav>
     <div id="layoutSidenav">
@@ -328,43 +343,59 @@
               <!-- Activity Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select"
-                  aria-label="Default select "
+                  class="form-select multi-select"
+                  aria-label="Select Activity "
                   id="select-activity"
-                  onchange="getNrmActivity(this.value);"
+                  multiple
+                  data-placeholder="--- Select Activity ---"
                 >
-                  <option selected value="-1">--Select Activity--</option>
+                  <option class="" value="-1" disabled>
+                    --- Select Activity ---
+                  </option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </select>
               </div>
+              <!--  -->
               <!-- District Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
                   class="form-select"
-                  aria-label="Default select "
+                  aria-label="Select District"
                   id="select-district"
-                  onchange="getDistrict(this.value);"
+                  onchange="getTaluka(this.value);"
                 ></select>
               </div>
               <!-- Taluka Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
                   class="form-select"
-                  aria-label="Default select "
+                  aria-label="Select Taluka"
                   id="select-taluka"
-                  onchange="getTaluka(this.value);"
-                ></select>
+                  onchange="getVillage(this.value);"
+                >
+                  <!-- <option selected value="-1">--Select Taluka--</option> -->
+                </select>
               </div>
               <!-- Village Dropdown -->
+              <script>
+                $("#select-district").change(function () {
+                  $("#select-village option:first").prop(
+                    "selected",
+                    "selected"
+                  );
+                });
+              </script>
               <div class="col-xl-3 col-md-6">
                 <select
                   class="form-select"
-                  aria-label="Default select "
+                  aria-label="Select Village"
                   id="select-village"
-                  onchange="getVillage(this.value)"
-                ></select>
+                  onchange="getVincode(this.value);"
+                >
+                  <!-- <option selected value="-1">--Select Village--</option> -->
+                </select>
               </div>
             </div>
             <!-- Map Div -->
@@ -404,6 +435,7 @@
         </footer>
       </div>
     </div>
+
     <!-- external JS files -->
     <!-- Open Layer js Files -->
     <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>

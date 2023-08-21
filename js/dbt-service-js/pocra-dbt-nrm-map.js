@@ -1,7 +1,6 @@
 window.onload = init;
 
 function init() {
-
   // Adding control to layer switcher
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
@@ -185,7 +184,7 @@ function init() {
 
   // Layer Switcher Extention
   const layerSwitcher = new ol.control.LayerSwitcher({
-    collapsed: false,
+    collapsed: true,
     // mouseover: true
   });
   map.addControl(layerSwitcher);

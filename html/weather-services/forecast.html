@@ -10,12 +10,11 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>PoCRA GIS Dashboard</title>
-    <link rel="icon" type="image/x-icon" href="./assets/logo/favicon.ico" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
-      rel="stylesheet"
-    />
-    <link href="css/styles.css" rel="stylesheet" />
+    <!--  -->
+    <!-- <base href="" /> -->
+    <!--  -->
+    <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
+    <link href="../../css/styles.css" rel="stylesheet" />
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
       crossorigin="anonymous"
@@ -27,14 +26,18 @@
       href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css"
     />
     <!-- Open Layer Extention -->
-    <link rel="stylesheet" href="./libs/dist/ol-ext.min.css" />
+    <link rel="stylesheet" href="../../libs/dist/ol-ext.min.css" />
+    <!-- JQuery and Bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
       <!-- Navbar Brand-->
-
-      <a class="navbar-brand ps-3" href="index.html"
-        ><img class="title-logo pocra-logo" src="./assets/logo/pocra-logo.png"
+      <a class="navbar-brand ps-3" href="../../index.html"
+        ><img
+          class="title-logo pocra-logo"
+          src="../../assets/logo/pocra-logo.png"
       /></a>
       <!-- Sidebar Toggle-->
       <button
@@ -45,7 +48,6 @@
         <i class="fas fa-bars"></i>
       </button>
       <!-- Navbar Title-->
-
       <div class="row title-bar">
         <div
           class="col-lg-10 col-md-10 col-sm-9 col-xs-8 title-grid"
@@ -53,9 +55,9 @@
         >
           <h2 class="fw-bolder" id="title">
             नानाजी देशमुख कृषि संजीवनी प्रकल्प
-            <h5 class="fw-bolder" id="sub-title">
+            <h6 class="fw-bolder" id="sub-title">
               कृषी विभाग, महाराष्ट्र शासन
-            </h5>
+            </h6>
           </h2>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 logo-div">
@@ -63,13 +65,13 @@
             <li class="">
               <img
                 class="title-logo emblum-logo"
-                src="./assets/logo/emblum-logo.png"
+                src="../../assets/logo/emblum-logo.png"
               />
             </li>
             <li>
               <img
                 class="title-logo agri-logo"
-                src="./assets/logo/agri-logo.png"
+                src="../../assets/logo/agri-logo.png"
               />
             </li>
             <li class="nav-item dropdown">
@@ -95,7 +97,6 @@
           </ul>
         </div>
       </div>
-
       <!-- Navbar-->
     </nav>
     <div id="layoutSidenav">
@@ -104,7 +105,7 @@
           <div class="sb-sidenav-menu">
             <div class="nav">
               <div class="sb-sidenav-menu-heading">Core</div>
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="../../index.html">
                 <div class="sb-nav-link-icon">
                   <i class="fas fa-tachometer-alt"></i>
                 </div>
@@ -136,25 +137,19 @@
                   data-bs-parent="#sidenavAccordion"
                 >
                   <nav class="sb-sidenav-menu-nested nav">
-                    <a
-                      class="nav-link"
-                      href="./html/dbt-services/dbt-farmer.html"
-                    >
+                    <a class="nav-link" href="./dbt-farmer.html">
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-tractor"></i>
                       </div>
                       Farmer Category
                     </a>
-                    <a class="nav-link" href="./html/dbt-services/dbt-nrm.html">
+                    <a class="nav-link" href="./dbt-nrm.html">
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-people-group"></i>
                       </div>
                       NRM Category
                     </a>
-                    <a
-                      class="nav-link"
-                      href="./html/dbt-services/dbt-fpc-fpo.html"
-                    >
+                    <a class="nav-link" href="./dbt-fpc-fpo.html">
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-industry"></i>
                       </div>
@@ -191,7 +186,7 @@
                   <nav class="sb-sidenav-menu-nested nav">
                     <a
                       class="nav-link"
-                      href="./html/weather-services/weather-forecast.html"
+                      href="../weather-services/weather-forecast.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-cloud-sun-rain"></i>
@@ -200,21 +195,13 @@
                     >
                     <a
                       class="nav-link"
-                      href="./html/weather-services/weather-realtime.html"
+                      href="../weather-services/weather-realtime.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-cloud-showers-water"></i>
                       </div>
                       Realtime Weather</a
                     >
-                    <!-- 
-                    <a class="nav-link" href="layout-static.html"
-                    >Static Navigation</a
-                  >
-                  <a class="nav-link" href="layout-sidenav-light.html"
-                    >Light Sidenav</a
-                  >
-                   -->
                   </nav>
                 </div>
               </div>
@@ -246,7 +233,7 @@
                   <nav class="sb-sidenav-menu-nested nav">
                     <a
                       class="nav-link"
-                      href="./html/soil-services/soil-soil-health-card.html"
+                      href="../soil-services/soil-soil-health-card.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-file-invoice"></i>
@@ -284,7 +271,7 @@
                   <nav class="sb-sidenav-menu-nested nav">
                     <a
                       class="nav-link"
-                      href="./html/map-services/map-export-map.html"
+                      href="../map-services/map-export-map.html"
                     >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-file-export"></i>
@@ -329,253 +316,203 @@
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h5 class="mt-4">Dashboard</h5>
-            <!-- 
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ol>
-             -->
-            <!-- PoCRA Count Area -->
-            <div class="row">
-              <div class="col-xl-3 col-md-6">
-                <div class="card_pocra_count bg-light text-black mb-4">
-                  <div class="card-body center">
-                    <span class="fw-bolder">Project District's</span>
-                    <span class="proca-count pocra-district">15</span>
-                  </div>
-                  <div
-                    class="card-footer d-flex align-items-center justify-content-between card-footer-pocra-count-bg-blue"
-                  >
-                    <a
-                      class="small text-white stretched-link"
-                      href="./html/dashboard-service/map-pocra-districts.html"
-                      >View Details</a
-                    >
-                    <div class="small text-white">
-                      <i class="fas fa-angle-right"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-3 col-md-6">
-                <div class="card_pocra_count bg-light text-black mb-4">
-                  <div class="card-body center">
-                    <span class="fw-bolder">Project Sub-division's</span>
-                    <span class="proca-count pocra-subdivision">36</span>
-                  </div>
-                  <div
-                    class="card-footer d-flex align-items-center justify-content-between card-footer-pocra-count-bg-blue"
-                  >
-                    <a
-                      class="small text-white stretched-link"
-                      href="./html/dashboard-service/map-pocra-subdivisions.html"
-                      >View Details</a
-                    >
-                    <div class="small text-white">
-                      <i class="fas fa-angle-right"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-3 col-md-6">
-                <div class="card_pocra_count bg-light text-black mb-4">
-                  <div class="card-body center">
-                    <span class="fw-bolder">Project Taluka's</span>
-                    <span class="proca-count pocra-taluka">155</span>
-                  </div>
-                  <div
-                    class="card-footer d-flex align-items-center justify-content-between card-footer-pocra-count-bg-blue"
-                  >
-                    <a
-                      class="small text-white stretched-link"
-                      href="./html/dashboard-service/map-pocra-talukas.html"
-                      >View Details</a
-                    >
-                    <div class="small text-white">
-                      <i class="fas fa-angle-right"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-3 col-md-6">
-                <div class="card_pocra_count bg-light text-black mb-4">
-                  <div class="card-body center">
-                    <span class="fw-bolder">Project Village's</span>
-                    <span class="proca-count pocra-village">5272</span>
-                  </div>
-                  <div
-                    class="card-footer d-flex align-items-center justify-content-between card-footer-pocra-count-bg-blue"
-                  >
-                    <a
-                      class="small text-white stretched-link"
-                      href="./html/dashboard-service/map-pocra-villages.html"
-                      >View Details</a
-                    >
-                    <div class="small text-white">
-                      <i class="fas fa-angle-right"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Administrative Map -->
+            <h5 class="mt-4">IMD Weather Forecast</h5>
+            <!-- Forecast Map -->
             <div class="card mb-4">
-              <div class="card-header">
-                <i class="fa-regular fa-map"></i>
-                PoCRA Juridiction
+              <div class="card-header bg-green-soft fw-bold">
+                <i class="fa-solid fa-cloud-sun-rain"></i>
+                Weather Forecast
               </div>
-              <div id="map-div" class="map"></div>
-              <div
-                id="pocra-administrative-map"
-                class="administrative-map"
-              ></div>
-            </div>
-            <!-- Chart Area -->
-            <div class="row">
-              <div class="col-xl-6">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <i class="fas fa-chart-area me-1"></i>
-                    Area Chart Example
-                  </div>
-                  <div class="card-body">
-                    <canvas id="myAreaChart" width="100%" height="40"></canvas>
+              <div class="row mb-4">
+                <div class="col-xl-4 col-md-4">
+                  <select
+                    class="form-select"
+                    aria-label="Default select "
+                    id="mapselect"
+                    style="font-weight: bold"
+                    onchange="changeMap()"
+                  >
+                    <option value="rainfall" selected="selected">
+                      Rainfall
+                    </option>
+                    <option value="mintemprature">Minimum Temprature</option>
+                    <option value="maxtemprature">Maximum Temprature</option>
+                  </select>
+                </div>
+                <div class="col-xl-4 col-md-4">
+                  <span style="color: black; font-weight: bold" id="info">
+                    Forecast on
+                  </span>
+                </div>
+                <div class="col-xl-4 col-md-4">
+                  <button class="btn" id="prev" type="button" title="Previous">
+                    <i class="fa-solid fa-backward-step fa-lg"></i>
+                  </button>
+                  <button class="btn" id="play" type="button" title="Play">
+                    <i class="fa-solid fa-circle-play fa-lg"></i>
+                  </button>
+                  <button class="btn" id="pause" type="button" title="Pause">
+                    <i class="fa-solid fa-circle-pause fa-lg"></i>
+                  </button>
+                  <button class="btn" id="next" type="button" title="Next">
+                    <i class="fa-solid fa-forward-step fa-lg"></i>
+                  </button>
+                </div>
+              </div>
+              <!--  -->
+              <div class="page-content-wrapper">
+                <div class="page-content">
+                  <div class="row">
+                    <div
+                      id="content"
+                      class="desk"
+                      style="width: 100%; height: 85vh; overflow: auto"
+                    >
+                      <div
+                        role="group"
+                        aria-label="Animation controls"
+                        style="height: 40px; margin-top: -6px"
+                      ></div>
+                      <div
+                        style="width: 100%; height: 60vh; padding: 0px"
+                        id="map"
+                        class="map"
+                      >
+                        <div id="popup" class="ol-popup" style="z-index: 500">
+                          <a
+                            href="#"
+                            id="popup-closer"
+                            class="ol-popup-closer"
+                          ></a>
+                          <div id="popup-content"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <!-- Bar Chart Area -->
-              <div class="col-xl-6">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <i class="fas fa-chart-bar me-1"></i>
-                    Bar Chart Example
-                  </div>
-                  <div class="card-body">
-                    <canvas id="myBarChart" width="100%" height="40"></canvas>
-                  </div>
-                </div>
-              </div>
             </div>
-            <!-- Data Table -->
-            <div class="card mb-4">
-              <div class="card-header">
-                <i class="fas fa-table me-1"></i>
-                DataTable Example
-              </div>
-              <div class="card-body">
-                <table id="datatablesSimple">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Position</th>
-                      <th>Office</th>
-                      <th>Age</th>
-                      <th>Start date</th>
-                      <th>Salary</th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Name</th>
-                      <th>Position</th>
-                      <th>Office</th>
-                      <th>Age</th>
-                      <th>Start date</th>
-                      <th>Salary</th>
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td>$320,800</td>
-                    </tr>
-                    <tr>
-                      <td>Garrett Winters</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>63</td>
-                      <td>2011/07/25</td>
-                      <td>$170,750</td>
-                    </tr>
-                    <tr>
-                      <td>Ashton Cox</td>
-                      <td>Junior Technical Author</td>
-                      <td>San Francisco</td>
-                      <td>66</td>
-                      <td>2009/01/12</td>
-                      <td>$86,000</td>
-                    </tr>
-                    <tr>
-                      <td>Cedric Kelly</td>
-                      <td>Senior Javascript Developer</td>
-                      <td>Edinburgh</td>
-                      <td>22</td>
-                      <td>2012/03/29</td>
-                      <td>$433,060</td>
-                    </tr>
-                    <tr>
-                      <td>Airi Satou</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>33</td>
-                      <td>2008/11/28</td>
-                      <td>$162,700</td>
-                    </tr>
-                    <tr>
-                      <td>Brielle Williamson</td>
-                      <td>Integration Specialist</td>
-                      <td>New York</td>
-                      <td>61</td>
-                      <td>2012/12/02</td>
-                      <td>$372,000</td>
-                    </tr>
-                    <tr>
-                      <td>Herrod Chandler</td>
-                      <td>Sales Assistant</td>
-                      <td>San Francisco</td>
-                      <td>59</td>
-                      <td>2012/08/06</td>
-                      <td>$137,500</td>
-                    </tr>
-                    <tr>
-                      <td>Rhona Davidson</td>
-                      <td>Integration Specialist</td>
-                      <td>Tokyo</td>
-                      <td>55</td>
-                      <td>2010/10/14</td>
-                      <td>$327,900</td>
-                    </tr>
-                    <tr>
-                      <td>Colleen Hurst</td>
-                      <td>Javascript Developer</td>
-                      <td>San Francisco</td>
-                      <td>39</td>
-                      <td>2009/09/15</td>
-                      <td>$205,500</td>
-                    </tr>
-                    <tr>
-                      <td>Sonya Frost</td>
-                      <td>Software Engineer</td>
-                      <td>Edinburgh</td>
-                      <td>23</td>
-                      <td>2008/12/13</td>
-                      <td>$103,600</td>
-                    </tr>
-                    <tr>
-                      <td>Jena Gaines</td>
-                      <td>Office Manager</td>
-                      <td>London</td>
-                      <td>30</td>
-                      <td>2008/12/19</td>
-                      <td>$90,560</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          </div>
+          <div class="card mb-4" id="forecasttable"></div>
+          <!-- Data Table -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-table me-1"></i>
+              Weather Forecast DataTable
+            </div>
+            <div class="card-body">
+              <table id="datatablesForecast">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                  </tr>
+                </tfoot>
+                <tbody>
+                  <tr>
+                    <td>Tiger Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                  </tr>
+                  <tr>
+                    <td>Garrett Winters</td>
+                    <td>Accountant</td>
+                    <td>Tokyo</td>
+                    <td>63</td>
+                    <td>2011/07/25</td>
+                    <td>$170,750</td>
+                  </tr>
+                  <tr>
+                    <td>Ashton Cox</td>
+                    <td>Junior Technical Author</td>
+                    <td>San Francisco</td>
+                    <td>66</td>
+                    <td>2009/01/12</td>
+                    <td>$86,000</td>
+                  </tr>
+                  <tr>
+                    <td>Cedric Kelly</td>
+                    <td>Senior Javascript Developer</td>
+                    <td>Edinburgh</td>
+                    <td>22</td>
+                    <td>2012/03/29</td>
+                    <td>$433,060</td>
+                  </tr>
+                  <tr>
+                    <td>Airi Satou</td>
+                    <td>Accountant</td>
+                    <td>Tokyo</td>
+                    <td>33</td>
+                    <td>2008/11/28</td>
+                    <td>$162,700</td>
+                  </tr>
+                  <tr>
+                    <td>Brielle Williamson</td>
+                    <td>Integration Specialist</td>
+                    <td>New York</td>
+                    <td>61</td>
+                    <td>2012/12/02</td>
+                    <td>$372,000</td>
+                  </tr>
+                  <tr>
+                    <td>Herrod Chandler</td>
+                    <td>Sales Assistant</td>
+                    <td>San Francisco</td>
+                    <td>59</td>
+                    <td>2012/08/06</td>
+                    <td>$137,500</td>
+                  </tr>
+                  <tr>
+                    <td>Rhona Davidson</td>
+                    <td>Integration Specialist</td>
+                    <td>Tokyo</td>
+                    <td>55</td>
+                    <td>2010/10/14</td>
+                    <td>$327,900</td>
+                  </tr>
+                  <tr>
+                    <td>Colleen Hurst</td>
+                    <td>Javascript Developer</td>
+                    <td>San Francisco</td>
+                    <td>39</td>
+                    <td>2009/09/15</td>
+                    <td>$205,500</td>
+                  </tr>
+                  <tr>
+                    <td>Sonya Frost</td>
+                    <td>Software Engineer</td>
+                    <td>Edinburgh</td>
+                    <td>23</td>
+                    <td>2008/12/13</td>
+                    <td>$103,600</td>
+                  </tr>
+                  <tr>
+                    <td>Jena Gaines</td>
+                    <td>Office Manager</td>
+                    <td>London</td>
+                    <td>30</td>
+                    <td>2008/12/19</td>
+                    <td>$90,560</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </main>
@@ -611,8 +548,7 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"
     ></script>
-    <!-- Internal JS file -->
-    <script src="js/scripts.js"></script>
+    <script src="../../js/scripts.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
       crossorigin="anonymous"
@@ -624,23 +560,17 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <!-- data tables demo js (delete in production enviorenment) -->
-    <script src="assets/demo/chart-area-demo.js"></script>
-    <script src="assets/demo/chart-bar-demo.js"></script>
+    <!--  -->
     <script
       src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
       crossorigin="anonymous"
     ></script>
-    <!-- data tables demo js (delete in production enviorenment) -->
-    <script src="js/datatables-simple-demo.js"></script>
-
     <!-- Open Layer js Files -->
     <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
-
     <!-- Open Layer Extention -->
-    <script src="./libs/dist/ol-ext.min.js"></script>
-
+    <script src="../../libs/dist/ol-ext.min.js"></script>
     <!-- Internal JS file -->
-    <script src="./js/dashboard-service-js/pocra-administrative-map.js"></script>
+    <script src="../../js/weather-service-js/weather-forecast.js"></script>
+    <!-- Active js -->
   </body>
 </html>

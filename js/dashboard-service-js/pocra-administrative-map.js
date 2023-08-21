@@ -53,7 +53,7 @@ function init() {
         title: 'World Topo Map',
         type: 'base',
 
-      }),     
+      }),
       new ol.layer.Tile({
         title: "PoCRA Districts",
 
@@ -78,7 +78,7 @@ function init() {
 
   // Layer Switcher Extention
   const layerSwitcher = new ol.control.LayerSwitcher({
-    collapsed: false,
+    collapsed: true,
     // mouseover: true
   });
   map.addControl(layerSwitcher);
