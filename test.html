@@ -62,3 +62,40 @@
   </body>
   <script src="test.js"></script>
 </html>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <table class="table table-image">
+        <thead>
+          <tr>
+            <th>Attibutes</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>District</td>
+            <td>${feature.get('district')}</td>
+          </tr>
+          <tr>
+            <td>Taluka</td>
+            <td>${feature.get('taluka')}</td>
+          </tr>
+          <tr>
+            <th colspan="2">Activity Image</th>
+          </tr>
+          <tr>
+            <th colspan="2">
+              <img
+                class="rounded float-start"
+                style="width: 200px; height: 200px; cursor: pointer"
+                src="${feature.get('img_url')}"
+              />
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

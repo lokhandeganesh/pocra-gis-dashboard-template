@@ -23,6 +23,31 @@ $("#select-activity").on("change", function (e) {
   console.log(activityCode);
 });
 
+// loadMap1();
+function loadMap1() {
+  if (geojson) {
+    map.removeLayer(geojson);
+  }
+
+  var url =
+    "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Taluka&outputFormat=application/json";
+  geojson = new ol.layer.Vector({
+    title: "Taluka",
+    source: new ol.source.Vector({
+      url: url,
+      format: new ol.format.GeoJSON(),
+    }),
+  });
+  geojson.getSource().on("addfeature", function () {
+    //alert(geojson.getSource().getExtent());
+    map.getView().fit(geojson.getSource().getExtent(), {
+      duration: 1590,
+      size: map.getSize() - 100,
+    });
+  });
+
+  map.addLayer(geojson);
+}
 // Calling getDistrict funtion initially to load district names into dropdown menu
 getDistrict();
 // District Name to Drop Down
