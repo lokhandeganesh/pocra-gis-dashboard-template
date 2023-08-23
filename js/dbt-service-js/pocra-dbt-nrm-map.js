@@ -48,6 +48,8 @@ function init() {
         visible: true,
         baseLayer: false,
         title: "PoCRA Districts",
+        // extent: [-653182.6969582437, 5037463.842847037, 1233297.5065495989, 6646432.677299531],
+
       }),
     ]
   })
@@ -309,9 +311,12 @@ function init() {
   // Layer Switcher Extention
   const layerSwitcher = new ol.control.LayerSwitcher({
     collapsed: true,
-    // mouseover: true
+    mouseover: true,
+    // extent: true
+
   });
   map.addControl(layerSwitcher);
+
 
   // Legend Control Extention
   // Define a new legend
