@@ -349,8 +349,8 @@
                   multiple
                   data-placeholder="--- Select Activity ---"
                 >
-                  <option class="" value="-1" disabled>
-                    --- Select Activity ---
+                  <option class="" value="-1">
+                    --- Select All Activity ---
                   </option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
@@ -361,9 +361,11 @@
               <!-- District Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select"
+                  class="form-select multi-select"
                   aria-label="Select District"
                   id="select-district"
+                  multiple
+                  data-placeholder="--- Select District ---"
                   onchange="getTaluka(this.value);"
                 ></select>
               </div>
@@ -405,6 +407,39 @@
                 Project Juridiction
               </div>
               <div id="pocra-dbt-nrm-map" class="dbt-nrm-map"></div>
+            </div>
+          </div>
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="enlargeImageModal"
+            tabindex="-1"
+            aria-labelledby="Enlarge Image Modal"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="activityImageModalLabel">
+                    <!-- Title for this is added via API call -->
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Image is loaded from API via source  -->
+                  <img
+                    id="modalImage"
+                    src=""
+                    alt="Activity Image"
+                    style="width: 100%"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </main>

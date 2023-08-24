@@ -190,6 +190,33 @@ function init() {
     // controls: new ol.control.extend([scaleLineControl]),
   })
 
+  // Vector source map of taluka
+  // loadMap1();
+  function loadMap1() {
+    if (geojson) {
+      map.removeLayer(geojson);
+    }
+
+    var url =
+      "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Taluka&outputFormat=application/json";
+    var geojson = new ol.layer.Vector({
+      title: "Taluka",
+      source: new ol.source.Vector({
+        url: url,
+        format: new ol.format.GeoJSON(),
+      }),
+    });
+    geojson.getSource().on("addfeature", function () {
+      //alert(geojson.getSource().getExtent());
+      map.getView().fit(geojson.getSource().getExtent(), {
+        duration: 1590,
+        size: map.getSize() - 100,
+      });
+    });
+
+    map.addLayer(geojson);
+  }
+
   // GeoJson Layer of NRM Project(PoCRA) Points
   const nrmProjectVectorSource = new ol.source.Vector({
     url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
@@ -234,8 +261,7 @@ function init() {
   // On Selected => show/hide popup
   select.getFeatures().on(['add'], function (evt) {
     var feature = evt.element;
-    console.log(feature);
-    // console.log(feature.get('application_number'));
+    // console.log(feature);    
     var content = "";
     content +=
       `
@@ -283,8 +309,10 @@ function init() {
                 <th colspan="2">
                   <img
                     class="rounded float-start"
-                    style="width:100%; height: 200px; cursor: pointer"
-                    src="${feature.get('img_url')}"
+                    style="width:100%; height: 200px;
+                    border-radius: 5px;  cursor: pointer;  transition: 0.3s;"
+                    src="${feature.get('img_url')}" data-bs-toggle="modal"
+                    data-bs-target="#enlargeImageModal"
                   />
                 </th>
               </tr>
@@ -294,8 +322,11 @@ function init() {
       </div>
     </div>
     `
-
     popup.show(feature.getGeometry().getFirstCoordinate(), content);
+    // Setting parameters to Image Modal
+    $('#activityImageModalLabel').text(`Application Number : ${feature.get('application_number')}`);
+    $('#modalImage').attr('src', feature.get('img_url'));
+    // 
   });
   select.getFeatures().on(['remove'], function (evt) {
     popup.hide();
@@ -316,7 +347,6 @@ function init() {
 
   });
   map.addControl(layerSwitcher);
-
 
   // Legend Control Extention
   // Define a new legend
