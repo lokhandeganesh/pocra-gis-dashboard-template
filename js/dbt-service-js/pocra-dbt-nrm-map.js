@@ -165,6 +165,7 @@ function init() {
     ]
   });
 
+
   // Popup overlay
   var popup = new ol.Overlay.Popup({
     popupClass: "default", //"tooltips", "warning" "black" "default", "tips", "shadow",
@@ -187,8 +188,17 @@ function init() {
     target: 'pocra-dbt-nrm-map',
     layers: [baseLayerGroup, adminLayers, activityLayers],
     overlays: [popup],
+    loadTilesWhileAnimating: true,
+    loadTilesWhileInteracting: true,
     // controls: new ol.control.extend([scaleLineControl]),
   })
+
+  // Changing mouse cursor style to Pinter
+  map.on('pointermove', function (e) {
+    var pixel = map.getEventPixel(e.originalEvent);
+    var hit = map.hasFeatureAtPixel(pixel);
+    map.getViewport().style.cursor = hit ? 'pointer' : '';
+  });
 
   // Vector source map of taluka
   // loadMap1();
@@ -248,11 +258,12 @@ function init() {
       });
       var styles = [style];
       return function (feature, resolution) {
-        style.getText().setText(feature.get("application_number"));
+        style.getText().setText(feature.get("structure_type"));
         return styles;
       };
     })()
   }))
+
 
   // Control Select
   const select = new ol.interaction.Select({});
@@ -261,7 +272,7 @@ function init() {
   // On Selected => show/hide popup
   select.getFeatures().on(['add'], function (evt) {
     var feature = evt.element;
-    // console.log(feature);    
+    // console.log(feature);
     var content = "";
     content +=
       `

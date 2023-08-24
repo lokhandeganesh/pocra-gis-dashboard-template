@@ -15,15 +15,17 @@ $(".multi-select").select2({
 });
 
 // Add change event to activity drop-down and log its values.
-$("#select-activity").on("change", function (e) {
-  // Access to full data
-  // console.log($(this).select2('data'));
-  // Access to value
-  let activityCode = $(this).val();
-  console.log(activityCode);
-});
+// $("#select-activity").on("change", function (e) {
+//   // Access to full data
+//   // console.log($(this).select2('data'));
+//   // Access to value
+//   let activityCode = $(this).val();
+//   console.log(activityCode);
+// });
 
-
+function getNrmActivity(activityCode) {
+  // console.log(activityCode);
+}
 
 // Calling getDistrict funtion initially to load district names into dropdown menu
 getDistrict();
@@ -44,15 +46,6 @@ function getDistrict() {
     }
   });
 }
-
-// Add change event to activity drop-down and log its values.
-$("#select-district").on("change", function (e) {
-  // Access to full data
-  // console.log($(this).select2('data'));
-  // Access to value
-  let districtCode = $(this).val();
-  // console.log(districtCode);
-});
 
 // Taluka Name Drop Down
 function getTaluka(dtncode) {
@@ -107,10 +100,7 @@ function getVillage(thncode) {
   // alert("kh")  
 }
 
-function getNrmActivity(activityCode) {
-  var result = [];
-  // console.log(activityCode);
-}
+
 
 function getVincode(vincode) {
   console.log(vincode);

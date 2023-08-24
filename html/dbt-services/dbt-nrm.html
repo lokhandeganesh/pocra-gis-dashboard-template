@@ -346,8 +346,8 @@
                   class="form-select multi-select"
                   aria-label="Select Activity "
                   id="select-activity"
-                  multiple
                   data-placeholder="--- Select Activity ---"
+                  onchange="getNrmActivity(this.value);"
                 >
                   <option class="" value="-1">
                     --- Select All Activity ---
@@ -364,7 +364,6 @@
                   class="form-select multi-select"
                   aria-label="Select District"
                   id="select-district"
-                  multiple
                   data-placeholder="--- Select District ---"
                   onchange="getTaluka(this.value);"
                 ></select>
@@ -417,7 +416,7 @@
             aria-labelledby="Enlarge Image Modal"
             aria-hidden="true"
           >
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="activityImageModalLabel">
