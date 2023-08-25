@@ -199,7 +199,14 @@ function init() {
     var hit = map.hasFeatureAtPixel(pixel);
     map.getViewport().style.cursor = hit ? 'pointer' : '';
   });
-
+  // 
+  map.addControl(new ol.control.CanvasAttribution({ canvas: true }));
+  // Add a title control
+  map.addControl(new ol.control.CanvasTitle({
+    title: '',
+    visible: false,
+    style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif' }) })
+  }));
   // Vector source map of taluka
   // loadMap1();
   function loadMap1() {
@@ -263,7 +270,6 @@ function init() {
       };
     })()
   }))
-
 
   // Control Select
   const select = new ol.interaction.Select({});
@@ -358,6 +364,59 @@ function init() {
 
   });
   map.addControl(layerSwitcher);
+
+  // Add control
+  var geoloc = new ol.control.GeolocationButton({
+    title: 'Where am I?',
+    delay: 10000 // 10s
+  });
+  map.addControl(geoloc);
+  // Show position
+  var here = new ol.Overlay.Popup({ positioning: 'bottom-center' });
+  map.addOverlay(here);
+  geoloc.on('position', function (e) {
+    if (e.coordinate) here.show(e.coordinate, "You are<br/>here!");
+    else here.hide();
+  });
+
+  // Add a ScaleLine control 
+  map.addControl(new ol.control.CanvasScaleLine());
+
+  // Print control
+  var printControl = new ol.control.PrintDialog({
+    // target: document.querySelector('.info'),
+    // targetDialog: map.getTargetElement() 
+    // save: false,
+    // copy: false,
+    // pdf: false
+  });
+  printControl.setSize('A4');
+  map.addControl(printControl);
+
+  /* On print > save image file */
+  printControl.on(['print', 'error'], function (e) {
+    // Print success
+    if (e.image) {
+      if (e.pdf) {
+        // Export pdf using the print info
+        var pdf = new jsPDF({
+          orientation: e.print.orientation,
+          unit: e.print.unit,
+          format: e.print.size
+        });
+        pdf.addImage(e.image, 'JPEG', e.print.position[0], e.print.position[0], e.print.imageWidth, e.print.imageHeight);
+        pdf.save(e.print.legend ? 'legend.pdf' : 'map.pdf');
+      } else {
+        // Save image as file
+        e.canvas.toBlob(function (blob) {
+          var name = (e.print.legend ? 'legend.' : 'map.') + e.imageType.replace('image/', '');
+          saveAs(blob, name);
+        }, e.imageType, e.quality);
+      }
+    } else {
+      console.warn('No canvas to export');
+    }
+  });
 
   // Legend Control Extention
   // Define a new legend

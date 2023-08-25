@@ -35,7 +35,7 @@ if (window.ol) {
  * @function module:ol.inherits
  * @api
  */
-ol.ext.inherits = function(child,parent) {
+ol.ext.inherits = function (child, parent) {
   child.prototype = Object.create(parent.prototype);
   child.prototype.constructor = child;
 };
@@ -50,7 +50,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 }
 // Element.remove
 if (window.Element && !Element.prototype.remove) {
-  Element.prototype.remove = function() {
+  Element.prototype.remove = function () {
     if (this.parentNode) this.parentNode.removeChild(this);
   }
 }
@@ -387,7 +387,7 @@ ol.ext.SVGOperation = class olextSVGOperation extends ol.Object {
  *  @param {File} [options.file]
  *  @param {number} [options.chunkSize=1E6]
  */
-ol.ext.TextStreamReader = function(options) {
+ol.ext.TextStreamReader = function (options) {
   options = options || {};
   this.setChunkSize(options.chunkSize);
   this.setFile(options.file);
@@ -396,38 +396,38 @@ ol.ext.TextStreamReader = function(options) {
 /** Set file to read
  * @param {File} file
  */
-ol.ext.TextStreamReader.prototype.setFile = function(file) {
+ol.ext.TextStreamReader.prototype.setFile = function (file) {
   this.file_ = file;
   this.fileSize_ = (this.file_.size - 1);
   this.rewind();
 }
 /** Sets the file position indicator to the beginning of the file stream.
  */
-ol.ext.TextStreamReader.prototype.rewind = function() {
+ol.ext.TextStreamReader.prototype.rewind = function () {
   this.chunk_ = 0;
   this.residue_ = '';
 };
 /** Set reader chunk size
  * @param {number} [chunkSize=1E6]
  */
-ol.ext.TextStreamReader.prototype.setChunkSize = function(s) {
+ol.ext.TextStreamReader.prototype.setChunkSize = function (s) {
   this.chunkSize_ = s || 1E6;
 };
 /** Get progress
  * @return {number} progress [0,1]
  */
-ol.ext.TextStreamReader.prototype.getProgress = function() {
+ol.ext.TextStreamReader.prototype.getProgress = function () {
   return this.chunk_ / this.fileSize_;
 };
 /** Read a text file line by line from the start
  * @param {function} getLine a function that gets the current line as argument. Return false to stop reading
  * @param {function} [progress] a function that gets the progress on each chunk (beetween 0,1) and a boolean set to true on end
  */
-ol.ext.TextStreamReader.prototype.readLines = function(getLine, progress) {
+ol.ext.TextStreamReader.prototype.readLines = function (getLine, progress) {
   this.rewind();
-  this.readChunk(function(lines) {
+  this.readChunk(function (lines) {
     // getLine by line
-    for (var i=0; i<lines.length; i++) {
+    for (var i = 0; i < lines.length; i++) {
       if (getLine(lines[i]) === false) {
         // Stop condition
         if (progress) progress(this.chunk_ / this.fileSize_, true);
@@ -436,7 +436,7 @@ ol.ext.TextStreamReader.prototype.readLines = function(getLine, progress) {
     }
     if (progress) progress(this.chunk_ / this.fileSize_, false);
     // Red next chunk
-    if (!this.nexChunk_() && progress)  {
+    if (!this.nexChunk_() && progress) {
       // EOF
       progress(1, true);
     }
@@ -446,12 +446,12 @@ ol.ext.TextStreamReader.prototype.readLines = function(getLine, progress) {
  * @param {function} getLines a function that gets lines read as an Array<String>.
  * @param {function} [progress] a function that gets the progress (beetween 0,1) and a boolean set to true on end of file
  */
-ol.ext.TextStreamReader.prototype.readChunk = function(getLines) {
+ol.ext.TextStreamReader.prototype.readChunk = function (getLines) {
   // Parse chunk line by line
-  this.reader_.onload = function(e) {
+  this.reader_.onload = function (e) {
     // Get lines
-    var lines = e.target.result.replace(/\r/g,'').split('\n')
-    lines[0] = this.residue_ +  lines[0] || '';
+    var lines = e.target.result.replace(/\r/g, '').split('\n')
+    lines[0] = this.residue_ + lines[0] || '';
     // next
     this.chunk_ += this.chunkSize_;
     // more to read?
@@ -469,7 +469,7 @@ ol.ext.TextStreamReader.prototype.readChunk = function(getLines) {
 /** Read next chunk
  * @private
  */
-ol.ext.TextStreamReader.prototype.nexChunk_ = function() {
+ol.ext.TextStreamReader.prototype.nexChunk_ = function () {
   if (this.chunk_ < this.fileSize_) {
     var blob = this.file_.slice(this.chunk_, this.chunk_ + this.chunkSize_);
     this.reader_.readAsText(blob);
@@ -479,7 +479,7 @@ ol.ext.TextStreamReader.prototype.nexChunk_ = function() {
 };
 
 // Prevent overwrite
-if (ol.View.prototype.flyTo)  {
+if (ol.View.prototype.flyTo) {
   console.warn('[OL-EXT] ol/View~View.flyTo redefinition')
 }
 /** Destination
@@ -497,18 +497,18 @@ if (ol.View.prototype.flyTo)  {
  * @param {viewTourDestinations} options
  * @param {function} done callback function called at the end of an animation, called with true if the animation completed
  */
-ol.View.prototype.flyTo = function(options, done) {
+ol.View.prototype.flyTo = function (options, done) {
   options = options || {};
   // Start new anim
   this.cancelAnimations();
-  var callback = (typeof(done) === 'function' ? done : function(){});
+  var callback = (typeof (done) === 'function' ? done : function () { });
   // Fly to destination
   var duration = options.duration || 2000;
-  var zoomAt = options.zoomAt || (Math.min(options.zoom||100, this.getZoom())-2);
+  var zoomAt = options.zoomAt || (Math.min(options.zoom || 100, this.getZoom()) - 2);
   var zoomTo = options.zoom || this.getZoom();
   var coord = options.center || this.getCenter();
   // Move to
-  this.animate ({
+  this.animate({
     center: coord,
     duration: duration,
     easing: options.easing,
@@ -516,18 +516,18 @@ ol.View.prototype.flyTo = function(options, done) {
     rotation: options.rotation
   });
   // Zoom to
-  this.animate ({
+  this.animate({
     zoom: zoomAt,
-    duration: duration/2,
+    duration: duration / 2,
     easing: options.easing,
     anchor: options.anchor
-  },{
+  }, {
     zoom: zoomTo,
-    duration: duration/2,
+    duration: duration / 2,
     easing: options.easing,
     anchor: options.anchor
   },
-  callback);
+    callback);
 };
 /** Start a tour on the map
  * @param {Array<viewTourDestinations>|Array<Array>} destinations an array of destinations or an array of [x,y,zoom,destinationType]
@@ -538,25 +538,25 @@ ol.View.prototype.flyTo = function(options, done) {
  *  @param {function} [options.done] callback function called at the end of an animation, called with true if the tour completed
  *  @param {function} [options.step] callback function called when a destination is reached with the step index as param
  */
-ol.View.prototype.takeTour = function(destinations, options) {
+ol.View.prototype.takeTour = function (destinations, options) {
   options = options || {};
   var index = -1;
-  var next = function(more) {
+  var next = function (more) {
     if (more) {
       var dest = destinations[++index];
-      if (typeof(options.step) === 'function') options.step(index, destinations);
+      if (typeof (options.step) === 'function') options.step(index, destinations);
       if (dest) {
-        if (dest instanceof Array) dest = { center: [dest[0],dest[1]], zoom: dest[2], type: dest[3] };
+        if (dest instanceof Array) dest = { center: [dest[0], dest[1]], zoom: dest[2], type: dest[3] };
         var delay = index === 0 ? 0 : (options.delay || 750);
         if (!dest.easing) dest.easing = options.easing;
         if (!dest.type) dest.type = options.type;
         setTimeout(function () {
-          switch(dest.type) {
+          switch (dest.type) {
             case 'moveTo': {
               this.animate(dest, next);
               break;
             }
-            case 'flightTo': 
+            case 'flightTo':
             default: {
               this.flyTo(dest, next);
               break;
@@ -564,10 +564,10 @@ ol.View.prototype.takeTour = function(destinations, options) {
           }
         }.bind(this), delay);
       } else {
-        if (typeof(options.done)==='function') options.done(true);
+        if (typeof (options.done) === 'function') options.done(true);
       }
     } else {
-      if (typeof(options.done)==='function') options.done(false);
+      if (typeof (options.done) === 'function') options.done(false);
     }
   }.bind(this)
   next(true);
@@ -635,8 +635,8 @@ ol.ext.Worker = class olextWorker {
  * @param {number} [round=100]
  * @returns {Array<number>} hsl as h:[0,360], s:[0,100], l:[0,100]
  */
-ol.color.toHSL = function(rgb, round) {
-  if (round===undefined) round = 100;
+ol.color.toHSL = function (rgb, round) {
+  if (round === undefined) round = 100;
   if (!Array.isArray(rgb)) rgb = ol.color.asArray(rgb);
   var r = rgb[0] / 255;
   var g = rgb[1] / 255;
@@ -655,12 +655,12 @@ ol.color.toHSL = function(rgb, round) {
       case b: h = (r - g) / d + 4; break;
     }
   }
-  var hsl = [ 
-    Math.round(h*60*round)/round, 
-    Math.round(s*100*round)/round, 
-    Math.round(l*100*round)/round
+  var hsl = [
+    Math.round(h * 60 * round) / round,
+    Math.round(s * 100 * round) / round,
+    Math.round(l * 100 * round) / round
   ];
-  if (rgb.length>3) hsl[3] = rgb[3];
+  if (rgb.length > 3) hsl[3] = rgb[3];
   return hsl;
 }
 /** Converts an HSL color value to RGB.
@@ -668,8 +668,8 @@ ol.color.toHSL = function(rgb, round) {
  * @param {number} [round=1000]
  * @returns {Array<number>} rgb
  */
-ol.color.fromHSL = function(hsl, round) {
-  if (round===undefined) round = 1000
+ol.color.fromHSL = function (hsl, round) {
+  if (round === undefined) round = 1000
   var h = hsl[0] / 360;
   var s = hsl[1] / 100;
   var l = hsl[2] / 100;
@@ -677,26 +677,26 @@ ol.color.fromHSL = function(hsl, round) {
   if (s == 0) {
     r = g = b = l; // achromatic
   } else {
-    var hue2rgb = function(p, q, t) {
+    var hue2rgb = function (p, q, t) {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
-      if (t < 1/6) return p + (q - p) * 6 * t;
-      if (t < 1/2) return q;
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
       return p;
     }
     var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
     var p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1/3);
+    r = hue2rgb(p, q, h + 1 / 3);
     g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1/3);
+    b = hue2rgb(p, q, h - 1 / 3);
   }
-  var rgb = [ 
-    Math.round(r * 255*round) / round, 
-    Math.round(g * 255*round) / round, 
-    Math.round(b * 255*round) / round
+  var rgb = [
+    Math.round(r * 255 * round) / round,
+    Math.round(g * 255 * round) / round,
+    Math.round(b * 255 * round) / round
   ];
-  if (hsl.length>3) rgb[3] = hsl[3];
+  if (hsl.length > 3) rgb[3] = hsl[3];
   return rgb;
 }
 /** Converts an HSL color value to RGB.
@@ -704,8 +704,8 @@ ol.color.fromHSL = function(hsl, round) {
  * @param {number} [round=100]
  * @returns {Array<number>} hsl as h:[0,360], s:[0,100], l:[0,100]
  */
-ol.color.toHSV = function(rgb, round) {
-  if (round===undefined) round = 100;
+ol.color.toHSV = function (rgb, round) {
+  if (round === undefined) round = 100;
   if (!Array.isArray(rgb)) rgb = ol.color.asArray(rgb);
   var r = rgb[0] / 255;
   var g = rgb[1] / 255;
@@ -724,12 +724,12 @@ ol.color.toHSV = function(rgb, round) {
       case b: h = (r - g) / d + 4; break;
     }
   }
-  var hsv = [ 
-    Math.round(h*60*round)/round, 
-    Math.round(s*100*round)/round, 
-    Math.round(v*100*round)/round
+  var hsv = [
+    Math.round(h * 60 * round) / round,
+    Math.round(s * 100 * round) / round,
+    Math.round(v * 100 * round) / round
   ];
-  if (rgb.length>3) hsv[3] = rgb[3];
+  if (rgb.length > 3) hsv[3] = rgb[3];
   return hsv;
 }
 /** Converts an HSV color value to RGB.
@@ -737,8 +737,8 @@ ol.color.toHSV = function(rgb, round) {
  * @param {number} [round=1000]
  * @returns {Array<number>} rgb
  */
-ol.color.fromHSV = function(hsv, round) {
-  if (round===undefined) round = 1000
+ol.color.fromHSV = function (hsv, round) {
+  if (round === undefined) round = 1000
   var h = hsv[0] / 360;
   var s = hsv[1] / 100;
   var v = hsv[2] / 100;
@@ -756,19 +756,19 @@ ol.color.fromHSV = function(hsv, round) {
     case 4: r = t, g = p, b = v; break;
     case 5: r = v, g = p, b = q; break;
   }
-  var rgb = [ 
-    Math.round(r * 255*round) / round, 
-    Math.round(g * 255*round) / round, 
-    Math.round(b * 255*round) / round
+  var rgb = [
+    Math.round(r * 255 * round) / round,
+    Math.round(g * 255 * round) / round,
+    Math.round(b * 255 * round) / round
   ];
-  if (hsv.length>3) rgb[3] = hsv[3];
+  if (hsv.length > 3) rgb[3] = hsv[3];
   return rgb;
 }
 /** Converts an HSL color value to RGB.
  * @param {ol/color~Color|string} rgb
  * @returns {string} 
  */
-ol.color.toHexa = function(rgb) {
+ol.color.toHexa = function (rgb) {
   return '#' + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
 }
 
@@ -795,7 +795,7 @@ ol.ext.element.create = function (tagName, options) {
   var elt;
   // Create text node
   if (tagName === 'TEXT') {
-    elt = document.createTextNode(options.html||'');
+    elt = document.createTextNode(options.html || '');
     if (options.parent) options.parent.appendChild(elt);
   } else {
     // Other element
@@ -813,7 +813,7 @@ ol.ext.element.create = function (tagName, options) {
         }
         case 'html': {
           if (options.html instanceof Element) elt.appendChild(options.html)
-          else if (options.html!==undefined) elt.innerHTML = options.html;
+          else if (options.html !== undefined) elt.innerHTML = options.html;
           break;
         }
         case 'parent': {
@@ -826,7 +826,7 @@ ol.ext.element.create = function (tagName, options) {
               ol.ext.element.create('OPTION', {
                 html: i,
                 value: options.options[i],
-                parent: elt          
+                parent: elt
               })
             }
           }
@@ -878,7 +878,7 @@ ol.ext.element.createSwitch = function (options) {
     change: options.change,
     parent: options.parent
   });
-  var opt = Object.assign ({ input: input }, options || {});
+  var opt = Object.assign({ input: input }, options || {});
   new ol.ext.input.Switch(opt);
   return input;
 };
@@ -897,11 +897,11 @@ ol.ext.element.createSwitch = function (options) {
 ol.ext.element.createCheck = function (options) {
   var input = ol.ext.element.create('INPUT', {
     name: options.name,
-    type: (options.type==='radio' ? 'radio' : 'checkbox'),
+    type: (options.type === 'radio' ? 'radio' : 'checkbox'),
     on: options.on,
     parent: options.parent
   });
-  var opt = Object.assign ({ input: input }, options || {});
+  var opt = Object.assign({ input: input }, options || {});
   if (options.type === 'radio') {
     new ol.ext.input.Radio(opt);
   } else {
@@ -913,16 +913,16 @@ ol.ext.element.createCheck = function (options) {
  * @param {Element} element
  * @param {Element|string} html Content of the element
  */
-ol.ext.element.setHTML = function(element, html) {
+ol.ext.element.setHTML = function (element, html) {
   if (html instanceof Element) element.appendChild(html)
-  else if (html!==undefined) element.innerHTML = html;
+  else if (html !== undefined) element.innerHTML = html;
 };
 /** Append text into an elemnt
  * @param {Element} element
  * @param {string} text text content
  */
-ol.ext.element.appendText = function(element, text) {
-  element.appendChild(document.createTextNode(text||''));
+ol.ext.element.appendText = function (element, text) {
+  element.appendChild(document.createTextNode(text || ''));
 };
 /**
  * Add a set of event listener to an element
@@ -930,9 +930,9 @@ ol.ext.element.appendText = function(element, text) {
  * @param {string|Array<string>} eventType
  * @param {function} fn
  */
-ol.ext.element.addListener = function (element, eventType, fn, useCapture ) {
+ol.ext.element.addListener = function (element, eventType, fn, useCapture) {
   if (typeof eventType === 'string') eventType = eventType.split(' ');
-  eventType.forEach(function(e) {
+  eventType.forEach(function (e) {
     element.addEventListener(e, fn, useCapture);
   });
 };
@@ -944,7 +944,7 @@ ol.ext.element.addListener = function (element, eventType, fn, useCapture ) {
  */
 ol.ext.element.removeListener = function (element, eventType, fn) {
   if (typeof eventType === 'string') eventType = eventType.split(' ');
-  eventType.forEach(function(e) {
+  eventType.forEach(function (e) {
     element.removeEventListener(e, fn);
   });
 };
@@ -975,13 +975,13 @@ ol.ext.element.hidden = function (element) {
  * @param {Element} element
  */
 ol.ext.element.toggle = function (element) {
-  element.style.display = (element.style.display==='none' ? '' : 'none');
+  element.style.display = (element.style.display === 'none' ? '' : 'none');
 };
 /** Set style of an element
  * @param {DOMElement} el the element
  * @param {*} st list of style
  */
-ol.ext.element.setStyle = function(el, st) {
+ol.ext.element.setStyle = function (el, st) {
   for (var s in st) {
     switch (s) {
       case 'top':
@@ -992,8 +992,8 @@ ol.ext.element.setStyle = function(el, st) {
       case 'maxWidth':
       case 'width':
       case 'height': {
-        if (typeof(st[s]) === 'number') {
-          el.style[s] = st[s]+'px';
+        if (typeof (st[s]) === 'number') {
+          el.style[s] = st[s] + 'px';
         } else {
           el.style[s] = st[s];
         }
@@ -1011,7 +1011,7 @@ ol.ext.element.setStyle = function(el, st) {
  * @param {string} styleProp Propertie name
  * @return {*} style value
  */
-ol.ext.element.getStyle = function(el, styleProp) {
+ol.ext.element.getStyle = function (el, styleProp) {
   var value, defaultView = (el.ownerDocument || document).defaultView;
   // W3C standard way:
   if (defaultView && defaultView.getComputedStyle) {
@@ -1021,13 +1021,13 @@ ol.ext.element.getStyle = function(el, styleProp) {
     value = defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
   } else if (el.currentStyle) { // IE
     // sanitize property name to camelCase
-    styleProp = styleProp.replace(/-(\w)/g, function(str, letter) {
+    styleProp = styleProp.replace(/-(\w)/g, function (str, letter) {
       return letter.toUpperCase();
     });
     value = el.currentStyle[styleProp];
     // convert other units to pixels on IE
-    if (/^\d+(em|pt|%|ex)?$/i.test(value)) { 
-      return (function(value) {
+    if (/^\d+(em|pt|%|ex)?$/i.test(value)) {
+      return (function (value) {
         var oldLeft = el.style.left, oldRsLeft = el.runtimeStyle.left;
         el.runtimeStyle.left = el.currentStyle.left;
         el.style.left = value || 0;
@@ -1045,21 +1045,21 @@ ol.ext.element.getStyle = function(el, styleProp) {
  * @param {DOMElement} elt
  * @return {number}
  */
-ol.ext.element.outerHeight = function(elt) {
+ol.ext.element.outerHeight = function (elt) {
   return elt.offsetHeight + ol.ext.element.getStyle(elt, 'marginBottom')
 };
 /** Get outerWidth of an elemen
  * @param {DOMElement} elt
  * @return {number}
  */
-ol.ext.element.outerWidth = function(elt) {
+ol.ext.element.outerWidth = function (elt) {
   return elt.offsetWidth + ol.ext.element.getStyle(elt, 'marginLeft')
 };
 /** Get element offset rect
  * @param {DOMElement} elt
  * @return {*} 
  */
-ol.ext.element.offsetRect = function(elt) {
+ol.ext.element.offsetRect = function (elt) {
   var rect = elt.getBoundingClientRect();
   return {
     top: rect.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0),
@@ -1072,19 +1072,19 @@ ol.ext.element.offsetRect = function(elt) {
  * @param {ELement} elt
  * @returns {Object} top/left offset
  */
-ol.ext.element.getFixedOffset = function(elt) {
+ol.ext.element.getFixedOffset = function (elt) {
   var offset = {
-    left:0,
-    top:0
+    left: 0,
+    top: 0
   };
-  var getOffset = function(parent) {
+  var getOffset = function (parent) {
     if (!parent) return offset;
     // Check position when transform
     if (ol.ext.element.getStyle(parent, 'position') === 'absolute'
       && ol.ext.element.getStyle(parent, 'transform') !== "none") {
       var r = parent.getBoundingClientRect();
-      offset.left += r.left; 
-      offset.top += r.top; 
+      offset.left += r.left;
+      offset.top += r.top;
       return offset;
     }
     return getOffset(parent.offsetParent)
@@ -1096,10 +1096,10 @@ ol.ext.element.getFixedOffset = function(elt) {
  * @param {boolean} fixed get fixed position
  * @return {Object} 
  */
-ol.ext.element.positionRect = function(elt, fixed) {
+ol.ext.element.positionRect = function (elt, fixed) {
   var gleft = 0;
   var gtop = 0;
-  var getRect = function( parent ) {
+  var getRect = function (parent) {
     if (parent) {
       gleft += parent.offsetLeft;
       gtop += parent.offsetTop;
@@ -1117,7 +1117,7 @@ ol.ext.element.positionRect = function(elt, fixed) {
       r.right = r.top + elt.offsetWidth;
       return r;
     }
-  }; 
+  };
   return getRect(elt.offsetParent);
 }
 /** Make a div scrollable without scrollbar.
@@ -1131,12 +1131,12 @@ ol.ext.element.positionRect = function(elt, fixed) {
  *  @param {boolean} [options.minibar=false] add a mini scrollbar to the parent element (only vertical scrolling)
  * @returns {Object} an object with a refresh function
  */
-ol.ext.element.scrollDiv = function(elt, options) {
+ol.ext.element.scrollDiv = function (elt, options) {
   options = options || {};
   var pos = false;
   var speed = 0;
   var d, dt = 0;
-  var onmove = (typeof(options.onmove) === 'function' ? options.onmove : function(){});
+  var onmove = (typeof (options.onmove) === 'function' ? options.onmove : function () { });
   //var page = options.vertical ? 'pageY' : 'pageX';
   var page = options.vertical ? 'screenY' : 'screenX';
   var scroll = options.vertical ? 'scrollTop' : 'scrollLeft';
@@ -1145,13 +1145,13 @@ ol.ext.element.scrollDiv = function(elt, options) {
   var scale, isbar;
   // Update the minibar
   var updateCounter = 0;
-  var updateMinibar = function() {
+  var updateMinibar = function () {
     if (scrollbar) {
       updateCounter++;
       setTimeout(updateMinibarDelay);
     }
   }
-  var updateMinibarDelay = function() {
+  var updateMinibarDelay = function () {
     if (scrollbar) {
       updateCounter--;
       // Prevent multi call
@@ -1171,7 +1171,7 @@ ol.ext.element.scrollDiv = function(elt, options) {
     }
   }
   // Handle pointer down
-  var onPointerDown = function(e) {
+  var onPointerDown = function (e) {
     // Prevent scroll
     if (e.target.classList.contains('ol-noscroll')) return;
     // Start scrolling
@@ -1183,17 +1183,17 @@ ol.ext.element.scrollDiv = function(elt, options) {
     e.preventDefault();
     // Listen scroll
     window.addEventListener('pointermove', onPointerMove);
-    ol.ext.element.addListener(window, ['pointerup','pointercancel'], onPointerUp);
+    ol.ext.element.addListener(window, ['pointerup', 'pointercancel'], onPointerUp);
   }
   // Register scroll
-  var onPointerMove = function(e) {
+  var onPointerMove = function (e) {
     if (pos !== false) {
-      var delta = (isbar ? -1/scale : 1) * (pos - e[page]);
+      var delta = (isbar ? -1 / scale : 1) * (pos - e[page]);
       moving = moving || Math.round(delta)
       elt[scroll] += delta;
       d = new Date();
-      if (d-dt) {
-        speed = (speed + delta / (d - dt))/2;
+      if (d - dt) {
+        speed = (speed + delta / (d - dt)) / 2;
       }
       pos = e[page];
       dt = d;
@@ -1204,17 +1204,17 @@ ol.ext.element.scrollDiv = function(elt, options) {
     }
   };
   // Animate scroll
-  var animate = function(to) {
-    var step = (to>0) ? Math.min(100, to/2) : Math.max(-100, to/2);
+  var animate = function (to) {
+    var step = (to > 0) ? Math.min(100, to / 2) : Math.max(-100, to / 2);
     to -= step;
     elt[scroll] += step;
     if (-1 < to && to < 1) {
-      if (moving) setTimeout(function() { elt.classList.remove('ol-move'); });
+      if (moving) setTimeout(function () { elt.classList.remove('ol-move'); });
       else elt.classList.remove('ol-move');
       moving = false;
       onmove(false);
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         animate(to);
       }, 40);
     }
@@ -1222,7 +1222,7 @@ ol.ext.element.scrollDiv = function(elt, options) {
   // Initialize scroll container for minibar
   var scrollContainer, scrollbar;
   if (options.vertical && options.minibar) {
-    var init = function(b) {
+    var init = function (b) {
       // only once
       elt.removeEventListener('pointermove', init);
       elt.parentNode.classList.add('ol-miniscroll');
@@ -1233,19 +1233,19 @@ ol.ext.element.scrollDiv = function(elt, options) {
       });
       elt.parentNode.insertBefore(scrollContainer, elt);
       // Move scrollbar
-      scrollbar.addEventListener('pointerdown', function(e) {
+      scrollbar.addEventListener('pointerdown', function (e) {
         isbar = true;
         onPointerDown(e)
       });
       // Handle mousewheel
       if (options.mousewheel) {
-        ol.ext.element.addListener(scrollContainer, 
-          ['mousewheel', 'DOMMouseScroll', 'onmousewheel'], 
-          function(e) { onMouseWheel(e) }
+        ol.ext.element.addListener(scrollContainer,
+          ['mousewheel', 'DOMMouseScroll', 'onmousewheel'],
+          function (e) { onMouseWheel(e) }
         );
-        ol.ext.element.addListener(scrollbar, 
-          ['mousewheel', 'DOMMouseScroll', 'onmousewheel'], 
-          function(e) { onMouseWheel(e) }
+        ol.ext.element.addListener(scrollbar,
+          ['mousewheel', 'DOMMouseScroll', 'onmousewheel'],
+          function (e) { onMouseWheel(e) }
         );
       }
       // Update on enter
@@ -1253,14 +1253,14 @@ ol.ext.element.scrollDiv = function(elt, options) {
       // Update on resize
       window.addEventListener('resize', updateMinibar);
       // Update
-      if (b!==false) updateMinibar();
+      if (b !== false) updateMinibar();
     };
     // Allready inserted in the DOM
     if (elt.parentNode) init(false);
     // or wait when ready
     else elt.addEventListener('pointermove', init);
     // Update on scroll
-    elt.addEventListener('scroll', function() {
+    elt.addEventListener('scroll', function () {
       updateMinibar();
     });
   }
@@ -1269,57 +1269,57 @@ ol.ext.element.scrollDiv = function(elt, options) {
   elt.style['overflow'] = 'hidden';
   elt.classList.add('ol-scrolldiv');
   // Start scrolling
-  ol.ext.element.addListener(elt, ['pointerdown'], function(e) {
+  ol.ext.element.addListener(elt, ['pointerdown'], function (e) {
     isbar = false;
     onPointerDown(e)
   });
   // Prevet click when moving...
-  elt.addEventListener('click', function(e) {
+  elt.addEventListener('click', function (e) {
     if (elt.classList.contains('ol-move')) {
       e.preventDefault();
       e.stopPropagation();
     }
   }, true);
   // Stop scrolling
-  var onPointerUp = function(e) {
+  var onPointerUp = function (e) {
     dt = new Date() - dt;
-    if (dt>100 || isbar) {
+    if (dt > 100 || isbar) {
       // User stop: no speed
       speed = 0;
-    } else if (dt>0) {
+    } else if (dt > 0) {
       // Calculate new speed
-      speed = ((speed||0) + (pos - e[page]) / dt) / 2;
+      speed = ((speed || 0) + (pos - e[page]) / dt) / 2;
     }
-    animate(options.animate===false ? 0 : speed*200);
+    animate(options.animate === false ? 0 : speed * 200);
     pos = false;
     speed = 0;
     dt = 0;
     // Add class to handle click (on iframe / double-click)
     if (!elt.classList.contains('ol-move')) {
       elt.classList.add('ol-hasClick')
-      setTimeout(function() { elt.classList.remove('ol-hasClick'); }, 500);
+      setTimeout(function () { elt.classList.remove('ol-hasClick'); }, 500);
     } else {
       elt.classList.remove('ol-hasClick');
     }
     isbar = false;
     window.removeEventListener('pointermove', onPointerMove)
-    ol.ext.element.removeListener(window, ['pointerup','pointercancel'], onPointerUp);
+    ol.ext.element.removeListener(window, ['pointerup', 'pointercancel'], onPointerUp);
   };
   // Handle mousewheel
-  var onMouseWheel = function(e) {
+  var onMouseWheel = function (e) {
     var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
     elt.classList.add('ol-move');
-    elt[scroll] -= delta*30;
+    elt[scroll] -= delta * 30;
     elt.classList.remove('ol-move');
     return false;
   }
   if (options.mousewheel) { // && !elt.classList.contains('ol-touch')) {
-    ol.ext.element.addListener(elt, 
-      ['mousewheel', 'DOMMouseScroll', 'onmousewheel'], 
+    ol.ext.element.addListener(elt,
+      ['mousewheel', 'DOMMouseScroll', 'onmousewheel'],
       onMouseWheel
     );
   }
-  return { 
+  return {
     refresh: updateMinibar
   }
 };
@@ -1331,7 +1331,7 @@ ol.ext.element.dispatchEvent = function (eventName, element) {
   var event;
   try {
     event = new CustomEvent(eventName);
-  } catch(e) {
+  } catch (e) {
     // Try customevent on IE
     event = document.createEvent("CustomEvent");
     event.initCustomEvent(eventName, true, true, {});
@@ -1343,7 +1343,7 @@ ol.ext.element.dispatchEvent = function (eventName, element) {
  * @param {ol.Map} map
  * @return {canvas}
  */
-ol.ext.getMapCanvas = function(map) {
+ol.ext.getMapCanvas = function (map) {
   if (!map) return null;
   var canvas = map.getViewport().getElementsByClassName('ol-fixedoverlay')[0];
   if (!canvas) {
@@ -1353,7 +1353,7 @@ ol.ext.getMapCanvas = function(map) {
       canvas.className = 'ol-fixedoverlay';
       map.getViewport().querySelector('.ol-layers').after(canvas);
       // Clear before new compose
-      map.on('precompose', function (e){
+      map.on('precompose', function (e) {
         canvas.width = map.getSize()[0] * e.frameState.pixelRatio;
         canvas.height = map.getSize()[1] * e.frameState.pixelRatio;
       });
@@ -1363,29 +1363,29 @@ ol.ext.getMapCanvas = function(map) {
   }
   return canvas;
 };
-  
+
 ol.ext.olVersion = ol.util.VERSION.split('.');
-ol.ext.olVersion = parseInt(ol.ext.olVersion[0])*100 + parseInt(ol.ext.olVersion[1]);
+ol.ext.olVersion = parseInt(ol.ext.olVersion[0]) * 100 + parseInt(ol.ext.olVersion[1]);
 /** Get style to use in a VectorContext
  * @param {} e
  * @param {ol.style.Style} s
  * @return {ol.style.Style}
  */
-ol.ext.getVectorContextStyle = function(e, s) {
+ol.ext.getVectorContextStyle = function (e, s) {
   var ratio = e.frameState.pixelRatio;
   // Bug with Icon images
   if (ol.ext.olVersion > 605 && ratio !== 1 && (s.getImage() instanceof ol.style.Icon)) {
     s = s.clone();
     var img = s.getImage();
-    img.setScale(img.getScale()*ratio);
+    img.setScale(img.getScale() * ratio);
     /* BUG anchor don't use ratio */
     var anchor = img.getAnchor();
     if (anchor && img.setDisplacement) {
       var disp = img.getDisplacement();
       if (disp) {
-        disp[0] -= anchor[0]/ratio;
-        disp[1] += anchor[1]/ratio;
-        img.setAnchor([0,0]);
+        disp[0] -= anchor[0] / ratio;
+        disp[1] += anchor[1] / ratio;
+        img.setAnchor([0, 0]);
       }
     } else {
       if (anchor) {
@@ -1404,10 +1404,10 @@ ol.ext.getVectorContextStyle = function(e, s) {
  * @param {function} onerror
  * @private
  */
-ol.ext.imageLoader.loadBILImage = function(src, onload, onerror) {
+ol.ext.imageLoader.loadBILImage = function (src, onload, onerror) {
   var size = [
-    parseInt(src.replace(/.*WIDTH=(\d*).*/i,'$1')), 
-    parseInt(src.replace(/.*HEIGHT=(\d*).*/i,'$1'))
+    parseInt(src.replace(/.*WIDTH=(\d*).*/i, '$1')),
+    parseInt(src.replace(/.*HEIGHT=(\d*).*/i, '$1'))
   ];
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'blob';
@@ -1439,14 +1439,14 @@ ol.ext.imageLoader.loadBILImage = function(src, onload, onerror) {
  * @param {function} onerror
  * @private
  */
-ol.ext.imageLoader.loadImage = function(src, onload, onerror) {
+ol.ext.imageLoader.loadImage = function (src, onload, onerror) {
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'blob';
   xhr.addEventListener('loadend', function () {
     var resp = this.response;
     if (resp !== undefined) {
       var img = new Image();
-      img.onload = function() {
+      img.onload = function () {
         onload(img, [img.naturalWidth, img.naturalHeight]);
       }
       img.src = URL.createObjectURL(resp);
@@ -1464,11 +1464,11 @@ ol.ext.imageLoader.loadImage = function(src, onload, onerror) {
  * @param {function} setPixel a function that takes a Uint8ClampedArray and the pixel position to transform
  * @returns {function} an ol/Tile~LoadFunction
  */
-ol.ext.imageLoader.pixelTransform = function(setPixel) {
-  return function(tile, src) {
+ol.ext.imageLoader.pixelTransform = function (setPixel) {
+  return function (tile, src) {
     ol.ext.imageLoader.loadImage(
-      src, 
-      function(img, size) {
+      src,
+      function (img, size) {
         var canvas = document.createElement('canvas');
         canvas.width = size[0];
         canvas.height = size[1];
@@ -1482,7 +1482,7 @@ ol.ext.imageLoader.pixelTransform = function(setPixel) {
         ctx.putImageData(imgData, 0, 0);
         tile.setImage(canvas);
       },
-      function() {
+      function () {
         tile.setState(3);
       }
     );
@@ -1491,16 +1491,16 @@ ol.ext.imageLoader.pixelTransform = function(setPixel) {
 /** Get a TileLoadFunction to transform tiles into grayscale images
  * @returns {function} an ol/Tile~LoadFunction
  */
-ol.ext.imageLoader.grayscale = function() {
-  return ol.ext.imageLoader.pixelTransform(function(pixels, i) {
-    pixels[i] = pixels[i + 1] = pixels[i + 2] = parseInt(3*pixels[i] + 4*pixels[i + 1] + pixels[i + 2] >>> 3);
+ol.ext.imageLoader.grayscale = function () {
+  return ol.ext.imageLoader.pixelTransform(function (pixels, i) {
+    pixels[i] = pixels[i + 1] = pixels[i + 2] = parseInt(3 * pixels[i] + 4 * pixels[i + 1] + pixels[i + 2] >>> 3);
   })
 };
 /** Get a TileLoadFunction to turn color or a color range transparent
  * @param {ol.color.Color|Array<ol.color.Color>} colors color or color range to turn transparent
  * @returns {function} an ol/Tile~LoadFunction
  */
-ol.ext.imageLoader.transparent = function(colors) {
+ol.ext.imageLoader.transparent = function (colors) {
   var color1, color2;
   if (colors instanceof Array) {
     color1 = colors[0];
@@ -1508,20 +1508,20 @@ ol.ext.imageLoader.transparent = function(colors) {
   }
   var color = color1 = ol.color.asArray(color1);
   if (!color2) {
-    return ol.ext.imageLoader.pixelTransform(function(pixels, i) {
-      if (pixels[i]===color[0] && pixels[i+1]===color[1] && pixels[i+2]===color[2]) {
-        pixels[i+3] = 0;
+    return ol.ext.imageLoader.pixelTransform(function (pixels, i) {
+      if (pixels[i] === color[0] && pixels[i + 1] === color[1] && pixels[i + 2] === color[2]) {
+        pixels[i + 3] = 0;
       }
     })
   } else {
     color2 = ol.color.asArray(color2);
     color = [Math.min(color1[0], color2[0]), Math.min(color1[1], color2[1]), Math.min(color1[2], color2[2])];
     color2 = [Math.max(color1[0], color2[0]), Math.max(color1[1], color2[1]), Math.max(color1[2], color2[2])];
-    return ol.ext.imageLoader.pixelTransform(function(pixels, i) {
-      if (pixels[i]>=color1[0] && pixels[i]<=color2[0] 
-        && pixels[i+1]>=color[1] && pixels[i+1]<=color2[1] 
-        && pixels[i+2]>=color[2] && pixels[i+2]<=color2[2]) {
-        pixels[i+3] = 0;
+    return ol.ext.imageLoader.pixelTransform(function (pixels, i) {
+      if (pixels[i] >= color1[0] && pixels[i] <= color2[0]
+        && pixels[i + 1] >= color[1] && pixels[i + 1] <= color2[1]
+        && pixels[i + 2] >= color[2] && pixels[i + 2] <= color2[2]) {
+        pixels[i + 3] = 0;
       }
     })
   }
@@ -1535,17 +1535,17 @@ ol.ext.imageLoader.transparent = function(colors) {
  *  @param { number } [options.minValue=-Infinity] minimum level value
  * @returns {function} an ol/Tile~LoadFunction
  */
-ol.ext.imageLoader.seaLevelMap = function(level, options) {
+ol.ext.imageLoader.seaLevelMap = function (level, options) {
   options = options || {};
   var h0 = Math.max(level + .01, .01);
-  var c = options.color ? ol.color.asArray(options.color) : [135,203,249];
-  var min = typeof(options.minValue) === 'number' ? options.minValue : -Infinity;
-  var opacity = options.opacity!==false;
-  return ol.ext.imageLoader.elevationMap(function(h) {
+  var c = options.color ? ol.color.asArray(options.color) : [135, 203, 249];
+  var min = typeof (options.minValue) === 'number' ? options.minValue : -Infinity;
+  var opacity = options.opacity !== false;
+  return ol.ext.imageLoader.elevationMap(function (h) {
     if (h < h0 && h > min) {
-      return [c[0], c[1], c[2], opacity ? 255 * (h0-h) / h0 : 255];
+      return [c[0], c[1], c[2], opacity ? 255 * (h0 - h) / h0 : 255];
     } else {
-      return [0,0,0,0];
+      return [0, 0, 0, 0];
     }
   })
 };
@@ -1553,13 +1553,13 @@ ol.ext.imageLoader.seaLevelMap = function(level, options) {
  * @returns {function} an ol/Tile~LoadFunction
  * @private
  */
-ol.ext.imageLoader.shadedRelief = function() {
+ol.ext.imageLoader.shadedRelief = function () {
   var sunElev = Math.PI / 4;
-  var sunAzimuth = 2*Math.PI - Math.PI / 4;
+  var sunAzimuth = 2 * Math.PI - Math.PI / 4;
   return function (tile, src) {
     ol.ext.imageLoader.loadBILImage(
       src,
-      function(data, size) {
+      function (data, size) {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         var width = canvas.width = size[0];
@@ -1567,46 +1567,46 @@ ol.ext.imageLoader.shadedRelief = function() {
         var imgData = ctx.getImageData(0, 0, width, height);
         var pixels = imgData.data;
         function getIndexForCoordinates(x, y) {
-          return x + y*width;
+          return x + y * width;
         }
-        for (var x=0; x<width; x++) for(var y=0; y<height; y++) {
-          var top = getIndexForCoordinates(x,Math.max(0,y-1))
-          var left = getIndexForCoordinates(Math.max(0,x-1),y);
-          var right = getIndexForCoordinates(Math.min(width-1,x+1),y);
-          var bottom = getIndexForCoordinates(x,Math.min(height,y+1))
+        for (var x = 0; x < width; x++) for (var y = 0; y < height; y++) {
+          var top = getIndexForCoordinates(x, Math.max(0, y - 1))
+          var left = getIndexForCoordinates(Math.max(0, x - 1), y);
+          var right = getIndexForCoordinates(Math.min(width - 1, x + 1), y);
+          var bottom = getIndexForCoordinates(x, Math.min(height, y + 1))
           // get slope values
           var topValue = data[top];
           var leftValue = data[left];
           var rightValue = data[right];
           var bottomValue = data[bottom];
-          var slx = (rightValue - leftValue)/3;
-          var sly = ( bottomValue - topValue )/3;
-          var sl0 = Math.sqrt( slx*slx + sly*sly );
+          var slx = (rightValue - leftValue) / 3;
+          var sly = (bottomValue - topValue) / 3;
+          var sl0 = Math.sqrt(slx * slx + sly * sly);
           // get aspect
-          var phi = Math.acos( slx/sl0 );
-          if ( sl0 == 0 ) {
+          var phi = Math.acos(slx / sl0);
+          if (sl0 == 0) {
             phi = 0;
           }
           var azimuth = 0;
-          if ( slx > 0 ) {
-            if ( sly > 0 ) azimuth = phi + 1.5*Math.PI;
-            else if ( sly < 0 ) azimuth = 1.5*Math.PI - phi;
-            else phi = 1.5*Math.PI;
-          } else if ( slx < 0 ){
-            if ( sly < 0 ) azimuth = phi + .5*Math.PI;
-            else if ( sly > 0 ) azimuth = .5*Math.PI - phi;
-            else azimuth = .5*Math.PI;
+          if (slx > 0) {
+            if (sly > 0) azimuth = phi + 1.5 * Math.PI;
+            else if (sly < 0) azimuth = 1.5 * Math.PI - phi;
+            else phi = 1.5 * Math.PI;
+          } else if (slx < 0) {
+            if (sly < 0) azimuth = phi + .5 * Math.PI;
+            else if (sly > 0) azimuth = .5 * Math.PI - phi;
+            else azimuth = .5 * Math.PI;
           } else {
-            if ( sly < 0 ) azimuth = Math.PI;
-            else if ( sly > 0 ) azimuth = 0;
+            if (sly < 0) azimuth = Math.PI;
+            else if (sly > 0) azimuth = 0;
           }
           // get luminance
-          var lum = Math.cos( azimuth - sunAzimuth )*Math.cos( Math.PI*.5 - Math.atan(sl0) )*Math.cos( sunElev ) +  Math.sin( Math.PI*.5 - Math.atan(sl0) )*Math.sin( sunElev );
-          if (lum<0) lum = 0;
-          lum = Math.sqrt(lum*.8 + .5);
-          var p = getIndexForCoordinates(x,y) * 4;
-          pixels[p] = pixels[p+1] = pixels[p+2] = 0;
-          pixels[p+3] = 255 - lum*255;
+          var lum = Math.cos(azimuth - sunAzimuth) * Math.cos(Math.PI * .5 - Math.atan(sl0)) * Math.cos(sunElev) + Math.sin(Math.PI * .5 - Math.atan(sl0)) * Math.sin(sunElev);
+          if (lum < 0) lum = 0;
+          lum = Math.sqrt(lum * .8 + .5);
+          var p = getIndexForCoordinates(x, y) * 4;
+          pixels[p] = pixels[p + 1] = pixels[p + 2] = 0;
+          pixels[p + 3] = 255 - lum * 255;
         }
         ctx.putImageData(imgData, 0, 0);
         tile.setImage(canvas);
@@ -1622,24 +1622,24 @@ ol.ext.imageLoader.shadedRelief = function() {
  * @param {function} [getPixelColor] a function that taket an elevation and return a color array [r,g,b,a], default store elevation as terrain-RGB
  * @returns {function} an ol/Tile~LoadFunction
  */
-ol.ext.imageLoader.elevationMap = function(getPixelColor) {
-  if (typeof(getPixelColor) !== 'function') getPixelColor = ol.ext.getPixelFromElevation;
+ol.ext.imageLoader.elevationMap = function (getPixelColor) {
+  if (typeof (getPixelColor) !== 'function') getPixelColor = ol.ext.getPixelFromElevation;
   return function (tile, src) {
     ol.ext.imageLoader.loadBILImage(
       src,
-      function(data, size) {
+      function (data, size) {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         canvas.width = size[0];
         canvas.height = size[1];
         var imgData = ctx.getImageData(0, 0, size[0], size[1]);
         var pixels = imgData.data;
-        for (var i=0; i<data.length; i++) {
+        for (var i = 0; i < data.length; i++) {
           var p = getPixelColor(data[i]);
-          pixels[4*i] = p[0];
-          pixels[4*i+1] = p[1];
-          pixels[4*i+2] = p[2];
-          pixels[4*i+3] = p[3];
+          pixels[4 * i] = p[0];
+          pixels[4 * i + 1] = p[1];
+          pixels[4 * i + 2] = p[2];
+          pixels[4 * i + 3] = p[3];
         }
         ctx.putImageData(imgData, 0, 0);
         tile.setImage(canvas);
@@ -1657,12 +1657,12 @@ ol.ext.imageLoader.elevationMap = function(getPixelColor) {
  * @param {number} height elevation
  * @returns {Array<number>} pixel value
  */
-ol.ext.getPixelFromElevation =  function(height) {
-  var h = Math.round(height*100 + 1200000);
+ol.ext.getPixelFromElevation = function (height) {
+  var h = Math.round(height * 100 + 1200000);
   var pixel = [
-    h >> 16, 
-    (h % 65536) >> 8, 
-    h % 256, 
+    h >> 16,
+    (h % 65536) >> 8,
+    h % 256,
     255
   ];
   return pixel;
@@ -1672,7 +1672,7 @@ ol.ext.getPixelFromElevation =  function(height) {
  * @param {Array<number>} pixel the pixel value
  * @returns {number} elevation
  */
-ol.ext.getElevationFromPixel = function(pixel) {
+ol.ext.getElevationFromPixel = function (pixel) {
   // return -10000 + (pixel[0] * 65536 + pixel[1] * 256 + pixel[2]) * 0.01;
   return -12000 + ((pixel[0] << 16) + (pixel[1] << 8) + pixel[2]) * 0.01;
 };
@@ -1690,15 +1690,15 @@ ol.matrix3D = {};
  * @param {Element} ele
  * @return {Array<Array<number>>}
  */
-ol.matrix3D.getTransform = function(ele) {
+ol.matrix3D.getTransform = function (ele) {
   var style = window.getComputedStyle(ele, null);
-  var tr = style.getPropertyValue("-webkit-transform") 
-    || style.getPropertyValue("-moz-transform") 
-    || style.getPropertyValue("-ms-transform") 
-    || style.getPropertyValue("-o-transform") 
+  var tr = style.getPropertyValue("-webkit-transform")
+    || style.getPropertyValue("-moz-transform")
+    || style.getPropertyValue("-ms-transform")
+    || style.getPropertyValue("-o-transform")
     || style.getPropertyValue("transform");
   var values = tr.split('(')[1].split(')')[0].split(',');
-  var mx = [ [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1] ];    
+  var mx = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
   var i, j;
   if (values.length === 16) {
     for (i = 0; i < 4; ++i) {
@@ -1721,13 +1721,13 @@ ol.matrix3D.getTransform = function(ele) {
  */
 ol.matrix3D.getTransformOrigin = function (ele) {
   var style = window.getComputedStyle(ele, null);
-  var tr = style.getPropertyValue("-webkit-transform-origin") 
-    || style.getPropertyValue("-moz-transform-origin") 
-    || style.getPropertyValue("-ms-transform-origin") 
-    || style.getPropertyValue("-o-transform-origin") 
+  var tr = style.getPropertyValue("-webkit-transform-origin")
+    || style.getPropertyValue("-moz-transform-origin")
+    || style.getPropertyValue("-ms-transform-origin")
+    || style.getPropertyValue("-o-transform-origin")
     || style.getPropertyValue("transform-origin");
   var values = tr.split(' ');
-  var mx = [ 0, 0, 0, 1 ];
+  var mx = [0, 0, 0, 1];
   for (var i = 0; i < values.length; ++i) {
     mx[i] = parseInt(values[i]);
   }
@@ -1739,7 +1739,7 @@ ol.matrix3D.getTransformOrigin = function (ele) {
  * @param {number} z
  * @return {Array<Array<number>>}
  */
-ol.matrix3D.translateMatrix = function(x, y, z) {
+ol.matrix3D.translateMatrix = function (x, y, z) {
   return [
     [1, 0, 0, x],
     [0, 1, 0, y],
@@ -1750,7 +1750,7 @@ ol.matrix3D.translateMatrix = function(x, y, z) {
 /** Identity matrix
  * @return {Array<Array<number>>}
  */
-ol.matrix3D.identity = function() {
+ol.matrix3D.identity = function () {
   return [
     [1, 0, 0, 0],
     [0, 1, 0, 0],
@@ -1762,11 +1762,11 @@ ol.matrix3D.identity = function() {
  * @param {Array<Array<number>>} mx
  * @param {number} round Rounding value, default 1E-10
  */
-ol.matrix3D.roundTo = function(mx, round) {
+ol.matrix3D.roundTo = function (mx, round) {
   if (!round) round = 1E-10;
-  var m = [[],[],[],[]];
-  for (var i=0; i<4; i++) {
-    for (var j=0; j<4; j++) {
+  var m = [[], [], [], []];
+  for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
       m[i][j] = Math.round(mx[i][j] / round) * round;
     }
   }
@@ -1778,12 +1778,12 @@ ol.matrix3D.roundTo = function(mx, round) {
  * @return {Array<Array<number>>} 
  */
 ol.matrix3D.multiply = function (mx1, mx2) {
-  var mx = [ [], [], [], [] ];
+  var mx = [[], [], [], []];
   for (var i = 0; i < 4; ++i) {
     for (var j = 0; j < 4; ++j) {
       var sum = 0;
       for (var k = 0; k < 4; ++k) {
-          sum += (mx1[k][i] * mx2[j][k]);
+        sum += (mx1[k][i] * mx2[j][k]);
       }
       mx[j][i] = sum;
     }
@@ -1795,7 +1795,7 @@ ol.matrix3D.multiply = function (mx1, mx2) {
  * @param {Array<Array<number>>} origin transform origin
  * @return {Array<Array<number>>} 
  */
-ol.matrix3D.computeTransformMatrix = function(tx, origin) {
+ol.matrix3D.computeTransformMatrix = function (tx, origin) {
   var preTx = ol.matrix3D.translateMatrix(-origin[0], -origin[1], -origin[2]);
   var postTx = ol.matrix3D.translateMatrix(origin[0], origin[1], origin[2]);
   var temp1 = ol.matrix3D.multiply(preTx, tx);
@@ -1805,9 +1805,9 @@ ol.matrix3D.computeTransformMatrix = function(tx, origin) {
  * @param {Array<Array<number>>} tx
  * @param {ol.pixel} px
  */
-ol.matrix3D.transformVertex = function(tx, px) {
+ol.matrix3D.transformVertex = function (tx, px) {
   var vert = [px[0], px[1], 0, 1]
-  var mx = [ ];
+  var mx = [];
   for (var i = 0; i < 4; ++i) {
     mx[i] = 0;
     for (var j = 0; j < 4; ++j) {
@@ -1820,8 +1820,8 @@ ol.matrix3D.transformVertex = function(tx, px) {
  * @param {Array<number>} vert
  * @return {Array<number>}
  */
-ol.matrix3D.projectVertex = function(vert) {
-  var out = [ ];
+ol.matrix3D.projectVertex = function (vert) {
+  var out = [];
   for (var i = 0; i < 4; ++i) {
     out[i] = vert[i] / vert[3];
   }
@@ -1831,7 +1831,7 @@ ol.matrix3D.projectVertex = function(vert) {
  * @return {Array<Array<number>>} m matrix to transform
  * @return {Array<Array<number>>}
  */
-ol.matrix3D.inverse = function(m) {
+ol.matrix3D.inverse = function (m) {
   var s0 = m[0][0] * m[1][1] - m[1][0] * m[0][1]
   var s1 = m[0][0] * m[1][2] - m[1][0] * m[0][2]
   var s2 = m[0][0] * m[1][3] - m[1][0] * m[0][3]
@@ -1854,17 +1854,17 @@ ol.matrix3D.inverse = function(m) {
       (-m[0][1] * c5 + m[0][2] * c4 - m[0][3] * c3) * determinant,
       (m[3][1] * s5 - m[3][2] * s4 + m[3][3] * s3) * determinant,
       (-m[2][1] * s5 + m[2][2] * s4 - m[2][3] * s3) * determinant
-    ],[
+    ], [
       (-m[1][0] * c5 + m[1][2] * c2 - m[1][3] * c1) * determinant,
       (m[0][0] * c5 - m[0][2] * c2 + m[0][3] * c1) * determinant,
       (-m[3][0] * s5 + m[3][2] * s2 - m[3][3] * s1) * determinant,
       (m[2][0] * s5 - m[2][2] * s2 + m[2][3] * s1) * determinant
-    ],[
+    ], [
       (m[1][0] * c4 - m[1][1] * c2 + m[1][3] * c0) * determinant,
       (-m[0][0] * c4 + m[0][1] * c2 - m[0][3] * c0) * determinant,
       (m[3][0] * s4 - m[3][1] * s2 + m[3][3] * s0) * determinant,
       (-m[2][0] * s4 + m[2][1] * s2 - m[2][3] * s0) * determinant
-    ],[
+    ], [
       (-m[1][0] * c3 + m[1][1] * c1 - m[1][2] * c0) * determinant,
       (m[0][0] * c3 - m[0][1] * c1 + m[0][2] * c0) * determinant,
       (-m[3][0] * s3 + m[3][1] * s1 - m[3][2] * s0) * determinant,
@@ -1909,16 +1909,16 @@ ol.ext.SVGFilter.Laplacian = class olextSVGFilterLaplacian extends ol.ext.SVGFil
       preserveAlpha: true,
       result: 'C1'
     };
-    if (options.neighbours===4) {
+    if (options.neighbours === 4) {
       operation.kernelMatrix = [
-        0, -1,  0, 
-        -1,  4, -1, 
-        0, -1,  0
+        0, -1, 0,
+        -1, 4, -1,
+        0, -1, 0
       ];
     } else {
       operation.kernelMatrix = [
-        -1, -1, -1, 
-        -1,  8, -1, 
+        -1, -1, -1,
+        -1, 8, -1,
         -1, -1, -1
       ];
     }
@@ -2006,31 +2006,31 @@ ol.ext.SVGFilter.Prewitt = class olextSVGFilterPrewitt extends ol.ext.SVGFilter 
     };
     // Vertical
     operation.kernelMatrix = [
-      -1, -1, -1, 
-      0,  0,  0,
-      1,  1,  1
+      -1, -1, -1,
+      0, 0, 0,
+      1, 1, 1
     ];
     operation.result = 'V1';
     this.addOperation(operation);
     operation.kernelMatrix = [
-      1,  1,  1, 
-      0,  0,  0,
+      1, 1, 1,
+      0, 0, 0,
       -1, -1, -1
     ];
     operation.result = 'V2';
     this.addOperation(operation);
     // Horizontal
     operation.kernelMatrix = [
-      -1,  0,  1, 
-      -1,  0,  1,
-      -1,  0,  1
+      -1, 0, 1,
+      -1, 0, 1,
+      -1, 0, 1
     ];
     operation.result = 'H1';
     this.addOperation(operation);
     operation.kernelMatrix = [
-      1, -0, -1, 
-      1,  0, -1,
-      1,  0, -1
+      1, -0, -1,
+      1, 0, -1,
+      1, 0, -1
     ];
     operation.result = 'H2';
     this.addOperation(operation);
@@ -2090,31 +2090,31 @@ ol.ext.SVGFilter.Roberts = class olextSVGFilterRoberts extends ol.ext.SVGFilter 
     };
     // Vertical
     operation.kernelMatrix = [
-      -1,  0,  0, 
-      0,  0,  0,
-      0,   0,  1
+      -1, 0, 0,
+      0, 0, 0,
+      0, 0, 1
     ];
     operation.result = 'V1';
     this.addOperation(operation);
     operation.kernelMatrix = [
-      1,  0,  0, 
-      0,  0,  0,
-      0,  0, -1
+      1, 0, 0,
+      0, 0, 0,
+      0, 0, -1
     ];
     operation.result = 'V2';
     this.addOperation(operation);
     // Horizontal
     operation.kernelMatrix = [
-      0,  0,  1, 
-      0,  0,  0,
-      -1,  0,  0
+      0, 0, 1,
+      0, 0, 0,
+      -1, 0, 0
     ];
     operation.result = 'H1';
     this.addOperation(operation);
     operation.kernelMatrix = [
-      0, -0, -1, 
-      0,  0,  0,
-      1,  0,  0
+      0, -0, -1,
+      0, 0, 0,
+      1, 0, 0
     ];
     operation.result = 'H2';
     this.addOperation(operation);
@@ -2174,31 +2174,31 @@ ol.ext.SVGFilter.Sobel = class olextSVGFilterSobel extends ol.ext.SVGFilter {
     };
     // Vertical
     operation.kernelMatrix = [
-      -1, -2, -1, 
-      0,  0,  0,
-      1,  2,  1
+      -1, -2, -1,
+      0, 0, 0,
+      1, 2, 1
     ];
     operation.result = 'V1';
     this.addOperation(operation);
     operation.kernelMatrix = [
-      1,  2,  1, 
-      0,  0,  0,
+      1, 2, 1,
+      0, 0, 0,
       -1, -2, -1
     ];
     operation.result = 'V2';
     this.addOperation(operation);
     // Horizontal
     operation.kernelMatrix = [
-      -1,  0,  1, 
-      -2,  0,  2,
-      -1,  0,  1
+      -1, 0, 1,
+      -2, 0, 2,
+      -1, 0, 1
     ];
     operation.result = 'H1';
     this.addOperation(operation);
     operation.kernelMatrix = [
-      1, -0, -1, 
-      2,  0, -2,
-      1,  0, -1
+      1, -0, -1,
+      2, 0, -2,
+      1, 0, -1
     ];
     operation.result = 'H2';
     this.addOperation(operation);
@@ -3568,7 +3568,7 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
    */
   static getLegendImage(item, canvas, offsetY) {
     item = item || {}
-    if (typeof (item.margin) === 'undefined'){
+    if (typeof (item.margin) === 'undefined') {
       item.margin = 10
     }
     var size = item.size || [40, 25]
@@ -3595,7 +3595,7 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
     var style
     var feature = item.feature
     if (!feature && typeGeom) {
-      if (/Point/.test(typeGeom)){
+      if (/Point/.test(typeGeom)) {
         feature = new ol.Feature(new ol.geom.Point([0, 0]))
       } else if (/LineString/.test(typeGeom)) {
         feature = new ol.Feature(new ol.geom.LineString([0, 0]))
@@ -3722,7 +3722,7 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
     if (this._layerListener) ol.Observable.unByKey(this._layerListener)
     this._layer = layer;
     if (layer) {
-      this._layerListener = layer.on('change:visible', function() {
+      this._layerListener = layer.on('change:visible', function () {
         this.refresh();
       }.bind(this))
     } else {
@@ -3767,7 +3767,7 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
   addItem(item) {
     if (item instanceof ol.legend.Legend) {
       this._items.push(item)
-      item.on('refresh', function() { this.refresh(true) }.bind(this))
+      item.on('refresh', function () { this.refresh(true) }.bind(this))
     } else if (item instanceof ol.legend.Item || item instanceof ol.legend.Image) {
       this._items.push(item)
     } else {
@@ -3868,7 +3868,7 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
         if ((!r._layer || r._layer.getVisible()) && r.getCanvas().height) {
           ctx.drawImage(r.getCanvas(), 0, offsetY * ratio)
           var list = r._listElement.querySelectorAll('li')
-          for (var l=0; l<list.length; l++) {
+          for (var l = 0; l < list.length; l++) {
             var li = list[l].cloneNode();
             li.innerHTML = list[l].innerHTML;
             table.appendChild(li);
@@ -3900,8 +3900,8 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
           // Image
           var img = r.getImage()
           try {
-            ctx.drawImage(img, 0,0,img.naturalWidth, img.naturalHeight, 0, offsetY * ratio, r.getWidth() * ratio, r.getHeight() * ratio)
-          } catch(e) { /* ok */ }
+            ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, offsetY * ratio, r.getWidth() * ratio, r.getHeight() * ratio)
+          } catch (e) { /* ok */ }
           offsetY += r.getHeight();
         } else {
           var item = r.getProperties()
@@ -3961,10 +3961,10 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
           height += r.getHeight()
         }
       } else if (r instanceof ol.legend.Image) {
-        if (r.get('title')) height += hitem; 
+        if (r.get('title')) height += hitem;
         height += r.getHeight()
       } else {
-        if (r.get('height')) height += r.get('height') + 2 * margin; 
+        if (r.get('height')) height += r.get('height') + 2 * margin;
         else height += hitem
       }
     })
@@ -4019,9 +4019,9 @@ ol.legend.Legend = class ollegendLegend extends ol.Object {
       style: options.style || this._style,
       properties: options.properties,
       margin: options.margin || this.get('margin'),
-      size: [ options.width || size[0], options.height || size[1]],
+      size: [options.width || size[0], options.height || size[1]],
       lineHeight: options.lineHeight || this.get('lineHeight'),
-      onload: function() {
+      onload: function () {
         // Force refresh
         this.refresh();
       }.bind(this)
@@ -4234,7 +4234,7 @@ ol.control.CanvasBase = class olcontrolCanvasBase extends ol.control.Control {
     }
     super.setMap(map)
     if (oldmap) {
-      try { oldmap.renderSync()}  catch (e) { /* ok */ }
+      try { oldmap.renderSync() } catch (e) { /* ok */ }
     }
     if (map) {
       this._listener = map.on('postcompose', this._draw.bind(this))
@@ -5553,8 +5553,8 @@ ol.control.SearchPhoton = class olcontrolSearchPhoton extends ol.control.SearchJ
 }
 
 /*	Copyright (c) 2017 Jean-Marc VIGLINO,
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * Search places using the French National Base Address (BAN) API.
@@ -5670,9 +5670,9 @@ ol.control.SearchGeoportail = class olcontrolSearchGeoportail extends ol.control
         dataType: 'XML'
       });
     } else {
-      this.ajax(url + '?lon='+lonlat[0] + '&lat=' + lonlat[1], 
-        {}, 
-        function(resp) {
+      this.ajax(url + '?lon=' + lonlat[0] + '&lat=' + lonlat[1],
+        {},
+        function (resp) {
           var f;
           try {
             resp = JSON.parse(resp).features[0];
@@ -5687,12 +5687,12 @@ ol.control.SearchGeoportail = class olcontrolSearchGeoportail extends ol.control
             } else {
               f.fulltext = f.postcode + ' ' + f.city;
             }
-          } catch(e) {
-            f = { 
-              x: lonlat[0], 
-              y: lonlat[1], 
+          } catch (e) {
+            f = {
+              x: lonlat[0],
+              y: lonlat[1],
               lonlat: lonlat,
-              fulltext: lonlat[0].toFixed(6) + ',' + lonlat[1].toFixed(6) 
+              fulltext: lonlat[0].toFixed(6) + ',' + lonlat[1].toFixed(6)
             };
           }
           if (typeof (options) === 'function') {
@@ -5704,9 +5704,9 @@ ol.control.SearchGeoportail = class olcontrolSearchGeoportail extends ol.control
             // this.drawList_();
           }
         }.bind(this), {
-          timeout: this.get('timeout'),
-          dataType: 'XML'
-        }
+        timeout: this.get('timeout'),
+        dataType: 'XML'
+      }
       );
     }
   }
@@ -5828,7 +5828,7 @@ ol.control.SearchGeoportail = class olcontrolSearchGeoportail extends ol.control
         { dataType: 'XML' }
       );
     } else {
-      this.ajax(url + '?lon=' + f.x + '&lat=' + f.y + '&limit=1', 
+      this.ajax(url + '?lon=' + f.x + '&lat=' + f.y + '&limit=1',
         {},
         function (resp) {
           try {
@@ -5839,13 +5839,13 @@ ol.control.SearchGeoportail = class olcontrolSearchGeoportail extends ol.control
             } else {
               this._handleSelect(f);
             }
-          } catch(e) { /* ok */ }
+          } catch (e) { /* ok */ }
         }.bind(this), {
-          timeout: this.get('timeout'),
-          dataType: 'XML'
-        }
+        timeout: this.get('timeout'),
+        dataType: 'XML'
+      }
       )
-    } 
+    }
   }
 }
 
@@ -6016,7 +6016,7 @@ ol.control.LayerSwitcher = class olcontrolLayerSwitcher extends ol.control.Contr
     super.setMap(map)
     this.drawPanel()
     if (this._listener) {
-      for (var i in this._listener){
+      for (var i in this._listener) {
         ol.Observable.unByKey(this._listener[i])
       }
     }
@@ -6163,7 +6163,7 @@ ol.control.LayerSwitcher = class olcontrolLayerSwitcher extends ol.control.Contr
    */
   setLayerOpacity(layer, li) {
     var i = li.querySelector('.layerswitcher-opacity-cursor')
-    if (i){
+    if (i) {
       i.style.left = (layer.getOpacity() * 100) + "%"
     }
     this.dispatchEvent({ type: 'layer:opacity', layer: layer })
@@ -6178,9 +6178,9 @@ ol.control.LayerSwitcher = class olcontrolLayerSwitcher extends ol.control.Contr
     if (i) {
       i.checked = layer.getVisible()
     }
-    if (layer.getVisible()){
+    if (layer.getVisible()) {
       li.classList.add('ol-visible')
-    } else{
+    } else {
       li.classList.remove('ol-visible')
     }
     this.dispatchEvent({ type: 'layer:visible', layer: layer })
@@ -7107,7 +7107,7 @@ ol.control.CanvasAttribution = class olcontrolCanvasAttribution extends ol.contr
     this._listener = null
     super.setMap(map)
     if (oldmap) {
-      try { oldmap.renderSync()}  catch (e) { /* ok */ }
+      try { oldmap.renderSync() } catch (e) { /* ok */ }
     }
     // Get change (new layer added or removed)
     if (map) {
@@ -7223,7 +7223,7 @@ ol.control.CanvasScaleLine = class olcontrolCanvasScaleLine extends ol.control.S
     this._listener = null
     super.setMap(map)
     if (oldmap) {
-      try { oldmap.renderSync()}  catch (e) { /* ok */ }
+      try { oldmap.renderSync() } catch (e) { /* ok */ }
     }
     // Add postcompose on the map
     if (map) {
@@ -7499,7 +7499,7 @@ ol.control.CenterPosition = class olcontrolCenterPosition extends ol.control.Can
     this.set('canvas', b)
     this.element.style.visibility = b ? "hidden" : "visible"
     if (this.getMap()) {
-      try { this.getMap().renderSync()}  catch (e) { /* ok */ }
+      try { this.getMap().renderSync() } catch (e) { /* ok */ }
     }
   }
   /**
@@ -7510,7 +7510,7 @@ ol.control.CenterPosition = class olcontrolCenterPosition extends ol.control.Can
   setVisible(b) {
     this.element.style.display = (b ? '' : 'none')
     if (this.getMap()) {
-      try { this.getMap().renderSync()}  catch (e) { /* ok */ }
+      try { this.getMap().renderSync() } catch (e) { /* ok */ }
     }
   }
   /**
@@ -8858,8 +8858,8 @@ ol.control.GeoBookmark = class olcontrolGeoBookmark extends ol.control.Control {
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO,
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Geolocation bar
  * The control bar is a container for other controls. It can be used to create toolbars.
@@ -8976,8 +8976,8 @@ ol.control.GeolocationBar = class olcontrolGeolocationBar extends ol.control.Bar
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO,
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Geolocation bar
  * The control bar is a container for other controls. It can be used to create toolbars.
@@ -9091,7 +9091,7 @@ ol.control.Globe = class olcontrolGlobe extends ol.control.Control {
     this.extentLayer = new ol.layer.Vector({
       name: 'Cache extent',
       source: new ol.source.Vector(),
-      style: options.style || [ new ol.style.Style({
+      style: options.style || [new ol.style.Style({
         image: new ol.style.Circle({
           fill: new ol.style.Fill({
             color: 'rgba(255,0,0, 1)'
@@ -9503,7 +9503,7 @@ ol.control.GridReference = class olcontrolGridReference extends ol.control.Canva
       target: options.target,
       style: options.style
     })
-    if (typeof (options.property) == 'function'){
+    if (typeof (options.property) == 'function') {
       this.getFeatureName = options.property
     }
     if (typeof (options.sortFeatures) == 'function') {
@@ -10032,8 +10032,8 @@ ol.control.Imageline = class olcontrolImageline extends ol.control.Control {
         img.addEventListener('click', function () {
           if (!this._moving) {
             this._scrolldiv.scrollLeft = img.offsetLeft
-            + ol.ext.element.getStyle(img, 'width') / 2
-            - ol.ext.element.getStyle(this.element, 'width') / 2;
+              + ol.ext.element.getStyle(img, 'width') / 2
+              - ol.ext.element.getStyle(this.element, 'width') / 2;
             if (this._select) this._select.elt.classList.remove('select');
             this._select = sel;
             if (this._select) this._select.elt.classList.add('select');
@@ -10144,8 +10144,8 @@ ol.control.Imageline = class olcontrolImageline extends ol.control.Control {
 }
 
 /*	Copyright (c) 2018 Jean-Marc VIGLINO,
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * Geoportail isochrone Control.
@@ -10430,8 +10430,8 @@ ol.control.IsochroneGeoportail = class olcontrolIsochroneGeoportail extends ol.c
 }
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * OpenLayers Layer Switcher Control.
@@ -10441,44 +10441,44 @@ ol.control.IsochroneGeoportail = class olcontrolIsochroneGeoportail extends ol.c
  * @param {Object=} options Control options.
  */
 ol.control.LayerPopup = class olcontrolLayerPopup extends ol.control.LayerSwitcher {
-	constructor(options) {
-		options = options || {};
-		options.switcherClass = 'ol-layerswitcher-popup' + (options.switcherClass ? ' ' + options.switcherClass : '');
-		if (options.mouseover !== false) options.mouseover = true;
-		super(options);
-	}
-	/** Disable overflow
-	*/
-	overflow() { }
-	/** Render a list of layer
-	 * @param {elt} element to render
-	 * @layers {Array{ol.layer}} list of layer to show
-	 * @api stable
-	 */
-	drawList(ul, layers) {
-		var self = this;
-		var setVisibility = function (e) {
-			e.preventDefault();
-			var l = self._getLayerForLI(this);
-			self.switchLayerVisibility(l, layers);
-			if (e.type === 'touchstart')
-				self.element.classList.add('ol-collapsed');
-		};
-		layers.forEach(function (layer) {
-			if (self.displayInLayerSwitcher(layer)) {
-				var d = ol.ext.element.create('LI', {
-					html: layer.get('title') || layer.get('name'),
-					on: { 'click touchstart': setVisibility },
-					parent: ul
-				});
-				self._setLayerForLI(d, layer);
-				if (self.testLayerVisibility(layer))
-					d.classList.add('ol-layer-hidden');
-				if (layer.getVisible())
-					d.classList.add('ol-visible');
-			}
-		});
-	}
+  constructor(options) {
+    options = options || {};
+    options.switcherClass = 'ol-layerswitcher-popup' + (options.switcherClass ? ' ' + options.switcherClass : '');
+    if (options.mouseover !== false) options.mouseover = true;
+    super(options);
+  }
+  /** Disable overflow
+  */
+  overflow() { }
+  /** Render a list of layer
+   * @param {elt} element to render
+   * @layers {Array{ol.layer}} list of layer to show
+   * @api stable
+   */
+  drawList(ul, layers) {
+    var self = this;
+    var setVisibility = function (e) {
+      e.preventDefault();
+      var l = self._getLayerForLI(this);
+      self.switchLayerVisibility(l, layers);
+      if (e.type === 'touchstart')
+        self.element.classList.add('ol-collapsed');
+    };
+    layers.forEach(function (layer) {
+      if (self.displayInLayerSwitcher(layer)) {
+        var d = ol.ext.element.create('LI', {
+          html: layer.get('title') || layer.get('name'),
+          on: { 'click touchstart': setVisibility },
+          parent: ul
+        });
+        self._setLayerForLI(d, layer);
+        if (self.testLayerVisibility(layer))
+          d.classList.add('ol-layer-hidden');
+        if (layer.getVisible())
+          d.classList.add('ol-visible');
+      }
+    });
+  }
 }
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
@@ -10587,8 +10587,8 @@ ol.control.LayerShop = class olcontrolLayerShop extends ol.control.LayerSwitcher
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * @classdesc OpenLayers Layer Switcher Control.
@@ -10601,7 +10601,7 @@ ol.control.LayerShop = class olcontrolLayerShop extends ol.control.LayerSwitcher
 ol.control.LayerSwitcherImage = class olcontrolLayerSwitcherImage extends ol.control.LayerSwitcher {
   constructor(options) {
     options = options || {};
-    options.switcherClass = ((options.switcherClass || '') +  ' ol-layerswitcher-image').trim();
+    options.switcherClass = ((options.switcherClass || '') + ' ol-layerswitcher-image').trim();
     options.mouseover = (options.mouseover !== false);
     super(options);
   }
@@ -10844,7 +10844,7 @@ ol.control.MapZone = class olcontrolMapZone extends ol.control.Control {
       target: options.target
     })
     if (!options.target) {
-      ['ol-unselectable', 'ol-control', 'ol-collapsed'].forEach(function(c) {
+      ['ol-unselectable', 'ol-control', 'ol-collapsed'].forEach(function (c) {
         element.classList.add(c)
       })
       var bt = ol.ext.element.create('BUTTON', {
@@ -10995,46 +10995,46 @@ ol.control.MapZone.zones = {};
 /** French overseas departments  */
 ol.control.MapZone.zones.DOM = [{
   "title": "Guadeloupe",
-  "extent": [ -61.898594315312444, 15.75623038647845, -60.957887532935324, 16.575317670979473 ]
-},{
+  "extent": [-61.898594315312444, 15.75623038647845, -60.957887532935324, 16.575317670979473]
+}, {
   "title": "Guyane",
-  "extent": [ -54.72525931072715, 2.1603763430019, -51.528236062921344, 5.7984307809552575 ]
-},{
+  "extent": [-54.72525931072715, 2.1603763430019, -51.528236062921344, 5.7984307809552575]
+}, {
   "title": "Martinique",
-  "extent": [ -61.257556528564756, 14.387506317407514, -60.76934912110432, 14.895067461729951 ]
-},{
+  "extent": [-61.257556528564756, 14.387506317407514, -60.76934912110432, 14.895067461729951]
+}, {
   "title": "Mayotte",
-  "extent": [ 44.959844536967815, -13.01674138212816, 45.35328866510648, -12.65521942207829 ]
-},{
+  "extent": [44.959844536967815, -13.01674138212816, 45.35328866510648, -12.65521942207829]
+}, {
   "title": "La réunion",
-  "extent": [ 55.17059012967656, -21.407680069231688, 55.88195702001797, -20.85560221637526 ]
+  "extent": [55.17059012967656, -21.407680069231688, 55.88195702001797, -20.85560221637526]
 }];
 /** French overseas territories */
 ol.control.MapZone.zones.TOM = [{
   "title": "Polynésie Française",
-  "extent": [ 206.23664226630862, -22.189040615809787, 221.85920743981987, -10.835039595040698 ]
-},{
+  "extent": [206.23664226630862, -22.189040615809787, 221.85920743981987, -10.835039595040698]
+}, {
   "title": "Nouvelle Calédonie",
-  "extent": [ 163.76420580160925, -22.581641092751838, 167.66984709498706, -19.816411635668445 ]
-},{
+  "extent": [163.76420580160925, -22.581641092751838, 167.66984709498706, -19.816411635668445]
+}, {
   "title": "St-Pierre et Miquelon",
-  "extent": [ -56.453698765748676, 46.74449858188555, -56.0980198121544, 47.14669874229787 ]
-},{
+  "extent": [-56.453698765748676, 46.74449858188555, -56.0980198121544, 47.14669874229787]
+}, {
   "title": "Wallis et Futuna",
-  "extent": [ 181.7588623143665, -14.7341169873267, 183.95612353301715, -13.134720799175085 ]
-},{
+  "extent": [181.7588623143665, -14.7341169873267, 183.95612353301715, -13.134720799175085]
+}, {
   "title": "St-Martin St-Barthélemy",
-  "extent": [ -63.1726389501678, 17.806097291313506, -62.7606535945649, 18.13267688837938 ]
+  "extent": [-63.1726389501678, 17.806097291313506, -62.7606535945649, 18.13267688837938]
 }];
 /** French overseas departments and territories */
 ol.control.MapZone.zones.DOMTOM = [{
   title: 'Métropole',
-  extent: [ -5.318421740712579, 41.16082274292913, 9.73284186155716, 51.21957336557702 ]
+  extent: [-5.318421740712579, 41.16082274292913, 9.73284186155716, 51.21957336557702]
 }].concat(ol.control.MapZone.zones.DOM, ol.control.MapZone.zones.TOM);
 
 /*	Copyright (c) 2017 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Control overlay for OL3
  * The overlay control is a control that display an overlay over the map
@@ -11586,10 +11586,10 @@ ol.control.Permalink = class olcontrolPermalink extends ol.control.Control {
     if (!this._localStorage) {
       try {
         localStorage.removeItem('ol@permalink')
-      } catch (e) { console.warn('Failed to access localStorage...')} 
+      } catch (e) { console.warn('Failed to access localStorage...') }
     }
     function linkto() {
-      if (typeof (options.onclick) == 'function'){
+      if (typeof (options.onclick) == 'function') {
         options.onclick(self.getLink())
       } else {
         self.setUrlReplace(!self.replaceState_)
@@ -11611,7 +11611,7 @@ ol.control.Permalink = class olcontrolPermalink extends ol.control.Control {
     if (this.replaceState_ && !hash && this._localStorage) {
       try {
         hash = localStorage['ol@permalink']
-      } catch (e) { console.warn('Failed to access localStorage...')} 
+      } catch (e) { console.warn('Failed to access localStorage...') }
     }
     if (hash) {
       hash = hash.replace(/(^#|^\?)/, "").split("&")
@@ -11708,7 +11708,7 @@ ol.control.Permalink = class olcontrolPermalink extends ol.control.Control {
     if (!hash && this._localStorage) {
       try {
         hash = localStorage['ol@permalink']
-      } catch (e) { console.warn('Failed to access localStorage...')} 
+      } catch (e) { console.warn('Failed to access localStorage...') }
     }
     if (!hash)
       return
@@ -11871,7 +11871,7 @@ ol.control.Permalink = class olcontrolPermalink extends ol.control.Control {
     if (this._localStorage) {
       try {
         localStorage['ol@permalink'] = this.getLink(this._localStorage)
-      } catch (e) { console.warn('Failed to access localStorage...')} 
+      } catch (e) { console.warn('Failed to access localStorage...') }
     }
   }
   /**
@@ -12950,7 +12950,7 @@ ol.control.PrintDialog.prototype._labels = {
     pdfFormat: 'save as pdf',
     none: 'none',
     small: 'small',
-    large: 'large',  
+    large: 'large',
     cancel: 'cancel'
   },
   fr: {
@@ -12976,7 +12976,7 @@ ol.control.PrintDialog.prototype._labels = {
     pdfFormat: 'enregistrer un pdf',
     none: 'aucune',
     small: 'petites',
-    large: 'larges',  
+    large: 'larges',
     cancel: 'annuler'
   },
   de: {
@@ -13002,10 +13002,10 @@ ol.control.PrintDialog.prototype._labels = {
     pdfFormat: 'speichern als pdf',
     none: 'kein',
     small: 'klein',
-    large: 'groß',  
+    large: 'groß',
     cancel: 'abbrechen'
   },
-  zh:{
+  zh: {
     title: '打印',
     orientation: '方向',
     portrait: '纵向',
@@ -13028,15 +13028,15 @@ ol.control.PrintDialog.prototype._labels = {
 /** List of paper size */
 ol.control.PrintDialog.prototype.paperSize = {
   '': null,
-  'A0': [841,1189],
-  'A1': [594,841],
-  'A2': [420,594],
-  'A3': [297,420],
-  'A4': [210,297],
-  'US Letter': [215.9,279.4],
-  'A5': [148,210],
-  'B4': [257,364],
-  'B5': [182,257]
+  'A0': [841, 1189],
+  'A1': [594, 841],
+  'A2': [420, 594],
+  'A3': [297, 420],
+  'A4': [210, 297],
+  'US Letter': [215.9, 279.4],
+  'A5': [148, 210],
+  'B4': [257, 364],
+  'B5': [182, 257]
 };
 /** List of margin size */
 ol.control.PrintDialog.prototype.marginSize = {
@@ -13051,22 +13051,22 @@ ol.control.PrintDialog.prototype.legendOptions = {
 };
 /** List of print image file formats */
 ol.control.PrintDialog.prototype.formats = [{
-    title: 'clipboardFormat',
-    imageType: 'image/png',
-    clipboard: true
-  }, {
-    title: 'jpegFormat',
-    imageType: 'image/jpeg',
-    quality: .8
-  }, {
-    title: 'pngFormat',
-    imageType: 'image/png',
-    quality: .8
-  }, {
-    title: 'pdfFormat',
-    imageType: 'image/jpeg',
-    pdf: true
-  }
+  title: 'clipboardFormat',
+  imageType: 'image/png',
+  clipboard: true
+}, {
+  title: 'jpegFormat',
+  imageType: 'image/jpeg',
+  quality: .8
+}, {
+  title: 'pngFormat',
+  imageType: 'image/png',
+  quality: .8
+}, {
+  title: 'pdfFormat',
+  imageType: 'image/jpeg',
+  pdf: true
+}
 ];
 /** List of print scale */
 ol.control.PrintDialog.prototype.scales = {
@@ -13986,18 +13986,18 @@ ol.control.RoutingGeoportail = class olcontrolRoutingGeoportail extends ol.contr
     this._search = [];
     this.addSearch(listElt, options);
     this.addSearch(listElt, options);
-    ol.ext.element.create('I', { 
-      className: 'ol-car', 
-      title: options.carlabel || 'by car', 
-      parent: content 
+    ol.ext.element.create('I', {
+      className: 'ol-car',
+      title: options.carlabel || 'by car',
+      parent: content
     })
       .addEventListener("click", function () {
         self.setMode('car');
       });
-    ol.ext.element.create('I', { 
-      className: 'ol-pedestrian', 
-      title: options.pedlabel || 'pedestrian', 
-      parent: content 
+    ol.ext.element.create('I', {
+      className: 'ol-pedestrian',
+      title: options.pedlabel || 'pedestrian',
+      parent: content
     })
       .addEventListener("click", function () {
         self.setMode('pedestrian');
@@ -14599,8 +14599,8 @@ ol.control.SearchBAN = class olcontrolSearchBAN extends ol.control.SearchPhoton 
 }
 
 /*	Copyright (c) 2017 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * Search on DFCI grid.
@@ -14670,8 +14670,8 @@ ol.control.SearchDFCI = class olcontrolSearchDFCI extends ol.control.Search {
 }
 
 /*	Copyright (c) 2017 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * Search features.
@@ -14778,7 +14778,7 @@ ol.control.SearchFeature = class olcontrolSearchFeature extends ol.control.Searc
         }
       }
     }
-    if (typeof(this._sort) === 'function') {
+    if (typeof (this._sort) === 'function') {
       result = result.sort(this._sort)
     }
     return result;
@@ -14786,8 +14786,8 @@ ol.control.SearchFeature = class olcontrolSearchFeature extends ol.control.Searc
 }
 
 /*	Copyright (c) 2019 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * Search on GPS coordinate.
@@ -15190,23 +15190,23 @@ ol.control.SearchGeoportailParcelle = class olcontrolSearchGeoportailParcelle ex
       );
     } else {
       this.ajax(url + '?index=parcel&q='
-        + '&departmentcode=' + commune.substr(0,2)
+        + '&departmentcode=' + commune.substr(0, 2)
         + '&municipalitycode=' + commune.substr(-3)
         + (prefix ? '&oldmunicipalitycode=' + prefix.replace(/_/g, '0') : '')
         + (section ? '&section=' + section : '')
         + (numero ? '&number=' + numero : '')
         + '&limit=20',
         {},
-        function(resp) {
+        function (resp) {
           var jsonResp = [];
-          resp.features.forEach(function(f) {
+          resp.features.forEach(function (f) {
             var prop = f.properties;
             jsonResp.push({
               id: prop.id,
               INSEE: prop.departmentcode + prop.municipalitycode,
-              Commune: prop.municipalitycode, 
-              Departement: prop.departmentcode, 
-              CommuneAbsorbee: prop.oldmunicipalitycode, 
+              Commune: prop.municipalitycode,
+              Departement: prop.departmentcode,
+              CommuneAbsorbee: prop.oldmunicipalitycode,
               Section: prop.section,
               Numero: prop.number,
               Municipality: prop.city,
@@ -15407,7 +15407,7 @@ ol.control.SearchNominatim = class olcontrolSearchNominatim extends ol.control.S
     return response.results || response;
   }
   /**/
-}  
+}
 
 /*	Copyright (c) 2019 Jean-Marc VIGLINO,
   released under the CeCILL-B license (French BSD license)
@@ -17142,8 +17142,8 @@ ol.control.SwipeMap = class olcontrolSwipeMap extends ol.control.Control {
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** ol.control.Target draw a target at the center of the map.
  * @constructor
@@ -19088,11 +19088,11 @@ ol.control.WMTSCapabilities = class olcontrolWMTSCapabilities extends ol.control
    * @returns {boolean}
    */
   isSupportedSet(tm) {
-    return tm.TileMatrixSet === 'PM' 
-    || tm.TileMatrixSet === '3857' 
-    || tm.TileMatrixSet === 'EPSG:3857' 
-    || tm.TileMatrixSet === 'webmercator'
-    || tm.TileMatrixSet === 'GoogleMapsCompatible'
+    return tm.TileMatrixSet === 'PM'
+      || tm.TileMatrixSet === '3857'
+      || tm.TileMatrixSet === 'EPSG:3857'
+      || tm.TileMatrixSet === 'webmercator'
+      || tm.TileMatrixSet === 'GoogleMapsCompatible'
   }
   /** Return a WMTS options for the given capabilities
    * @param {*} caps layer capabilities (read from the capabilities)
@@ -19187,7 +19187,7 @@ ol.control.WMTSCapabilities = class olcontrolWMTSCapabilities extends ol.control
     }
     var returnedLegend = undefined;
     if (caps.Style && caps.Style[0] && caps.Style[0].LegendURL && caps.Style[0].LegendURL[0]) {
-      returnedLegend = [ caps.Style[0].LegendURL[0].href ];
+      returnedLegend = [caps.Style[0].LegendURL[0].href];
     }
     return ({
       layer: layer_opt,
@@ -19349,11 +19349,11 @@ ol.featureAnimation = class olfeatureAnimation extends ol.Object {
 }
 /** Hidden style: a transparent style
  */
-ol.featureAnimation.hiddenStyle = new ol.style.Style({ 
-  image: new ol.style.Circle({}), 
-  stroke: new ol.style.Stroke({ 
-    color: 'transparent' 
-  }) 
+ol.featureAnimation.hiddenStyle = new ol.style.Style({
+  image: new ol.style.Circle({}),
+  stroke: new ol.style.Stroke({
+    color: 'transparent'
+  })
 });
 /** An animation controler object an object to control animation with start, stop and isPlaying function.    
  * To be used with {@link olx.Map#animateFeature} or {@link ol.layer.Vector#animateFeature}
@@ -19368,7 +19368,7 @@ ol.featureAnimation.hiddenStyle = new ol.style.Style({
  * @param {ol.featureAnimation|Array<ol.featureAnimation>} fanim the animation to play
  * @return {animationControler} an object to control animation with start, stop and isPlaying function
  */
-ol.Map.prototype.animateFeature = function(feature, fanim) {
+ol.Map.prototype.animateFeature = function (feature, fanim) {
   // Get or create an animation layer associated with the map 
   var layer = this._featureAnimationLayer;
   if (!layer) {
@@ -19377,8 +19377,8 @@ ol.Map.prototype.animateFeature = function(feature, fanim) {
   }
   // Animate feature on this layer
   layer.getSource().addFeature(feature);
-  var listener = fanim.on('animationend', function(e) {
-    if (e.feature===feature) {
+  var listener = fanim.on('animationend', function (e) {
+    if (e.feature === feature) {
       // Remove feature on end
       layer.getSource().removeFeature(feature);
       ol.Observable.unByKey(listener);
@@ -19393,13 +19393,13 @@ ol.Map.prototype.animateFeature = function(feature, fanim) {
  * @param {boolean} useFilter use the filters of the layer
  * @return {animationControler} an object to control animation with start, stop and isPlaying function
  */
-ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
+ol.layer.Base.prototype.animateFeature = function (feature, fanim, useFilter) {
   var self = this;
   var listenerKey;
   // Save style
   var style = feature.getStyle();
   var flashStyle = style || (this.getStyleFunction ? this.getStyleFunction()(feature) : null);
-  if (!flashStyle) flashStyle=[];
+  if (!flashStyle) flashStyle = [];
   if (!(flashStyle instanceof Array)) flashStyle = [flashStyle];
   // Structure pass for animating
   var event = {
@@ -19420,17 +19420,17 @@ ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
   };
   if (!(fanim instanceof Array)) fanim = [fanim];
   // Remove null animations
-  for (var i=fanim.length-1; i>=0; i--) {
-    if (fanim[i].duration_===0) fanim.splice(i,1);
+  for (var i = fanim.length - 1; i >= 0; i--) {
+    if (fanim[i].duration_ === 0) fanim.splice(i, 1);
   }
-  var nb=0, step = 0;
+  var nb = 0, step = 0;
   // Filter availiable on the layer
   var filters = (useFilter && this.getFilters) ? this.getFilters() : [];
   function animate(e) {
     event.type = e.type;
     try {
       event.vectorContext = e.vectorContext || ol.render.getVectorContext(e);
-    } catch(e) { /* nothing todo */ }
+    } catch (e) { /* nothing todo */ }
     event.frameState = e.frameState;
     event.inversePixelTransform = e.inversePixelTransform;
     if (!event.extent) {
@@ -19443,7 +19443,7 @@ ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
     if (event.elapsed > 1) event.elapsed = 1;
     // Filter
     e.context.save();
-    filters.forEach(function(f) {
+    filters.forEach(function (f) {
       if (f.get('active')) f.precompose(e);
     });
     if (this.getOpacity) {
@@ -19455,24 +19455,24 @@ ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
       // Repeat animation
       if (nb < fanim[step].repeat_) {
         event.extent = false;
-      } else if (step < fanim.length-1) {
+      } else if (step < fanim.length - 1) {
         // newt step
-        fanim[step].dispatchEvent({ type:'animationend', feature: feature });
+        fanim[step].dispatchEvent({ type: 'animationend', feature: feature });
         step++;
-        nb=0;
+        nb = 0;
         event.extent = false;
       } else {
         // the end
         stop();
       }
     } else {
-      var animEvent = { 
-        type: 'animating', 
+      var animEvent = {
+        type: 'animating',
         step: step,
         start: event.start,
         time: event.time,
         elapsed: event.elapsed,
-        rotation: event.rotation||0,
+        rotation: event.rotation || 0,
         geom: event.geom,
         coordinate: event.coord,
         feature: feature,
@@ -19481,7 +19481,7 @@ ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
       fanim[step].dispatchEvent(animEvent);
       self.dispatchEvent(animEvent);
     }
-    filters.forEach(function(f) {
+    filters.forEach(function (f) {
       if (f.get('active')) f.postcompose(e);
     });
     e.context.restore();
@@ -19495,10 +19495,10 @@ ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
     feature.setStyle(style);
     event.stop = (new Date).getTime();
     // Send event
-    var eventEnd = { type:'animationend', feature: feature };
+    var eventEnd = { type: 'animationend', feature: feature };
     if (options) {
       for (var i in options) if (options.hasOwnProperty(i)) {
-        eventEnd[i] = options[i]; 
+        eventEnd[i] = options[i];
       }
     }
     fanim[step].dispatchEvent(eventEnd);
@@ -19513,20 +19513,20 @@ ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
         event.stop = 0;
       }
       // Compose
-      listenerKey = self.on(['postcompose','postrender'], animate.bind(self));
+      listenerKey = self.on(['postcompose', 'postrender'], animate.bind(self));
       // map or layer?
       if (self.renderSync) {
-        try { self.renderSync(); } catch(e) { /* ok */ }
+        try { self.renderSync(); } catch (e) { /* ok */ }
       } else {
         self.changed();
       }
       // Hide feature while animating
       feature.setStyle(fanim[step].hiddenStyle || ol.featureAnimation.hiddenStyle);
       // Send event
-      var eventStart = { type:'animationstart', feature: feature };
+      var eventStart = { type: 'animationstart', feature: feature };
       if (options) {
         for (var i in options) if (options.hasOwnProperty(i)) {
-          eventStart[i] = options[i]; 
+          eventStart[i] = options[i];
         }
       }
       fanim[step].dispatchEvent(eventStart);
@@ -19538,7 +19538,7 @@ ol.layer.Base.prototype.animateFeature = function(feature, fanim, useFilter) {
   return {
     start: start,
     stop: stop,
-    isPlaying: function() { return (!!listenerKey); }
+    isPlaying: function () { return (!!listenerKey); }
   };
 };
 
@@ -19569,8 +19569,8 @@ ol.featureAnimation.Blink = class olfeatureAnimationBlink extends ol.featureAnim
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Bounce animation: 
  * @constructor
@@ -19582,31 +19582,31 @@ ol.featureAnimation.Blink = class olfeatureAnimationBlink extends ol.featureAnim
  *	@param {Integer} options.duration duration in ms, default 1000
  */
 ol.featureAnimation.Bounce = class olfeatureAnimationBounce extends ol.featureAnimation {
-	constructor(options) {
-		options = options || {};
-		super(options);
-		this.amplitude_ = options.amplitude || 40;
-		this.bounce_ = -Math.PI * (options.bounce || 3);
-	}
-	/** Animate
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		var flashGeom = e.geom.clone();
-		/*
-		var t = this.easing_(e.elapsed)
-		t = Math.abs(Math.sin(this.bounce_*t)) * this.amplitude_ * (1-t) * e.frameState.viewState.resolution;
-		*/
-		var t = Math.abs(Math.sin(this.bounce_ * e.elapsed)) * this.amplitude_ * (1 - this.easing_(e.elapsed)) * e.frameState.viewState.resolution;
-		flashGeom.translate(0, t);
-		this.drawGeom_(e, flashGeom, e.geom);
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.amplitude_ = options.amplitude || 40;
+    this.bounce_ = -Math.PI * (options.bounce || 3);
+  }
+  /** Animate
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    var flashGeom = e.geom.clone();
+    /*
+    var t = this.easing_(e.elapsed)
+    t = Math.abs(Math.sin(this.bounce_*t)) * this.amplitude_ * (1-t) * e.frameState.viewState.resolution;
+    */
+    var t = Math.abs(Math.sin(this.bounce_ * e.elapsed)) * this.amplitude_ * (1 - this.easing_(e.elapsed)) * e.frameState.viewState.resolution;
+    flashGeom.translate(0, t);
+    this.drawGeom_(e, flashGeom, e.geom);
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Drop animation: drop a feature on the map
  * @constructor
@@ -19616,40 +19616,40 @@ ol.featureAnimation.Bounce = class olfeatureAnimationBounce extends ol.featureAn
  *  @param {Number} options.side top or bottom, default top
  */
 ol.featureAnimation.Drop = class olfeatureAnimationDrop extends ol.featureAnimation {
-	constructor(options) {
-		options = options || {};
-		super(options);
-		this.speed_ = options.speed || 0;
-		this.side_ = options.side || 'top';
-	}
-	/** Animate
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		if (!e.time) {
-			var angle = e.frameState.viewState.rotation;
-			var s = e.frameState.size[1] * e.frameState.viewState.resolution;
-			if (this.side_ != 'top') s *= -1;
-			this.dx = -Math.sin(angle) * s;
-			this.dy = Math.cos(angle) * s;
-			if (this.speed_) {
-				this.duration_ = s / this.speed_ / e.frameState.viewState.resolution;
-			}
-		}
-		// Animate
-		var flashGeom = e.geom.clone();
-		flashGeom.translate(
-			this.dx * (1 - this.easing_(e.elapsed)),
-			this.dy * (1 - this.easing_(e.elapsed))
-		);
-		this.drawGeom_(e, flashGeom, e.geom);
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.speed_ = options.speed || 0;
+    this.side_ = options.side || 'top';
+  }
+  /** Animate
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    if (!e.time) {
+      var angle = e.frameState.viewState.rotation;
+      var s = e.frameState.size[1] * e.frameState.viewState.resolution;
+      if (this.side_ != 'top') s *= -1;
+      this.dx = -Math.sin(angle) * s;
+      this.dy = Math.cos(angle) * s;
+      if (this.speed_) {
+        this.duration_ = s / this.speed_ / e.frameState.viewState.resolution;
+      }
+    }
+    // Animate
+    var flashGeom = e.geom.clone();
+    flashGeom.translate(
+      this.dx * (1 - this.easing_(e.elapsed)),
+      this.dy * (1 - this.easing_(e.elapsed))
+    );
+    this.drawGeom_(e, flashGeom, e.geom);
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Fade animation: feature fade in
  * @constructor
@@ -19657,24 +19657,24 @@ ol.featureAnimation.Drop = class olfeatureAnimationDrop extends ol.featureAnimat
  * @param {ol.featureAnimationOptions} options
  */
 ol.featureAnimation.Fade = class olfeatureAnimationFade extends ol.featureAnimation {
-	constructor(options) {
-		options = options || {};
-		super(options);
-		this.speed_ = options.speed || 0;
-	}
-	/** Animate
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		e.context.globalAlpha = this.easing_(e.elapsed);
-		this.drawGeom_(e, e.geom);
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.speed_ = options.speed || 0;
+  }
+  /** Animate
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    e.context.globalAlpha = this.easing_(e.elapsed);
+    this.drawGeom_(e, e.geom);
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Do nothing for a given duration
  * @constructor
@@ -19683,15 +19683,15 @@ ol.featureAnimation.Fade = class olfeatureAnimationFade extends ol.featureAnimat
  * 
  */
 ol.featureAnimation.None = class olfeatureAnimationNone extends ol.featureAnimation {
-	constructor(options) {
-		super(options);
-	}
-	/** Animate: do nothing during the laps time
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    super(options);
+  }
+  /** Animate: do nothing during the laps time
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
@@ -19703,8 +19703,8 @@ ol.featureAnimation.None = class olfeatureAnimationNone extends ol.featureAnimat
  * @extends {ol.featureAnimation}
  */
 ol.featureAnimation.Null = class olfeatureAnimationNull extends ol.featureAnimation {
-	constructor() {
-    super({ duration:0 });
+  constructor() {
+    super({ duration: 0 });
   }
 };
 
@@ -19770,7 +19770,7 @@ ol.featureAnimation.Path = class olfeatureAnimationPath extends ol.featureAnimat
       dy = p[1] - p0[1];
       dl = Math.sqrt(dx * dx + dy * dy);
       if (dl && d + dl >= dmax) {
-        e.extra = { index: i, coordinates: p};
+        e.extra = { index: i, coordinates: p };
         s = (dmax - d) / dl;
         p = [p0[0] + (p[0] - p0[0]) * s, p0[1] + (p[1] - p0[1]) * s];
         break;
@@ -19804,8 +19804,8 @@ ol.featureAnimation.Path = class olfeatureAnimationPath extends ol.featureAnimat
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Shakee animation: 
  * @constructor
@@ -19816,31 +19816,31 @@ ol.featureAnimation.Path = class olfeatureAnimationPath extends ol.featureAnimat
  *	@param {bool} options.horizontal shake horizontally default false (vertical)
  */
 ol.featureAnimation.Shake = class olfeatureAnimationShake extends ol.featureAnimation {
-	constructor(options) {
-		options = options || {};
-		super(options);
-		//	this.easing_ = options.easing_ || function(t){return (0.5+t)*t -0.5*t ;};
-		this.amplitude_ = options.amplitude || 40;
-		this.bounce_ = -Math.PI * (options.bounce || 6);
-		this.horizontal_ = options.horizontal;
-	}
-	/** Animate
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		var flashGeom = e.geom.clone();
-		var shadow = e.geom.clone();
-		var t = this.easing_(e.elapsed);
-		t = Math.sin(this.bounce_ * t) * this.amplitude_ * (1 - t) * e.frameState.viewState.resolution;
-		if (this.horizontal_) {
-			flashGeom.translate(t, 0);
-			shadow.translate(t, 0);
-		}
-		else
-			flashGeom.translate(0, t);
-		this.drawGeom_(e, flashGeom, shadow);
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    options = options || {};
+    super(options);
+    //	this.easing_ = options.easing_ || function(t){return (0.5+t)*t -0.5*t ;};
+    this.amplitude_ = options.amplitude || 40;
+    this.bounce_ = -Math.PI * (options.bounce || 6);
+    this.horizontal_ = options.horizontal;
+  }
+  /** Animate
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    var flashGeom = e.geom.clone();
+    var shadow = e.geom.clone();
+    var t = this.easing_(e.elapsed);
+    t = Math.sin(this.bounce_ * t) * this.amplitude_ * (1 - t) * e.frameState.viewState.resolution;
+    if (this.horizontal_) {
+      flashGeom.translate(t, 0);
+      shadow.translate(t, 0);
+    }
+    else
+      flashGeom.translate(0, t);
+    this.drawGeom_(e, flashGeom, shadow);
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
@@ -19866,8 +19866,8 @@ ol.featureAnimation.Show = class olfeatureAnimationShow extends ol.featureAnimat
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Slice animation: feature enter from left
  * @constructor
@@ -19876,35 +19876,35 @@ ol.featureAnimation.Show = class olfeatureAnimationShow extends ol.featureAnimat
  *  @param {Number} options.speed speed of the animation, if 0 the duration parameter will be used instead, default 0
  */
 ol.featureAnimation.Slide = class olfeatureAnimationSlide extends ol.featureAnimation {
-	constructor(options) {
-		options = options || {};
-		super(options);
-		this.speed_ = options.speed || 0;
-		this.side_ = options.side || 'left';
-	}
-	/** Animate
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		if (!e.time) {
-			if (this.side_ == 'left')
-				this.dx = (e.extent[0] - e.bbox[2]);
-			else
-				this.dx = (e.extent[2] - e.bbox[0]);
-			if (this.speed_)
-				this.duration_ = Math.abs(this.dx) / this.speed_ / e.frameState.viewState.resolution;
-		}
-		// Animate
-		var flashGeom = e.geom.clone();
-		flashGeom.translate(this.dx * (1 - this.easing_(e.elapsed)), 0);
-		this.drawGeom_(e, flashGeom);
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.speed_ = options.speed || 0;
+    this.side_ = options.side || 'left';
+  }
+  /** Animate
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    if (!e.time) {
+      if (this.side_ == 'left')
+        this.dx = (e.extent[0] - e.bbox[2]);
+      else
+        this.dx = (e.extent[2] - e.bbox[0]);
+      if (this.speed_)
+        this.duration_ = Math.abs(this.dx) / this.speed_ / e.frameState.viewState.resolution;
+    }
+    // Animate
+    var flashGeom = e.geom.clone();
+    flashGeom.translate(this.dx * (1 - this.easing_(e.elapsed)), 0);
+    this.drawGeom_(e, flashGeom);
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Teleport a feature at a given place (feat. Star Trek)
  * @constructor
@@ -19912,33 +19912,33 @@ ol.featureAnimation.Slide = class olfeatureAnimationSlide extends ol.featureAnim
  * @param {ol.featureAnimationOptions} options
  */
 ol.featureAnimation.Teleport = class olfeatureAnimationTeleport extends ol.featureAnimation {
-	constructor(options) {
-		super(options);
-	}
-	/** Animate
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		var sc = this.easing_(e.elapsed);
-		if (sc) {
-			e.context.save();
-			var ratio = e.frameState.pixelRatio;
-			e.context.globalAlpha = sc;
-			e.context.scale(sc, 1 / sc);
-			var m = e.frameState.coordinateToPixelTransform;
-			var dx = (1 / sc - 1) * ratio * (m[0] * e.coord[0] + m[1] * e.coord[1] + m[4]);
-			var dy = (sc - 1) * ratio * (m[2] * e.coord[0] + m[3] * e.coord[1] + m[5]);
-			e.context.translate(dx, dy);
-			this.drawGeom_(e, e.geom);
-			e.context.restore();
-		}
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    super(options);
+  }
+  /** Animate
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    var sc = this.easing_(e.elapsed);
+    if (sc) {
+      e.context.save();
+      var ratio = e.frameState.pixelRatio;
+      e.context.globalAlpha = sc;
+      e.context.scale(sc, 1 / sc);
+      var m = e.frameState.coordinateToPixelTransform;
+      var dx = (1 / sc - 1) * ratio * (m[0] * e.coord[0] + m[1] * e.coord[1] + m[4]);
+      var dy = (sc - 1) * ratio * (m[2] * e.coord[0] + m[3] * e.coord[1] + m[5]);
+      e.context.translate(dx, dy);
+      this.drawGeom_(e, e.geom);
+      e.context.restore();
+    }
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
-	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL license (http://www.cecill.info/).
+  Copyright (c) 2016 Jean-Marc VIGLINO, 
+  released under the CeCILL license (http://www.cecill.info/).
 */
 /** Slice animation: feature enter from left
  * @constructor
@@ -19947,37 +19947,37 @@ ol.featureAnimation.Teleport = class olfeatureAnimationTeleport extends ol.featu
  *  @param {left|right} options.side side of the animation, default left
  */
 ol.featureAnimation.Throw = class olfeatureAnimationThrow extends ol.featureAnimation {
-	constructor(options) {
-		options = options || {};
-		super(options);
-		this.speed_ = options.speed || 0;
-		this.side_ = options.side || 'left';
-	}
-	/** Animate
-	* @param {ol.featureAnimationEvent} e
-	*/
-	animate(e) {
-		if (!e.time && this.speed_) {
-			var dx, dy;
-			if (this.side_ == 'left') {
-				dx = this.dx = e.extent[0] - e.bbox[2];
-				dy = this.dy = e.extent[3] - e.bbox[1];
-			}
-			else {
-				dx = this.dx = e.extent[2] - e.bbox[0];
-				dy = this.dy = e.extent[3] - e.bbox[1];
-			}
-			this.duration_ = Math.sqrt(dx * dx + dy * dy) / this.speed_ / e.frameState.viewState.resolution;
-		}
-		// Animate
-		var flashGeom = e.geom.clone();
-		var shadow = e.geom.clone();
-		flashGeom.translate(this.dx * (1 - this.easing_(e.elapsed)),
-			this.dy * Math.cos(Math.PI / 2 * this.easing_(e.elapsed)));
-		shadow.translate(this.dx * (1 - this.easing_(e.elapsed)), 0);
-		this.drawGeom_(e, flashGeom, shadow);
-		return (e.time <= this.duration_);
-	}
+  constructor(options) {
+    options = options || {};
+    super(options);
+    this.speed_ = options.speed || 0;
+    this.side_ = options.side || 'left';
+  }
+  /** Animate
+  * @param {ol.featureAnimationEvent} e
+  */
+  animate(e) {
+    if (!e.time && this.speed_) {
+      var dx, dy;
+      if (this.side_ == 'left') {
+        dx = this.dx = e.extent[0] - e.bbox[2];
+        dy = this.dy = e.extent[3] - e.bbox[1];
+      }
+      else {
+        dx = this.dx = e.extent[2] - e.bbox[0];
+        dy = this.dy = e.extent[3] - e.bbox[1];
+      }
+      this.duration_ = Math.sqrt(dx * dx + dy * dy) / this.speed_ / e.frameState.viewState.resolution;
+    }
+    // Animate
+    var flashGeom = e.geom.clone();
+    var shadow = e.geom.clone();
+    flashGeom.translate(this.dx * (1 - this.easing_(e.elapsed)),
+      this.dy * Math.cos(Math.PI / 2 * this.easing_(e.elapsed)));
+    shadow.translate(this.dx * (1 - this.easing_(e.elapsed)), 0);
+    this.drawGeom_(e, flashGeom, shadow);
+    return (e.time <= this.duration_);
+  }
 }
 
 /*
@@ -20095,109 +20095,109 @@ ol.filter.Base = class olfilterBase extends ol.Object {
     return this.get('active')
   }
 }
-;(function(){
-/** Internal function
- * @this {ol.filter} this the filter
- * @private
- */
-function precompose_(e) {
-  if (this.get('active') && e.context) this.precompose(e);
-}
-/** Internal function
- * @this {ol.filter} this the filter
- * @private
- */
-function postcompose_(e) {
-  if (this.get('active') && e.context) this.postcompose(e);
-}
-/** Force filter redraw / Internal function
- * @this {ol.Map|ol.layer.Layer} this: the map or layer the filter is added to
- * @private
- */
-function filterRedraw_(/* e */) {
-  if (this.renderSync) {
-    try { this.renderSync(); } catch(e) { /* ok */ }
-  } else {
-    this.changed(); 
-  }
-}
-/** Add a filter to an ol object
- * @this {ol.Map|ol.layer.Layer} this: the map or layer the filter is added to
- * @private
- */
-function addFilter_(filter) {
-  if (!this.filters_) this.filters_ = [];
-  this.filters_.push(filter);
-  if (filter.addToLayer) filter.addToLayer(this);
-  if (filter.precompose) filter._listener.push ( { listener: this.on(['precompose','prerender'], precompose_.bind(filter)), target: this });
-  if (filter.postcompose) filter._listener.push ( { listener: this.on(['postcompose','postrender'], postcompose_.bind(filter)), target: this });
-  filter._listener.push ( { listener: filter.on('propertychange', filterRedraw_.bind(this)), target: this });
-  filterRedraw_.call (this);
-}
-/** Remove a filter to an ol object
- * @this {ol.Map|ol.layer.Layer} this: the map or layer the filter is added to
- * @private
- */
-function removeFilter_(filter) {
-  var i
-  if (!this.filters_) this.filters_ = [];
-  if (!filter) {
-    this.filters_.forEach(function(f) {
-      this.removeFilter(f)
-    }.bind(this))
-    return;
-  }
-  for (i=this.filters_.length-1; i>=0; i--) {
-    if (this.filters_[i]===filter) this.filters_.splice(i,1);
-  }
-  for (i=filter._listener.length-1; i>=0; i--) {
-    // Remove listener on this object
-    if (filter._listener[i].target === this) {
-      if (filter.removeFromLayer) filter.removeFromLayer(this);
-      ol.Observable.unByKey(filter._listener[i].listener);
-      filter._listener.splice(i,1);
+  ; (function () {
+    /** Internal function
+     * @this {ol.filter} this the filter
+     * @private
+     */
+    function precompose_(e) {
+      if (this.get('active') && e.context) this.precompose(e);
     }
-  }
-  filterRedraw_.call (this);
-}
-/** Add a filter to an ol.Map
-*	@param {ol.filter}
-*/
-ol.Map.prototype.addFilter = function (filter) {
-  console.warn('[OL-EXT] addFilter deprecated on map.')
-  addFilter_.call (this, filter);
-};
-/** Remove a filter to an ol.Map
-*	@param {ol.filter}
-*/
-ol.Map.prototype.removeFilter = function (filter) {
-  removeFilter_.call (this, filter);
-};
-/** Get filters associated with an ol.Map
-*	@return {Array<ol.filter>}
-*/
-ol.Map.prototype.getFilters = function () {
-  return this.filters_ || [];
-};
-/** Add a filter to an ol.Layer
-*	@param {ol.filter}
-*/
-ol.layer.Base.prototype.addFilter = function (filter) {
-  addFilter_.call (this, filter);
-};
-/** Remove a filter to an ol.Layer
-*	@param {ol.filter}
-*/
-ol.layer.Base.prototype.removeFilter = function (filter) {
-  removeFilter_.call (this, filter);
-};
-/** Get filters associated with an ol.Map
-*	@return {Array<ol.filter>}
-*/
-ol.layer.Base.prototype.getFilters = function () {
-  return this.filters_ || [];
-};
-})();
+    /** Internal function
+     * @this {ol.filter} this the filter
+     * @private
+     */
+    function postcompose_(e) {
+      if (this.get('active') && e.context) this.postcompose(e);
+    }
+    /** Force filter redraw / Internal function
+     * @this {ol.Map|ol.layer.Layer} this: the map or layer the filter is added to
+     * @private
+     */
+    function filterRedraw_(/* e */) {
+      if (this.renderSync) {
+        try { this.renderSync(); } catch (e) { /* ok */ }
+      } else {
+        this.changed();
+      }
+    }
+    /** Add a filter to an ol object
+     * @this {ol.Map|ol.layer.Layer} this: the map or layer the filter is added to
+     * @private
+     */
+    function addFilter_(filter) {
+      if (!this.filters_) this.filters_ = [];
+      this.filters_.push(filter);
+      if (filter.addToLayer) filter.addToLayer(this);
+      if (filter.precompose) filter._listener.push({ listener: this.on(['precompose', 'prerender'], precompose_.bind(filter)), target: this });
+      if (filter.postcompose) filter._listener.push({ listener: this.on(['postcompose', 'postrender'], postcompose_.bind(filter)), target: this });
+      filter._listener.push({ listener: filter.on('propertychange', filterRedraw_.bind(this)), target: this });
+      filterRedraw_.call(this);
+    }
+    /** Remove a filter to an ol object
+     * @this {ol.Map|ol.layer.Layer} this: the map or layer the filter is added to
+     * @private
+     */
+    function removeFilter_(filter) {
+      var i
+      if (!this.filters_) this.filters_ = [];
+      if (!filter) {
+        this.filters_.forEach(function (f) {
+          this.removeFilter(f)
+        }.bind(this))
+        return;
+      }
+      for (i = this.filters_.length - 1; i >= 0; i--) {
+        if (this.filters_[i] === filter) this.filters_.splice(i, 1);
+      }
+      for (i = filter._listener.length - 1; i >= 0; i--) {
+        // Remove listener on this object
+        if (filter._listener[i].target === this) {
+          if (filter.removeFromLayer) filter.removeFromLayer(this);
+          ol.Observable.unByKey(filter._listener[i].listener);
+          filter._listener.splice(i, 1);
+        }
+      }
+      filterRedraw_.call(this);
+    }
+    /** Add a filter to an ol.Map
+    *	@param {ol.filter}
+    */
+    ol.Map.prototype.addFilter = function (filter) {
+      console.warn('[OL-EXT] addFilter deprecated on map.')
+      addFilter_.call(this, filter);
+    };
+    /** Remove a filter to an ol.Map
+    *	@param {ol.filter}
+    */
+    ol.Map.prototype.removeFilter = function (filter) {
+      removeFilter_.call(this, filter);
+    };
+    /** Get filters associated with an ol.Map
+    *	@return {Array<ol.filter>}
+    */
+    ol.Map.prototype.getFilters = function () {
+      return this.filters_ || [];
+    };
+    /** Add a filter to an ol.Layer
+    *	@param {ol.filter}
+    */
+    ol.layer.Base.prototype.addFilter = function (filter) {
+      addFilter_.call(this, filter);
+    };
+    /** Remove a filter to an ol.Layer
+    *	@param {ol.filter}
+    */
+    ol.layer.Base.prototype.removeFilter = function (filter) {
+      removeFilter_.call(this, filter);
+    };
+    /** Get filters associated with an ol.Map
+    *	@return {Array<ol.filter>}
+    */
+    ol.layer.Base.prototype.getFilters = function () {
+      return this.filters_ || [];
+    };
+  })();
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
   released under the CeCILL-B license (French BSD license)
@@ -21609,7 +21609,7 @@ ol.filter.Texture = class olfilterTexture extends ol.filter.Base {
     // Old version (matrix)
     if (!mt) {
       mt = e.frameState.pixelToCoordinateMatrix,
-      mt[2] = mt[4];
+        mt[2] = mt[4];
       mt[3] = mt[5];
       mt[4] = mt[12];
       mt[5] = mt[13];
@@ -21808,7 +21808,7 @@ ol.format.GeoJSONX = class olformatGeoJSONX extends ol.format.GeoJSON {
           var dx = v[i][0] - dxy[0];
           var dy = v[i][1] - dxy[1];
           // Prevent same coords
-          if (i == 0 || (dx !== 0 || dy !== 0) || v.length===2) {
+          if (i == 0 || (dx !== 0 || dy !== 0) || v.length === 2) {
             p = this.encodeNumber(dx, 0) + ','
               + this.encodeNumber(dy, 0)
               + (hasZ ? ',' + this.encodeNumber(v[i][2] - dxy[2], 2) : '')
@@ -22050,8 +22050,8 @@ ol.format.GeoJSONX = class olformatGeoJSONX extends ol.format.GeoJSON {
   }
 }
 /** Radix */
-ol.format.GeoJSONX.prototype._radix = 
-'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ !#$%&\'()*-.:<=>?@[]^_`{|}~';
+ol.format.GeoJSONX.prototype._radix =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ !#$%&\'()*-.:<=>?@[]^_`{|}~';
 /** Radix size */
 ol.format.GeoJSONX.prototype._size = ol.format.GeoJSONX.prototype._radix.length;
 /** GeoSJON types */
@@ -22274,8 +22274,8 @@ ol.format.GeoRSS = class olformatGeoRSS extends ol.Object {
 ol.interaction.Clip = class olinteractionClip extends ol.interaction.Pointer {
   constructor(options) {
     super({
-      handleDownEvent: function(e) { return this._setPosition(e) },
-      handleMoveEvent: function(e) { return this._setPosition(e) },
+      handleDownEvent: function (e) { return this._setPosition(e) },
+      handleMoveEvent: function (e) { return this._setPosition(e) },
     });
     this.layers_ = [];
     this.precomposeBind_ = this.precompose_.bind(this);
@@ -22402,7 +22402,7 @@ ol.interaction.Clip = class olinteractionClip extends ol.interaction.Pointer {
    * @privata
    */
   _setPosition(e) {
-    if (e.type === 'pointermove' && this.get('action') === 'onclick'){
+    if (e.type === 'pointermove' && this.get('action') === 'onclick') {
       return;
     }
     if (e.pixel) {
@@ -22789,8 +22789,8 @@ ol.interaction.CenterTouch = class olinteractionCenterTouch extends ol.interacti
 ol.interaction.ClipMap = class olinteractionClipMap extends ol.interaction.Pointer {
   constructor(options) {
     super({
-      handleDownEvent: function(e) { return this._clip(e) },
-      handleMoveEvent: function(e) { return this._clip(e) },
+      handleDownEvent: function (e) { return this._clip(e) },
+      handleMoveEvent: function (e) { return this._clip(e) },
     });
     // Default options
     options = options || {};
@@ -23048,8 +23048,8 @@ ol.interaction.CopyPaste = class olinteractionCopyPaste extends ol.interaction.C
 }
 
 /*	Copyright (c) 2018 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** A Select interaction to delete features on click.
  * @constructor
@@ -23251,7 +23251,7 @@ ol.interaction.DrawHole = class olinteractionDrawHole extends ol.interaction.Dra
   constructor(options) {
     options = options || {}
     // Geometry function that test points inside the current selection
-    var _geometryFn = function(coordinates, geometry) {
+    var _geometryFn = function (coordinates, geometry) {
       var coord = coordinates[0].pop()
       if (!this.getPolygon() || this.getPolygon().intersectsCoordinate(coord)) {
         this.lastOKCoord = [coord[0], coord[1]]
@@ -23476,7 +23476,7 @@ ol.interaction.DrawRegular = class olinteractionDrawRegular extends ol.interacti
   constructor(options) {
     options = options || {}
     super({
-      handleEvent: function(e) { return self.handleEvent_(e) }
+      handleEvent: function (e) { return self.handleEvent_(e) }
     })
     var self = this;
     this.squaredClickTolerance_ = options.clickTolerance ? options.clickTolerance * options.clickTolerance : 36
@@ -23833,9 +23833,9 @@ ol.interaction.DrawRegular = class olinteractionDrawRegular extends ol.interacti
 /** Default start angle array for each sides
 */
 ol.interaction.DrawRegular.prototype.startAngle = {
-  'default':Math.PI/2,
-  3: -Math.PI/2,
-  4: Math.PI/4
+  'default': Math.PI / 2,
+  3: -Math.PI / 2,
+  4: Math.PI / 4
 };
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
@@ -23981,8 +23981,8 @@ ol.interaction.DropFile = class olinteractionDropFile extends ol.interaction.Int
     this.formatConstructors_ = options.formatConstructors || [ol.format.GPX, ol.format.GeoJSONX, ol.format.GeoJSONP, ol.format.GeoJSON, ol.format.IGC, ol.format.KML, ol.format.TopoJSON]
     this.projection_ = options.projection
     this.accept_ = options.accept || ["gpx", "json", "geojsonx", "geojsonp", "geojson", "igc", "kml", "topojson"]
-    zone.addEventListener('drop', function (e) { 
-      return this.ondrop(e) 
+    zone.addEventListener('drop', function (e) {
+      return this.ondrop(e)
     }.bind(this))
   }
   /** Set the map
@@ -24007,7 +24007,7 @@ ol.interaction.DropFile = class olinteractionDropFile extends ol.interaction.Int
       var files = e.dataTransfer.files // e.originalEvent.target.files ?
       // process all File objects
       var pat = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/
-      Array.prototype.forEach.call(files, function(file) {
+      Array.prototype.forEach.call(files, function (file) {
         var ex = file.name.match(pat)[0]
         var isok = (this.accept_.indexOf(ex.toLocaleLowerCase()) >= 0)
         this.dispatchEvent({ type: 'loadstart', file: file, filesize: file.size, filetype: file.type, fileextension: ex, projection: projection, isok: isok })
@@ -24207,8 +24207,8 @@ ol.interaction.FillAttribute = class olinteractionFillAttribute extends ol.inter
 ol.interaction.Flashlight = class olinteractionFlashlight extends ol.interaction.Pointer {
   constructor(options) {
     super({
-      handleDownEvent: function(e) { return this.setPosition(e) },
-      handleMoveEvent: function(e) { return this.setPosition(e) },
+      handleDownEvent: function (e) { return this.setPosition(e) },
+      handleMoveEvent: function (e) { return this.setPosition(e) },
     })
     // Default options
     options = options || {}
@@ -24235,7 +24235,7 @@ ol.interaction.Flashlight = class olinteractionFlashlight extends ol.interaction
   setRadius(radius) {
     this.radius = radius
     if (this.getMap()) {
-      try { this.getMap().renderSync()}  catch (e) { /* ok */ }
+      try { this.getMap().renderSync() } catch (e) { /* ok */ }
     }
   }
   /** Set flashlight color
@@ -24260,7 +24260,7 @@ ol.interaction.Flashlight = class olinteractionFlashlight extends ol.interaction
     //c[3] = (op + c[3] * 9) / 10;
     this.midColor = ol.color.asString(c)
     if (this.getMap()) {
-      try { this.getMap().renderSync()}  catch (e) { /* ok */ }
+      try { this.getMap().renderSync() } catch (e) { /* ok */ }
     }
   }
   /** Set position of the flashlight
@@ -24272,7 +24272,7 @@ ol.interaction.Flashlight = class olinteractionFlashlight extends ol.interaction
     else
       this.pos = e
     if (this.getMap()) {
-      try { this.getMap().renderSync()}  catch (e) { /* ok */ }
+      try { this.getMap().renderSync() } catch (e) { /* ok */ }
     }
   }
   /** Postcompose function
@@ -24523,7 +24523,7 @@ ol.interaction.GeolocationDraw = class olinteractionGeolocationDraw extends ol.i
     super.setActive(active)
     if (this.getMap()) {
       this.geolocation.setTracking(active)
-      try { this.getMap().renderSync()}  catch (e) { /* ok */ }
+      try { this.getMap().renderSync() } catch (e) { /* ok */ }
     }
     if (!this.overlayLayer_) return;
     this.overlayLayer_.setVisible(active)
@@ -24832,7 +24832,7 @@ ol.interaction.GeolocationDraw = class olinteractionGeolocationDraw extends ol.i
 ol.interaction.Hover = class olinteractionHover extends ol.interaction.Interaction {
   constructor(options) {
     if (!options)
-    options = options || {};
+      options = options || {};
     var dragging = false;
     super({
       handleEvent: function (e) {
@@ -25081,9 +25081,9 @@ ol.interaction.LongTouch = class olinteractionLongTouch extends ol.interaction.I
  * @return {Array<ol.Feature>} the modified features
  * @deprecated
  */
-ol.interaction.Modify.prototype.getModifiedFeatures = function() {
+ol.interaction.Modify.prototype.getModifiedFeatures = function () {
   var featuresById = {};
-  this.dragSegments_.forEach( function(s) {
+  this.dragSegments_.forEach(function (s) {
     var feature = s[0].feature;
     // Openlayers > v.6
     if (window && window.ol && window.ol.util) featuresById[ol.util.getUid(feature)] = feature;
@@ -25146,7 +25146,7 @@ ol.interaction.ModifyFeature = class olinteractionModifyFeature extends ol.inter
               return true
           }
           case 'pointermove': {
-            if (!dragging){
+            if (!dragging) {
               return this.handleMoveEvent(e)
             } else {
               return false
@@ -25846,8 +25846,8 @@ ol.interaction.ModifyFeature = class olinteractionModifyFeature extends ol.inter
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Modify interaction with a popup to delet a point on touch device
  * @constructor
@@ -25993,8 +25993,8 @@ ol.interaction.ModifyTouch = class olinteractionModifyTouch extends ol.interacti
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Offset interaction for offseting feature geometry
  * @constructor
@@ -26015,10 +26015,10 @@ ol.interaction.Offset = class olinteractionOffset extends ol.interaction.Pointer
     options = options || {};
     // Extend pointer
     super({
-      handleDownEvent: function(e) { return self.handleDownEvent_(e) },
-      handleDragEvent: function(e) { return self.handleDragEvent_(e) },
-      handleMoveEvent: function(e) { return self.handleMoveEvent_(e) },
-      handleUpEvent: function(e) { return self.handleUpEvent_(e) },
+      handleDownEvent: function (e) { return self.handleDownEvent_(e) },
+      handleDragEvent: function (e) { return self.handleDragEvent_(e) },
+      handleMoveEvent: function (e) { return self.handleMoveEvent_(e) },
+      handleUpEvent: function (e) { return self.handleUpEvent_(e) },
     });
     var self = this;
     this._filter = options.filter;
@@ -26222,8 +26222,8 @@ ol.interaction.Offset = class olinteractionOffset extends ol.interaction.Pointer
 ol.interaction.Ripple = class olinteractionRipple extends ol.interaction.Pointer {
   constructor(options) {
     super({
-      handleDownEvent: function(e) { return this.rainDrop(e) },
-      handleMoveEvent: function(e) { return this.rainDrop(e) },
+      handleDownEvent: function (e) { return this.rainDrop(e) },
+      handleMoveEvent: function (e) { return this.rainDrop(e) },
     });
     // Default options
     options = options || {};
@@ -27464,14 +27464,14 @@ ol.interaction.Splitter = class olinteractionSplitter extends ol.interaction.Int
     // Geom type
     switch (feature.getGeometry().getType()) {
       case 'Point': {
-        c = [c]; 
+        c = [c];
         break;
       }
       case 'LineString': {
         break;
       }
       default: {
-        c = []; 
+        c = [];
         break;
       }
     }
@@ -27497,7 +27497,7 @@ ol.interaction.Splitter = class olinteractionSplitter extends ol.interaction.Int
     if (c.length === 1) {
       seg = [c[0], c[0]]
       var extent = ol.extent.buffer(ol.extent.boundingExtent(seg), this.tolerance_ /*0.01*/)
-      this.source_.forEachFeatureIntersectingExtent(extent, function(f) {
+      this.source_.forEachFeatureIntersectingExtent(extent, function (f) {
         if (f.getGeometry().splitAt) {
           var g = f.getGeometry().splitAt(c[0], this.tolerance_)
           if (g.length > 1) {
@@ -27614,7 +27614,7 @@ ol.interaction.Synchronize = class olinteractionSynchronize extends ol.interacti
     options = options || {}
     super({
       handleEvent: function (e) {
-        if (e.type == "pointermove") { this.handleMove_(e)} 
+        if (e.type == "pointermove") { this.handleMove_(e) }
         return true
       }
     })
@@ -27702,7 +27702,7 @@ ol.interaction.Synchronize = class olinteractionSynchronize extends ol.interacti
 /** Show a target overlay at coord
  * @param {ol.coordinate} coord
  */
-ol.Map.prototype.showTarget = function(coord) {
+ol.Map.prototype.showTarget = function (coord) {
   if (!this._targetOverlay) {
     var elt = document.createElement("div");
     elt.classList.add("ol-target");
@@ -27711,13 +27711,13 @@ ol.Map.prototype.showTarget = function(coord) {
     this.addOverlay(this._targetOverlay);
     elt.parentElement.classList.add("ol-target-overlay");
     // hack to render targetOverlay before positioning it
-    this._targetOverlay.setPosition([0,0]);
+    this._targetOverlay.setPosition([0, 0]);
   }
   this._targetOverlay.setPosition(coord);
 };
 /** Hide the target overlay
  */
-ol.Map.prototype.hideTarget = function() {
+ol.Map.prototype.hideTarget = function () {
   this.removeOverlay(this._targetOverlay);
   this._targetOverlay = undefined;
 };
@@ -27739,8 +27739,8 @@ ol.interaction.TinkerBell = class olinteractionTinkerBell extends ol.interaction
   constructor(options) {
     options = options || {}
     super({
-      handleDownEvent: function(e) { this.onMove(e) },
-      handleMoveEvent: function(e) { this.onMove(e) }
+      handleDownEvent: function (e) { this.onMove(e) },
+      handleMoveEvent: function (e) { this.onMove(e) }
     })
     this.set('color', options.color ? ol.color.asString(options.color) : "#fff")
     this.sparkle = [0, 0]
@@ -27806,8 +27806,8 @@ ol.interaction.TinkerBell = class olinteractionTinkerBell extends ol.interaction
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Interaction splitter: acts as a split feature agent while editing vector features (LineString).
  * @constructor
@@ -27818,145 +27818,145 @@ ol.interaction.TinkerBell = class olinteractionTinkerBell extends ol.interaction
  *	@param {Number} options.alpha opacity of the compass, default 0.5
  */
 ol.interaction.TouchCompass = class olinteractionTouchCompass extends ol.interaction.Pointer {
-	constructor(options) {
-		options = options || {};
-		var opt = {};
-		// Click on the compass
-		opt.handleDownEvent = function (e) {
-			var s = this.getCenter_();
-			var dx = e.pixel[0] - s[0];
-			var dy = e.pixel[1] - s[1];
-			this.start = e;
-			return (Math.sqrt(dx * dx + dy * dy) < this.size / 2);
-		};
-		// Pn drag
-		opt.handleDragEvent = function (e) {
-			if (!this.pos) {
-				this.pos = this.start;
-				try { this.getMap().renderSync(); } catch (e) { /* ok */ }
-			}
-			this.pos = e;
-		};
-		// Stop drag
-		opt.handleUpEvent = function () {
-			this.pos = false;
-			return true;
-		};
-		super(opt);
-		this.ondrag_ = options.onDrag;
-		this.size = options.size || 80;
-		this.alpha = options.alpha || 0.5;
-		if (!this.compass) {
-			var canvas = this.compass = document.createElement('canvas');
-			var ctx = canvas.getContext("2d");
-			var s = canvas.width = canvas.height = this.size;
-			var w = s / 10;
-			var r = s / 2;
-			var r2 = 0.22 * r;
-			ctx.translate(r, r);
-			ctx.fillStyle = "#999";
-			ctx.strokeStyle = "#ccc";
-			ctx.lineWidth = w;
-			ctx.beginPath();
-			ctx.arc(0, 0, s * 0.42, 0, 2 * Math.PI);
-			ctx.fill();
-			ctx.stroke();
-			ctx.fillStyle = "#99f";
-			ctx.beginPath();
-			ctx.moveTo(0, 0);
-			ctx.lineTo(r, 0); ctx.lineTo(r2, r2); ctx.moveTo(0, 0);
-			ctx.lineTo(-r, 0); ctx.lineTo(-r2, -r2); ctx.moveTo(0, 0);
-			ctx.lineTo(0, r); ctx.lineTo(-r2, r2); ctx.moveTo(0, 0);
-			ctx.lineTo(0, -r); ctx.lineTo(r2, -r2); ctx.moveTo(0, 0);
-			ctx.fill();
-			ctx.fillStyle = "#eee";
-			ctx.beginPath();
-			ctx.moveTo(0, 0);
-			ctx.lineTo(r, 0); ctx.lineTo(r2, -r2); ctx.moveTo(0, 0);
-			ctx.lineTo(-r, 0); ctx.lineTo(-r2, r2); ctx.moveTo(0, 0);
-			ctx.lineTo(0, r); ctx.lineTo(r2, r2); ctx.moveTo(0, 0);
-			ctx.lineTo(0, -r); ctx.lineTo(-r2, -r2); ctx.moveTo(0, 0);
-			ctx.fill();
-		}
-	}
-	/**
-	 * Remove the interaction from its current map, if any,  and attach it to a new
-	 * map, if any. Pass `null` to just remove the interaction from the current map.
-	 * @param {_ol_Map_} map Map.
-	 * @api stable
-	 */
-	setMap(map) {
-		if (this._listener) ol.Observable.unByKey(this._listener);
-		this._listener = null;
-		super.setMap(map);
-		if (map) {
-			this._listener = map.on('postcompose', this.drawCompass_.bind(this));
-			ol.ext.getMapCanvas(map);
-		}
-	}
-	/**
-	 * Activate or deactivate the interaction.
-	 * @param {boolean} active Active.
-	 * @observable
-	 * @api
-	 */
-	setActive(b) {
-		super.setActive(b);
-		if (this.getMap()) {
-			try { this.getMap().renderSync(); } catch (e) { /* ok */ }
-		}
-	}
-	/**
-	 * Get the center of the compass
-	 * @param {_ol_coordinate_}
-	 * @private
-	 */
-	getCenter_() {
-		var margin = 10;
-		var s = this.size;
-		var c = this.getMap().getSize();
-		return [c[0] / 2, c[1] - margin - s / 2];
-	}
-	/**
-	 * Draw the compass on post compose
-	 * @private
-	 */
-	drawCompass_(e) {
-		if (!this.getActive())
-			return;
-		var ctx = e.context || ol.ext.getMapCanvas(this.getMap()).getContext('2d');
-		var ratio = e.frameState.pixelRatio;
-		ctx.save();
-		ctx.scale(ratio, ratio);
-		ctx.globalAlpha = this.alpha;
-		ctx.strokeStyle = "#fff";
-		ctx.lineWidth = 5;
-		var s = this.size;
-		var c = this.getCenter_();
-		ctx.drawImage(this.compass, 0, 0, this.compass.width, this.compass.height, c[0] - s / 2, c[1] - s / 2, s, s);
-		if (this.pos) {
-			var dx = this.pos.pixel[0] - this.start.pixel[0];
-			var dy = this.pos.pixel[1] - this.start.pixel[1];
-			for (var i = 1; i <= 4; i++) {
-				ctx.beginPath();
-				ctx.arc(c[0] + dx / 4 * i, c[1] + dy / 4 * i, s / 2 * (0.6 + 0.4 * i / 4), 0, 2 * Math.PI);
-				ctx.stroke();
-			}
-		}
-		ctx.restore();
-		if (this.pos) { // Get delta
-			if (this.ondrag_) {
-				var r = this.getMap().getView().getResolution();
-				var delta = {
-					dpixel: [this.pos.pixel[0] - this.start.pixel[0], this.pos.pixel[1] - this.start.pixel[1]]
-				};
-				delta.traction = [delta.dpixel[0] * r, -delta.dpixel[1] * r];
-				this.ondrag_(delta, this.pos);
-			}
-			// Continue animation
-			e.frameState.animate = true;
-		}
-	}
+  constructor(options) {
+    options = options || {};
+    var opt = {};
+    // Click on the compass
+    opt.handleDownEvent = function (e) {
+      var s = this.getCenter_();
+      var dx = e.pixel[0] - s[0];
+      var dy = e.pixel[1] - s[1];
+      this.start = e;
+      return (Math.sqrt(dx * dx + dy * dy) < this.size / 2);
+    };
+    // Pn drag
+    opt.handleDragEvent = function (e) {
+      if (!this.pos) {
+        this.pos = this.start;
+        try { this.getMap().renderSync(); } catch (e) { /* ok */ }
+      }
+      this.pos = e;
+    };
+    // Stop drag
+    opt.handleUpEvent = function () {
+      this.pos = false;
+      return true;
+    };
+    super(opt);
+    this.ondrag_ = options.onDrag;
+    this.size = options.size || 80;
+    this.alpha = options.alpha || 0.5;
+    if (!this.compass) {
+      var canvas = this.compass = document.createElement('canvas');
+      var ctx = canvas.getContext("2d");
+      var s = canvas.width = canvas.height = this.size;
+      var w = s / 10;
+      var r = s / 2;
+      var r2 = 0.22 * r;
+      ctx.translate(r, r);
+      ctx.fillStyle = "#999";
+      ctx.strokeStyle = "#ccc";
+      ctx.lineWidth = w;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.42, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#99f";
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(r, 0); ctx.lineTo(r2, r2); ctx.moveTo(0, 0);
+      ctx.lineTo(-r, 0); ctx.lineTo(-r2, -r2); ctx.moveTo(0, 0);
+      ctx.lineTo(0, r); ctx.lineTo(-r2, r2); ctx.moveTo(0, 0);
+      ctx.lineTo(0, -r); ctx.lineTo(r2, -r2); ctx.moveTo(0, 0);
+      ctx.fill();
+      ctx.fillStyle = "#eee";
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(r, 0); ctx.lineTo(r2, -r2); ctx.moveTo(0, 0);
+      ctx.lineTo(-r, 0); ctx.lineTo(-r2, r2); ctx.moveTo(0, 0);
+      ctx.lineTo(0, r); ctx.lineTo(r2, r2); ctx.moveTo(0, 0);
+      ctx.lineTo(0, -r); ctx.lineTo(-r2, -r2); ctx.moveTo(0, 0);
+      ctx.fill();
+    }
+  }
+  /**
+   * Remove the interaction from its current map, if any,  and attach it to a new
+   * map, if any. Pass `null` to just remove the interaction from the current map.
+   * @param {_ol_Map_} map Map.
+   * @api stable
+   */
+  setMap(map) {
+    if (this._listener) ol.Observable.unByKey(this._listener);
+    this._listener = null;
+    super.setMap(map);
+    if (map) {
+      this._listener = map.on('postcompose', this.drawCompass_.bind(this));
+      ol.ext.getMapCanvas(map);
+    }
+  }
+  /**
+   * Activate or deactivate the interaction.
+   * @param {boolean} active Active.
+   * @observable
+   * @api
+   */
+  setActive(b) {
+    super.setActive(b);
+    if (this.getMap()) {
+      try { this.getMap().renderSync(); } catch (e) { /* ok */ }
+    }
+  }
+  /**
+   * Get the center of the compass
+   * @param {_ol_coordinate_}
+   * @private
+   */
+  getCenter_() {
+    var margin = 10;
+    var s = this.size;
+    var c = this.getMap().getSize();
+    return [c[0] / 2, c[1] - margin - s / 2];
+  }
+  /**
+   * Draw the compass on post compose
+   * @private
+   */
+  drawCompass_(e) {
+    if (!this.getActive())
+      return;
+    var ctx = e.context || ol.ext.getMapCanvas(this.getMap()).getContext('2d');
+    var ratio = e.frameState.pixelRatio;
+    ctx.save();
+    ctx.scale(ratio, ratio);
+    ctx.globalAlpha = this.alpha;
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 5;
+    var s = this.size;
+    var c = this.getCenter_();
+    ctx.drawImage(this.compass, 0, 0, this.compass.width, this.compass.height, c[0] - s / 2, c[1] - s / 2, s, s);
+    if (this.pos) {
+      var dx = this.pos.pixel[0] - this.start.pixel[0];
+      var dy = this.pos.pixel[1] - this.start.pixel[1];
+      for (var i = 1; i <= 4; i++) {
+        ctx.beginPath();
+        ctx.arc(c[0] + dx / 4 * i, c[1] + dy / 4 * i, s / 2 * (0.6 + 0.4 * i / 4), 0, 2 * Math.PI);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+    if (this.pos) { // Get delta
+      if (this.ondrag_) {
+        var r = this.getMap().getView().getResolution();
+        var delta = {
+          dpixel: [this.pos.pixel[0] - this.start.pixel[0], this.pos.pixel[1] - this.start.pixel[1]]
+        };
+        delta.traction = [delta.dpixel[0] * r, -delta.dpixel[1] * r];
+        this.ondrag_(delta, this.pos);
+      }
+      // Continue animation
+      e.frameState.animate = true;
+    }
+  }
 }
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
@@ -28706,10 +28706,10 @@ ol.interaction.Transform = class olinteractionTransform extends ol.interaction.P
     options = options || {}
     // Extend pointer
     super({
-      handleDownEvent: function(e) { return self.handleDownEvent_(e) },
-      handleDragEvent: function(e) { return this.handleDragEvent_(e) },
-      handleMoveEvent: function(e) { return this.handleMoveEvent_(e) },
-      handleUpEvent: function(e) { return this.handleUpEvent_(e) },
+      handleDownEvent: function (e) { return self.handleDownEvent_(e) },
+      handleDragEvent: function (e) { return this.handleDragEvent_(e) },
+      handleMoveEvent: function (e) { return this.handleMoveEvent_(e) },
+      handleUpEvent: function (e) { return this.handleUpEvent_(e) },
     })
     var self = this
     this.selection_ = new ol.Collection()
@@ -29511,7 +29511,7 @@ ol.interaction.Transform = class olinteractionTransform extends ol.interaction.P
    * @private
    */
   _movePoint(point, displacementVector) {
-    return [point[0]+displacementVector[0], point[1]+displacementVector[1]];
+    return [point[0] + displacementVector[0], point[1] + displacementVector[1]];
   }
 }
 /** Cursors for transform
@@ -29978,16 +29978,16 @@ ol.interaction.UndoRedo = class olinteractionUndoRedo extends ol.interaction.Int
 /** Set attribute
  * @private
  */
-ol.interaction.UndoRedo.prototype._onInteraction.setattributestart = function(e) {
+ol.interaction.UndoRedo.prototype._onInteraction.setattributestart = function (e) {
   this.blockStart(e.target.get('name') || 'setattribute');
   var newp = Object.assign({}, e.properties);
-  e.features.forEach(function(f) {
+  e.features.forEach(function (f) {
     var oldp = {};
     for (var p in newp) {
       oldp[p] = f.get(p);
     }
     this._undoStack.push({
-      type: 'changeattribute', 
+      type: 'changeattribute',
       feature: f,
       newProperties: newp,
       oldProperties: oldp
@@ -29995,41 +29995,41 @@ ol.interaction.UndoRedo.prototype._onInteraction.setattributestart = function(e)
   }.bind(this));
   this.blockEnd();
 };
-ol.interaction.UndoRedo.prototype._onInteraction.rotatestart = 
-ol.interaction.UndoRedo.prototype._onInteraction.translatestart = 
-ol.interaction.UndoRedo.prototype._onInteraction.scalestart = 
-ol.interaction.UndoRedo.prototype._onInteraction.modifystart = function (e) {
-  this.blockStart(e.type.replace(/start$/,''));
-  e.features.forEach(function(m) {
-    this._undoStack.push({ 
-      type: 'changegeometry', 
-      feature: m, 
-      oldGeom: m.getGeometry().clone() 
-    });
-  }.bind(this));
-  this.blockEnd();
-};
+ol.interaction.UndoRedo.prototype._onInteraction.rotatestart =
+  ol.interaction.UndoRedo.prototype._onInteraction.translatestart =
+  ol.interaction.UndoRedo.prototype._onInteraction.scalestart =
+  ol.interaction.UndoRedo.prototype._onInteraction.modifystart = function (e) {
+    this.blockStart(e.type.replace(/start$/, ''));
+    e.features.forEach(function (m) {
+      this._undoStack.push({
+        type: 'changegeometry',
+        feature: m,
+        oldGeom: m.getGeometry().clone()
+      });
+    }.bind(this));
+    this.blockEnd();
+  };
 /** @private
  */
-ol.interaction.UndoRedo.prototype._onInteraction.beforesplit = function() {
+ol.interaction.UndoRedo.prototype._onInteraction.beforesplit = function () {
   // Check modify before split
   var l = this._undoStack.getLength();
-  if (l>2 
-    && this._undoStack.item(l-1).type === 'blockend'
-    && this._undoStack.item(l-2).type === 'changegeometry') {
+  if (l > 2
+    && this._undoStack.item(l - 1).type === 'blockend'
+    && this._undoStack.item(l - 2).type === 'changegeometry') {
     this._undoStack.pop();
   } else {
     this.blockStart('split');
   }
 };
-ol.interaction.UndoRedo.prototype._onInteraction.deletestart = function() {
+ol.interaction.UndoRedo.prototype._onInteraction.deletestart = function () {
   this.blockStart('delete');
 }
 /** @private
  */
 ol.interaction.UndoRedo.prototype._onInteraction.aftersplit =
-ol.interaction.UndoRedo.prototype._onInteraction.deleteend =
-ol.interaction.UndoRedo.prototype.blockEnd;
+  ol.interaction.UndoRedo.prototype._onInteraction.deleteend =
+  ol.interaction.UndoRedo.prototype.blockEnd;
 
 /*	Copyright (c) 2019 Jean-Marc VIGLINO,
   released under the CeCILL-B license (French BSD license)
@@ -30263,7 +30263,7 @@ ol.source.DBPedia = class olsourceDBPedia extends ol.source.Vector {
   constructor(opt_options) {
     var options = opt_options || {}
     /** Default attribution */
-    if (!options.attributions) options.attributions = [ '&copy; <a href="http://dbpedia.org/"">DBpedia</a> CC-by-SA']
+    if (!options.attributions) options.attributions = ['&copy; <a href="http://dbpedia.org/"">DBpedia</a> CC-by-SA']
     // Bbox strategy : reload at each move
     if (!options.strategy) options.strategy = ol.loadingstrategy.bbox
     super(options)
@@ -30362,81 +30362,81 @@ ol.source.DBPedia = class olsourceDBPedia extends ol.source.Vector {
   }
 }
 ol.style.clearDBPediaStyleCache;
-ol.style.dbPediaStyleFunction; 
-(function(){
-// Style cache
-var styleCache = {};
-/** Reset the cache (when fonts are loaded)
-*/
-ol.style.clearDBPediaStyleCache = function() {
-  styleCache = {};
-}
-/** Get a default style function for dbpedia
-* @param {} options
-* @param {string|function|undefined} options.glyph a glyph name or a function that takes a feature and return a glyph
-* @param {number} options.radius radius of the symbol, default 8
-* @param {ol.style.Fill} options.fill style for fill, default navy
-* @param {ol.style.stroke} options.stroke style for stroke, default 2px white
-* @param {string} options.prefix a prefix if many style used for the same type
-*
-* @require ol.style.FontSymbol and FontAwesome defs are required for dbPediaStyleFunction()
-*/
-ol.style.dbPediaStyleFunction = function(options) {
-  if (!options) options={};
-  // Get font function using dbPedia type
-  var getFont;
-  switch (typeof(options.glyph)) {
-    case "function": getFont = options.glyph; break;
-    case "string": getFont = function(){ return options.glyph; }; break;
-    default: {
-      getFont = function (f) {
-        var type = f.get("type");
-        if (type) {
-          if (type.match("/Museum")) return "fa-camera";
-          else if (type.match("/Monument")) return "fa-building";
-          else if (type.match("/Sculpture")) return "fa-android";
-          else if (type.match("/Religious")) return "fa-institution";
-          else if (type.match("/Castle")) return "fa-key";
-          else if (type.match("Water")) return "fa-tint";
-          else if (type.match("Island")) return "fa-leaf";
-          else if (type.match("/Event")) return "fa-heart";
-          else if (type.match("/Artwork")) return "fa-asterisk";
-          else if (type.match("/Stadium")) return "fa-futbol-o";
-          else if (type.match("/Place")) return "fa-street-view";
+ol.style.dbPediaStyleFunction;
+(function () {
+  // Style cache
+  var styleCache = {};
+  /** Reset the cache (when fonts are loaded)
+  */
+  ol.style.clearDBPediaStyleCache = function () {
+    styleCache = {};
+  }
+  /** Get a default style function for dbpedia
+  * @param {} options
+  * @param {string|function|undefined} options.glyph a glyph name or a function that takes a feature and return a glyph
+  * @param {number} options.radius radius of the symbol, default 8
+  * @param {ol.style.Fill} options.fill style for fill, default navy
+  * @param {ol.style.stroke} options.stroke style for stroke, default 2px white
+  * @param {string} options.prefix a prefix if many style used for the same type
+  *
+  * @require ol.style.FontSymbol and FontAwesome defs are required for dbPediaStyleFunction()
+  */
+  ol.style.dbPediaStyleFunction = function (options) {
+    if (!options) options = {};
+    // Get font function using dbPedia type
+    var getFont;
+    switch (typeof (options.glyph)) {
+      case "function": getFont = options.glyph; break;
+      case "string": getFont = function () { return options.glyph; }; break;
+      default: {
+        getFont = function (f) {
+          var type = f.get("type");
+          if (type) {
+            if (type.match("/Museum")) return "fa-camera";
+            else if (type.match("/Monument")) return "fa-building";
+            else if (type.match("/Sculpture")) return "fa-android";
+            else if (type.match("/Religious")) return "fa-institution";
+            else if (type.match("/Castle")) return "fa-key";
+            else if (type.match("Water")) return "fa-tint";
+            else if (type.match("Island")) return "fa-leaf";
+            else if (type.match("/Event")) return "fa-heart";
+            else if (type.match("/Artwork")) return "fa-asterisk";
+            else if (type.match("/Stadium")) return "fa-futbol-o";
+            else if (type.match("/Place")) return "fa-street-view";
+          }
+          return "fa-star";
         }
-        return "fa-star";
+        break;
       }
-      break;
     }
-  }
-  // Default values
-  var radius = options.radius || 8;
-  var fill = options.fill || new ol.style.Fill({ color:"navy"});
-  var stroke = options.stroke || new ol.style.Stroke({ color: "#fff", width: 2 });
-  var prefix = options.prefix ? options.prefix+"_" : "";
-  // Vector style function
-  return function (feature) {
-    var glyph = getFont(feature);
-    var k = prefix + glyph;
-    var style = styleCache[k];
-    if (!style) {
-      styleCache[k] = style = new ol.style.Style ({
-        image: new ol.style.FontSymbol({
-          glyph: glyph, 
-          radius: radius, 
-          fill: fill,
-          stroke: stroke
-        })
-      });
+    // Default values
+    var radius = options.radius || 8;
+    var fill = options.fill || new ol.style.Fill({ color: "navy" });
+    var stroke = options.stroke || new ol.style.Stroke({ color: "#fff", width: 2 });
+    var prefix = options.prefix ? options.prefix + "_" : "";
+    // Vector style function
+    return function (feature) {
+      var glyph = getFont(feature);
+      var k = prefix + glyph;
+      var style = styleCache[k];
+      if (!style) {
+        styleCache[k] = style = new ol.style.Style({
+          image: new ol.style.FontSymbol({
+            glyph: glyph,
+            radius: radius,
+            fill: fill,
+            stroke: stroke
+          })
+        });
+      }
+      return [style];
     }
-    return [style];
-  }
-};
+  };
 })();
 
 /*	Copyright (c) 2018 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** DFCI source: a source to display the French DFCI grid on a map
  * @see http://ccffpeynier.free.fr/Files/dfci.pdf
@@ -30448,7 +30448,7 @@ ol.style.dbPediaStyleFunction = function(options) {
 ol.source.DFCI = class olsourceDFCI extends ol.source.Vector {
   constructor(options) {
     options = options || {}
-    options.loader = function(extent, resolution, projection) {
+    options.loader = function (extent, resolution, projection) {
       return this._calcGrid(extent, resolution, projection)
     }
     options.strategy = function (extent, resolution) {
@@ -31598,9 +31598,9 @@ ol.source.GeoImage = class olsourceGeoImage extends ol.source.ImageCanvas {
 ol.source.GeoRSS = class olsourceGeoRSS extends ol.source.Vector {
   constructor(options) {
     options = options || {};
-    options.loader = function(extent, resolution, projection) {
+    options.loader = function (extent, resolution, projection) {
       return this._loaderFn(extent, resolution, projection);
-    } 
+    }
     super(options);
   }
   /** Loader function used to load features.
@@ -31659,7 +31659,7 @@ ol.source.Geoportail = class olsourceGeoportail extends ol.source.WMTS {
       matrixIds: matrixIds
     })
     tg.minZoom = (options.minZoom ? options.minZoom : 0)
-    var attr = [ ol.source.Geoportail.defaultAttribution ]
+    var attr = [ol.source.Geoportail.defaultAttribution]
     if (options.attributions) attr = options.attributions
     var server = options.server || 'https://wxs.ign.fr/geoportail/wmts'
     var gppKey = options.gppKey || options.key || 'choisirgeoportail'
@@ -31804,7 +31804,7 @@ ol.source.Geoportail = class olsourceGeoportail extends ol.source.WMTS {
 ol.source.Geoportail.defaultAttribution = '<a href="http://www.geoportail.gouv.fr/">Géoportail</a> &copy; <a href="http://www.ign.fr/">IGN-France</a>';
 /** Get service URL according to server url or standard url
  */
-ol.source.Geoportail.getServiceURL = function(server, gppKey) {
+ol.source.Geoportail.getServiceURL = function (server, gppKey) {
   if (server) {
     return server.replace(/^(https?:\/\/[^/]*)(.*)$/, "$1/" + gppKey + "$2")
   } else {
@@ -31984,7 +31984,7 @@ ol.source.IDW = class olsourceIDW extends ol.source.ImageCanvas {
     this._source.on(['addfeature', 'removefeature', 'clear', 'removefeature'], function () {
       this.changed();
     }.bind(this));
-    if (typeof(options.getColor) === 'function') this.getColor = options.getColor
+    if (typeof (options.getColor) === 'function') this.getColor = options.getColor
     if (options.useWorker) {
       var lib = {
         hue2rgb: this.hue2rgb,
@@ -32243,7 +32243,7 @@ ol.source.InseeBin = class olsourceInseeBin extends ol.source.BinBase {
 ol.source.Mapillary = class olsourceMapillary extends ol.source.Vector {
   constructor(opt_options) {
     var options = opt_options || {};
-    options.loader = function(extent, resolution, projection) {
+    options.loader = function (extent, resolution, projection) {
       return this._loaderFn(extent, resolution, projection);
     }
     /** Default attribution */
@@ -32380,7 +32380,7 @@ ol.source.OilPainting = class olsourceOilPainting extends ol.source.Raster {
 /**
  * @private
  */
-ol.source.OilPainting._operation = function(pixels, data) {
+ol.source.OilPainting._operation = function (pixels, data) {
   var width = pixels[0].width, height = pixels[0].height, imgData = pixels[0], pixData = imgData.data, pixelIntensityCount = [];
   var destImageData = data.image, destPixData = destImageData.data, intensityLUT = [], rgbLUT = [];
   for (var y = 0; y < height; y++) {
@@ -32435,8 +32435,8 @@ ol.source.OilPainting._operation = function(pixels, data) {
 }
 
 /*	Copyright (c) 2018 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * OSM layer using the Ovepass API
@@ -32455,7 +32455,7 @@ ol.source.OilPainting._operation = function(pixels, data) {
 ol.source.Overpass = class olsourceOverpass extends ol.source.Vector {
   constructor(options) {
     options = options || {}
-    options.loader = function(extent, resolution, projection) {
+    options.loader = function (extent, resolution, projection) {
       return this._loaderFn(extent, resolution, projection)
     }
     /** Default attribution */
@@ -32666,16 +32666,16 @@ ol.source.TileWFS = class olsourceTileWFS extends ol.source.Vector {
   }
 }
 
-;(function () {
-  var clear = ol.source.Vector.prototype.clear;
-  /** Overwrite ol/source/Vector clear to fire clearstart / clearend event
-   */
-  ol.source.Vector.prototype.clear = function(opt_fast) {
-    this.dispatchEvent({ type: 'clearstart' });
-    clear.call(this, opt_fast)
-    this.dispatchEvent({ type: 'clearend' });
-  };
-})();
+  ; (function () {
+    var clear = ol.source.Vector.prototype.clear;
+    /** Overwrite ol/source/Vector clear to fire clearstart / clearend event
+     */
+    ol.source.Vector.prototype.clear = function (opt_fast) {
+      this.dispatchEvent({ type: 'clearstart' });
+      clear.call(this, opt_fast)
+      this.dispatchEvent({ type: 'clearend' });
+    };
+  })();
 
 /** 
  * @classdesc 3D vector layer rendering
@@ -33005,11 +33005,11 @@ ol.layer.Vector3D = class ollayerVector3D extends ol.layer.Image {
 ol.source.WikiCommons = class olsourceWikiCommons extends ol.source.Vector {
   constructor(opt_options) {
     var options = opt_options || {}
-    options.loader = function(extent, resolution, projection) {
+    options.loader = function (extent, resolution, projection) {
       return this._loaderFn(extent, resolution, projection)
-    } 
+    }
     /** Default attribution */
-    if (!options.attributions) options.attributions = [ '&copy; <a href="https://commons.wikimedia.org/">Wikimedia Commons</a>']
+    if (!options.attributions) options.attributions = ['&copy; <a href="https://commons.wikimedia.org/">Wikimedia Commons</a>']
     // Bbox strategy : reload at each move
     if (!options.strategy) options.strategy = ol.loadingstrategy.bbox
     super(options)
@@ -33395,7 +33395,7 @@ ol.layer.GeoImage = class ollayerGeoImage extends ol.layer.Image {
  *  @param {ol.projectionLike} [options.projection=EPSG:3857] projection for the extent, default EPSG:3857
  * @param {olx.source.WMTSOptions=} tileoptions WMTS options if not defined default are used
  */
- ol.layer.Geoportail = class ollayerGeoportail extends ol.layer.Tile {
+ol.layer.Geoportail = class ollayerGeoportail extends ol.layer.Tile {
   constructor(layer, options, tileoptions) {
     options = options || {}
     tileoptions = tileoptions || {}
@@ -33709,19 +33709,19 @@ ol.layer.GeoImage = class ollayerGeoImage extends ol.layer.Image {
  */
 ol.layer.Geoportail.capabilities = {
   // choisirgeoportail
-  "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2": { "key":"cartes", "server":"https://wxs.ign.fr/geoportail/wmts","layer":"GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2","title":"Plan IGN v2","format":"image/png","style":"normal","queryable":false,"tilematrix":"PM","minZoom":0,"maxZoom":19,"bbox":[-175,-85,175,85],"desc":"Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé. Version actuellement en beta test","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":0,"maxZoom":19,"constraint":[{"minZoom":0,"maxZoom":19,"bbox":[-175,-85,175,85]}]}}},
-  "CADASTRALPARCELS.PARCELLAIRE_EXPRESS": { "key":"parcellaire", "server":"https://wxs.ign.fr/geoportail/wmts","layer":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS","title":"PCI vecteur","format":"image/png","style":"PCI vecteur","queryable":false,"tilematrix":"PM","minZoom":0,"maxZoom":19,"bbox":[-63.37252,-21.475586,55.925865,51.31212],"desc":"Plan cadastral informatisé vecteur de la DGFIP.","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":0,"maxZoom":19,"constraint":[{"minZoom":0,"maxZoom":19,"bbox":[-63.37252,-21.475586,55.925865,51.31212]}]}}},
-  "ORTHOIMAGERY.ORTHOPHOTOS": { "key":"ortho", "server":"https://wxs.ign.fr/geoportail/wmts","layer":"ORTHOIMAGERY.ORTHOPHOTOS","title":"Photographies aériennes","format":"image/jpeg","style":"normal","queryable":true,"tilematrix":"PM","minZoom":0,"bbox":[-178.18713,-22.767689,167.94624,51.11242],"desc":"Photographies aériennes","originators":{"CRCORSE":{"href":"http://www.corse.fr//","attribution":"CRCORSE","logo":"https://wxs.ign.fr/static/logos/CRCORSE/CRCORSE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[8.428783,41.338627,9.688606,43.08541]}]},"SIGLR":{"href":"http://www.siglr.org//","attribution":"SIGLR","logo":"https://wxs.ign.fr/static/logos/SIGLR/SIGLR.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[1.6784439,42.316307,4.8729386,44.978218]}]},"BOURGOGNE-FRANCHE-COMTE":{"href":"https://www.bourgognefranchecomte.fr/","attribution":"Auvergne","logo":"https://wxs.ign.fr/static/logos/BOURGOGNE-FRANCHE-COMTE/BOURGOGNE-FRANCHE-COMTE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[2.837849,46.131435,7.1713247,48.408287]}]},"FEDER_AUVERGNE":{"href":"http://www.europe-en-auvergne.eu/","attribution":"Auvergne","logo":"https://wxs.ign.fr/static/logos/FEDER_AUVERGNE/FEDER_AUVERGNE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[2.0398402,44.60505,3.38408,45.49146]}]},"FEDER_PAYSDELALOIRE":{"href":"https://www.europe.paysdelaloire.fr/","attribution":"Pays-de-la-Loire","logo":"https://wxs.ign.fr/static/logos/FEDER_PAYSDELALOIRE/FEDER_PAYSDELALOIRE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[-2.457367,46.19304,0.951426,48.57609]}]},"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":13,"maxZoom":20,"constraint":[{"minZoom":19,"maxZoom":19,"bbox":[-63.160706,-21.401262,55.84643,51.11242]},{"bbox":[0.035491213,43.221077,6.0235267,49.696926]},{"minZoom":20,"maxZoom":20,"bbox":[0.035491213,43.221077,6.0235267,49.696926]},{"minZoom":13,"maxZoom":18,"bbox":[-178.18713,-21.401329,55.85611,51.11242]}]},"E-MEGALIS":{"href":"http://www.e-megalisbretagne.org//","attribution":"Syndicat mixte de coopération territoriale (e-Megalis)","logo":"https://wxs.ign.fr/static/logos/E-MEGALIS/E-MEGALIS.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[-3.7059498,47.971947,-1.8486879,48.99035]}]},"FEDER2":{"href":"http://www.europe-en-france.gouv.fr/","attribution":"Fonds européen de développement économique et régional","logo":"https://wxs.ign.fr/static/logos/FEDER2/FEDER2.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[1.3577043,48.824635,4.269964,50.37648]}]},"PREFECTURE_GUADELOUPE":{"href":"www.guadeloupe.pref.gouv.fr/","attribution":"guadeloupe","logo":"https://wxs.ign.fr/static/logos/PREFECTURE_GUADELOUPE/PREFECTURE_GUADELOUPE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[-61.82342,14.371942,-60.787838,16.521578]}]},"OCCITANIE":{"href":"https://www.laregion.fr/","attribution":"La Région Occitanie; Pyrénées - Méditerranée","logo":"https://wxs.ign.fr/static/logos/OCCITANIE/OCCITANIE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[2.2086434,48.805965,2.4859917,48.915382]}]},"RGD_SAVOIE":{"href":"http://www.rgd.fr","attribution":"Régie de Gestion de Données des Pays de Savoie (RGD 73-74)","logo":"https://wxs.ign.fr/static/logos/RGD_SAVOIE/RGD_SAVOIE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":19,"maxZoom":19,"bbox":[5.7759595,45.65335,7.0887337,46.438328]},{"minZoom":13,"maxZoom":18,"bbox":[5.5923314,45.017353,7.2323394,46.438328]}]},"CG45":{"href":"http://www.loiret.com","attribution":"Le conseil général du Loiret","logo":"https://wxs.ign.fr/static/logos/CG45/CG45.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[1.4883244,47.471867,3.1349874,48.354233]}]},"CRAIG":{"href":"http://www.craig.fr","attribution":"Centre Régional Auvergnat de l'Information Géographique (CRAIG)","logo":"https://wxs.ign.fr/static/logos/CRAIG/CRAIG.gif","minZoom":13,"maxZoom":20,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[2.0398402,44.60505,6.4295278,46.8038]},{"minZoom":20,"maxZoom":20,"bbox":[2.2243388,44.76621,2.7314367,45.11295]}]},"e-Megalis":{"href":"http://www.e-megalisbretagne.org//","attribution":"Syndicat mixte de coopération territoriale (e-Megalis)","logo":"https://wxs.ign.fr/static/logos/e-Megalis/e-Megalis.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[-5.1937118,47.23789,-0.98568505,48.980812]}]},"PPIGE":{"href":"http://www.ppige-npdc.fr/","attribution":"PPIGE","logo":"https://wxs.ign.fr/static/logos/PPIGE/PPIGE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[1.5212119,49.957302,4.2673664,51.090965]}]},"CG06":{"href":"http://www.cg06.fr","attribution":"Département Alpes Maritimes (06) en partenariat avec : Groupement Orthophoto 06 (NCA, Ville de Cannes, CARF, CASA,CG06, CA de Grasse) ","logo":"https://wxs.ign.fr/static/logos/CG06/CG06.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[6.6093955,43.44647,7.7436337,44.377018]}]},"MEGALIS-BRETAGNE":{"href":"https://www.megalisbretagne.org/","attribution":"Syndicat mixte Mégalis Bretagne","logo":"https://wxs.ign.fr/static/logos/MEGALIS-BRETAGNE/MEGALIS-BRETAGNE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[-5.2086344,47.591938,-3.3396015,48.808697]}]},"FEDER":{"href":"http://www.europe-en-france.gouv.fr/","attribution":"Fonds européen de développement économique et régional","logo":"https://wxs.ign.fr/static/logos/FEDER/FEDER.gif","minZoom":0,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[-1.9662633,42.316307,8.25674,50.18387]},{"minZoom":0,"maxZoom":12,"bbox":[-2.400665,41.333557,9.560094,50.366302]}]},"LANGUEDOC-ROUSSILLON":{"href":"https://www.laregion.fr/","attribution":"Région Occitanie","logo":"https://wxs.ign.fr/static/logos/LANGUEDOC-ROUSSILLON/LANGUEDOC-ROUSSILLON.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[1.6784439,42.63972,4.208843,43.979004]}]},"GRAND_EST":{"href":"https://www.grandest.fr/","attribution":"Hauts-de-France","logo":"https://wxs.ign.fr/static/logos/GRAND_EST/GRAND_EST.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[5.362788,47.390827,7.6924667,49.58011]}]},"CNES_AUVERGNE":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_AUVERGNE/CNES_AUVERGNE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[2.2656832,45.279934,4.0227704,46.8038]}]},"HAUTS_DE_FRANCE":{"href":"https://www.hautsdefrance.fr/","attribution":"Hauts-de-France","logo":"https://wxs.ign.fr/static/logos/HAUTS_DE_FRANCE/HAUTS_DE_FRANCE.gif","minZoom":13,"maxZoom":19,"constraint":[{"minZoom":13,"maxZoom":19,"bbox":[2.0740242,48.81521,4.3390365,51.11242]}]},"MPM":{"href":"http://www.marseille-provence.com/","attribution":"Marseille Provence Métropole","logo":"https://wxs.ign.fr/static/logos/MPM/MPM.gif","minZoom":20,"maxZoom":20,"constraint":[{"minZoom":20,"maxZoom":20,"bbox":[5.076959,43.153347,5.7168245,43.454994]}]},"DITTT":{"href":"http://www.dittt.gouv.nc/portal/page/portal/dittt/","attribution":"Direction des Infrastructures, de la Topographie et des Transports Terrestres","logo":"https://wxs.ign.fr/static/logos/DITTT/DITTT.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[163.47784,-22.767689,167.94624,-19.434975]}]},"CNES_978":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_978/CNES_978.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[-63.160706,18.04345,-62.962185,18.133898]}]},"CNES_ALSACE":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_ALSACE/CNES_ALSACE.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[6.8086324,47.39981,7.668318,48.32695]}]},"CNES_974":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_974/CNES_974.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[55.205757,-21.401262,55.84643,-20.862825]}]},"CNES_975":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_975/CNES_975.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[-56.410988,46.734093,-56.10308,47.149963]}]},"CNES_976":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_976/CNES_976.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[44.916977,-13.089187,45.30442,-12.564543]}]},"CNES_977":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_977/CNES_977.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[-62.952805,17.862621,-62.78276,17.98024]}]},"CNES":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES/CNES.gif","minZoom":13,"maxZoom":16,"constraint":[{"minZoom":13,"maxZoom":16,"bbox":[-55.01953,1.845384,-50.88867,6.053161]}]},"ASTRIUM":{"href":"http://www.geo-airbusds.com/","attribution":"Airbus Defence and Space","logo":"https://wxs.ign.fr/static/logos/ASTRIUM/ASTRIUM.gif","minZoom":13,"maxZoom":16,"constraint":[{"minZoom":13,"maxZoom":16,"bbox":[-55.01953,1.845384,-50.88867,6.053161]}]},"CNES_971":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_971/CNES_971.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[-61.82342,15.819616,-60.99497,16.521578]}]},"CNES_972":{"href":"http://www.cnes.fr/","attribution":"Centre national d'études spatiales (CNES)","logo":"https://wxs.ign.fr/static/logos/CNES_972/CNES_972.gif","minZoom":13,"maxZoom":18,"constraint":[{"minZoom":13,"maxZoom":18,"bbox":[-61.247208,14.371855,-60.778458,14.899901]}]}}},
+  "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2": { "key": "cartes", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2", "title": "Plan IGN v2", "format": "image/png", "style": "normal", "queryable": false, "tilematrix": "PM", "minZoom": 0, "maxZoom": 19, "bbox": [-175, -85, 175, 85], "desc": "Cartographie multi-échelles sur le territoire national, issue des bases de données vecteur de l’IGN, mis à jour régulièrement et réalisée selon un processus entièrement automatisé. Version actuellement en beta test", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 0, "maxZoom": 19, "constraint": [{ "minZoom": 0, "maxZoom": 19, "bbox": [-175, -85, 175, 85] }] } } },
+  "CADASTRALPARCELS.PARCELLAIRE_EXPRESS": { "key": "parcellaire", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "CADASTRALPARCELS.PARCELLAIRE_EXPRESS", "title": "PCI vecteur", "format": "image/png", "style": "PCI vecteur", "queryable": false, "tilematrix": "PM", "minZoom": 0, "maxZoom": 19, "bbox": [-63.37252, -21.475586, 55.925865, 51.31212], "desc": "Plan cadastral informatisé vecteur de la DGFIP.", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 0, "maxZoom": 19, "constraint": [{ "minZoom": 0, "maxZoom": 19, "bbox": [-63.37252, -21.475586, 55.925865, 51.31212] }] } } },
+  "ORTHOIMAGERY.ORTHOPHOTOS": { "key": "ortho", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "ORTHOIMAGERY.ORTHOPHOTOS", "title": "Photographies aériennes", "format": "image/jpeg", "style": "normal", "queryable": true, "tilematrix": "PM", "minZoom": 0, "bbox": [-178.18713, -22.767689, 167.94624, 51.11242], "desc": "Photographies aériennes", "originators": { "CRCORSE": { "href": "http://www.corse.fr//", "attribution": "CRCORSE", "logo": "https://wxs.ign.fr/static/logos/CRCORSE/CRCORSE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [8.428783, 41.338627, 9.688606, 43.08541] }] }, "SIGLR": { "href": "http://www.siglr.org//", "attribution": "SIGLR", "logo": "https://wxs.ign.fr/static/logos/SIGLR/SIGLR.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [1.6784439, 42.316307, 4.8729386, 44.978218] }] }, "BOURGOGNE-FRANCHE-COMTE": { "href": "https://www.bourgognefranchecomte.fr/", "attribution": "Auvergne", "logo": "https://wxs.ign.fr/static/logos/BOURGOGNE-FRANCHE-COMTE/BOURGOGNE-FRANCHE-COMTE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [2.837849, 46.131435, 7.1713247, 48.408287] }] }, "FEDER_AUVERGNE": { "href": "http://www.europe-en-auvergne.eu/", "attribution": "Auvergne", "logo": "https://wxs.ign.fr/static/logos/FEDER_AUVERGNE/FEDER_AUVERGNE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [2.0398402, 44.60505, 3.38408, 45.49146] }] }, "FEDER_PAYSDELALOIRE": { "href": "https://www.europe.paysdelaloire.fr/", "attribution": "Pays-de-la-Loire", "logo": "https://wxs.ign.fr/static/logos/FEDER_PAYSDELALOIRE/FEDER_PAYSDELALOIRE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [-2.457367, 46.19304, 0.951426, 48.57609] }] }, "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 13, "maxZoom": 20, "constraint": [{ "minZoom": 19, "maxZoom": 19, "bbox": [-63.160706, -21.401262, 55.84643, 51.11242] }, { "bbox": [0.035491213, 43.221077, 6.0235267, 49.696926] }, { "minZoom": 20, "maxZoom": 20, "bbox": [0.035491213, 43.221077, 6.0235267, 49.696926] }, { "minZoom": 13, "maxZoom": 18, "bbox": [-178.18713, -21.401329, 55.85611, 51.11242] }] }, "E-MEGALIS": { "href": "http://www.e-megalisbretagne.org//", "attribution": "Syndicat mixte de coopération territoriale (e-Megalis)", "logo": "https://wxs.ign.fr/static/logos/E-MEGALIS/E-MEGALIS.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [-3.7059498, 47.971947, -1.8486879, 48.99035] }] }, "FEDER2": { "href": "http://www.europe-en-france.gouv.fr/", "attribution": "Fonds européen de développement économique et régional", "logo": "https://wxs.ign.fr/static/logos/FEDER2/FEDER2.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [1.3577043, 48.824635, 4.269964, 50.37648] }] }, "PREFECTURE_GUADELOUPE": { "href": "www.guadeloupe.pref.gouv.fr/", "attribution": "guadeloupe", "logo": "https://wxs.ign.fr/static/logos/PREFECTURE_GUADELOUPE/PREFECTURE_GUADELOUPE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [-61.82342, 14.371942, -60.787838, 16.521578] }] }, "OCCITANIE": { "href": "https://www.laregion.fr/", "attribution": "La Région Occitanie; Pyrénées - Méditerranée", "logo": "https://wxs.ign.fr/static/logos/OCCITANIE/OCCITANIE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [2.2086434, 48.805965, 2.4859917, 48.915382] }] }, "RGD_SAVOIE": { "href": "http://www.rgd.fr", "attribution": "Régie de Gestion de Données des Pays de Savoie (RGD 73-74)", "logo": "https://wxs.ign.fr/static/logos/RGD_SAVOIE/RGD_SAVOIE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 19, "maxZoom": 19, "bbox": [5.7759595, 45.65335, 7.0887337, 46.438328] }, { "minZoom": 13, "maxZoom": 18, "bbox": [5.5923314, 45.017353, 7.2323394, 46.438328] }] }, "CG45": { "href": "http://www.loiret.com", "attribution": "Le conseil général du Loiret", "logo": "https://wxs.ign.fr/static/logos/CG45/CG45.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [1.4883244, 47.471867, 3.1349874, 48.354233] }] }, "CRAIG": { "href": "http://www.craig.fr", "attribution": "Centre Régional Auvergnat de l'Information Géographique (CRAIG)", "logo": "https://wxs.ign.fr/static/logos/CRAIG/CRAIG.gif", "minZoom": 13, "maxZoom": 20, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [2.0398402, 44.60505, 6.4295278, 46.8038] }, { "minZoom": 20, "maxZoom": 20, "bbox": [2.2243388, 44.76621, 2.7314367, 45.11295] }] }, "e-Megalis": { "href": "http://www.e-megalisbretagne.org//", "attribution": "Syndicat mixte de coopération territoriale (e-Megalis)", "logo": "https://wxs.ign.fr/static/logos/e-Megalis/e-Megalis.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [-5.1937118, 47.23789, -0.98568505, 48.980812] }] }, "PPIGE": { "href": "http://www.ppige-npdc.fr/", "attribution": "PPIGE", "logo": "https://wxs.ign.fr/static/logos/PPIGE/PPIGE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [1.5212119, 49.957302, 4.2673664, 51.090965] }] }, "CG06": { "href": "http://www.cg06.fr", "attribution": "Département Alpes Maritimes (06) en partenariat avec : Groupement Orthophoto 06 (NCA, Ville de Cannes, CARF, CASA,CG06, CA de Grasse) ", "logo": "https://wxs.ign.fr/static/logos/CG06/CG06.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [6.6093955, 43.44647, 7.7436337, 44.377018] }] }, "MEGALIS-BRETAGNE": { "href": "https://www.megalisbretagne.org/", "attribution": "Syndicat mixte Mégalis Bretagne", "logo": "https://wxs.ign.fr/static/logos/MEGALIS-BRETAGNE/MEGALIS-BRETAGNE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [-5.2086344, 47.591938, -3.3396015, 48.808697] }] }, "FEDER": { "href": "http://www.europe-en-france.gouv.fr/", "attribution": "Fonds européen de développement économique et régional", "logo": "https://wxs.ign.fr/static/logos/FEDER/FEDER.gif", "minZoom": 0, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [-1.9662633, 42.316307, 8.25674, 50.18387] }, { "minZoom": 0, "maxZoom": 12, "bbox": [-2.400665, 41.333557, 9.560094, 50.366302] }] }, "LANGUEDOC-ROUSSILLON": { "href": "https://www.laregion.fr/", "attribution": "Région Occitanie", "logo": "https://wxs.ign.fr/static/logos/LANGUEDOC-ROUSSILLON/LANGUEDOC-ROUSSILLON.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [1.6784439, 42.63972, 4.208843, 43.979004] }] }, "GRAND_EST": { "href": "https://www.grandest.fr/", "attribution": "Hauts-de-France", "logo": "https://wxs.ign.fr/static/logos/GRAND_EST/GRAND_EST.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [5.362788, 47.390827, 7.6924667, 49.58011] }] }, "CNES_AUVERGNE": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_AUVERGNE/CNES_AUVERGNE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [2.2656832, 45.279934, 4.0227704, 46.8038] }] }, "HAUTS_DE_FRANCE": { "href": "https://www.hautsdefrance.fr/", "attribution": "Hauts-de-France", "logo": "https://wxs.ign.fr/static/logos/HAUTS_DE_FRANCE/HAUTS_DE_FRANCE.gif", "minZoom": 13, "maxZoom": 19, "constraint": [{ "minZoom": 13, "maxZoom": 19, "bbox": [2.0740242, 48.81521, 4.3390365, 51.11242] }] }, "MPM": { "href": "http://www.marseille-provence.com/", "attribution": "Marseille Provence Métropole", "logo": "https://wxs.ign.fr/static/logos/MPM/MPM.gif", "minZoom": 20, "maxZoom": 20, "constraint": [{ "minZoom": 20, "maxZoom": 20, "bbox": [5.076959, 43.153347, 5.7168245, 43.454994] }] }, "DITTT": { "href": "http://www.dittt.gouv.nc/portal/page/portal/dittt/", "attribution": "Direction des Infrastructures, de la Topographie et des Transports Terrestres", "logo": "https://wxs.ign.fr/static/logos/DITTT/DITTT.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [163.47784, -22.767689, 167.94624, -19.434975] }] }, "CNES_978": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_978/CNES_978.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [-63.160706, 18.04345, -62.962185, 18.133898] }] }, "CNES_ALSACE": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_ALSACE/CNES_ALSACE.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [6.8086324, 47.39981, 7.668318, 48.32695] }] }, "CNES_974": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_974/CNES_974.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [55.205757, -21.401262, 55.84643, -20.862825] }] }, "CNES_975": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_975/CNES_975.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [-56.410988, 46.734093, -56.10308, 47.149963] }] }, "CNES_976": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_976/CNES_976.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [44.916977, -13.089187, 45.30442, -12.564543] }] }, "CNES_977": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_977/CNES_977.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [-62.952805, 17.862621, -62.78276, 17.98024] }] }, "CNES": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES/CNES.gif", "minZoom": 13, "maxZoom": 16, "constraint": [{ "minZoom": 13, "maxZoom": 16, "bbox": [-55.01953, 1.845384, -50.88867, 6.053161] }] }, "ASTRIUM": { "href": "http://www.geo-airbusds.com/", "attribution": "Airbus Defence and Space", "logo": "https://wxs.ign.fr/static/logos/ASTRIUM/ASTRIUM.gif", "minZoom": 13, "maxZoom": 16, "constraint": [{ "minZoom": 13, "maxZoom": 16, "bbox": [-55.01953, 1.845384, -50.88867, 6.053161] }] }, "CNES_971": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_971/CNES_971.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [-61.82342, 15.819616, -60.99497, 16.521578] }] }, "CNES_972": { "href": "http://www.cnes.fr/", "attribution": "Centre national d'études spatiales (CNES)", "logo": "https://wxs.ign.fr/static/logos/CNES_972/CNES_972.gif", "minZoom": 13, "maxZoom": 18, "constraint": [{ "minZoom": 13, "maxZoom": 18, "bbox": [-61.247208, 14.371855, -60.778458, 14.899901] }] } } },
   // Deprecated
-  "GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD": {"server":"https://wxs.ign.fr/geoportail/wmts","layer":"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD","title":"Carte IGN","format":"image/jpeg","style":"normal","queryable":false,"tilematrix":"PM","minZoom":0,"maxZoom":18,"bbox":[-179.62723,-84.5047,179.74588,85.47958],"desc":"Cartographie topographique multi-échelles du territoire français issue des bases de données vecteur de l’IGN - emprise nationale, visible du 1/200 au 1/130000000","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":0,"maxZoom":18,"constraint":[{"minZoom":5,"maxZoom":5,"bbox":[-179.57285,-83.84196,178.4975,85.36646]},{"minZoom":0,"maxZoom":2,"bbox":[-175.99709,-84.42859,175.99709,84.2865]},{"minZoom":3,"maxZoom":3,"bbox":[-176.23093,-84.5047,179.08267,84.89126]},{"minZoom":4,"maxZoom":4,"bbox":[-179.62723,-84.0159,-179.21112,85.47958]},{"minZoom":6,"maxZoom":8,"bbox":[-179.49689,-84.02368,179.74588,85.30035]},{"minZoom":15,"maxZoom":18,"bbox":[-5.6663494,41.209736,10.819784,51.175068]},{"minZoom":14,"maxZoom":14,"bbox":[-5.713191,40.852314,11.429714,51.44377]},{"minZoom":13,"maxZoom":13,"bbox":[-63.37252,13.428586,11.429714,51.44377]},{"minZoom":11,"maxZoom":12,"bbox":[-63.37252,13.428586,11.496459,51.444122]},{"minZoom":9,"maxZoom":9,"bbox":[-64.81273,13.428586,11.496459,51.444016]},{"minZoom":10,"maxZoom":10,"bbox":[-63.37252,13.428586,11.496459,51.444016]}]}}},
+  "GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD": { "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD", "title": "Carte IGN", "format": "image/jpeg", "style": "normal", "queryable": false, "tilematrix": "PM", "minZoom": 0, "maxZoom": 18, "bbox": [-179.62723, -84.5047, 179.74588, 85.47958], "desc": "Cartographie topographique multi-échelles du territoire français issue des bases de données vecteur de l’IGN - emprise nationale, visible du 1/200 au 1/130000000", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 0, "maxZoom": 18, "constraint": [{ "minZoom": 5, "maxZoom": 5, "bbox": [-179.57285, -83.84196, 178.4975, 85.36646] }, { "minZoom": 0, "maxZoom": 2, "bbox": [-175.99709, -84.42859, 175.99709, 84.2865] }, { "minZoom": 3, "maxZoom": 3, "bbox": [-176.23093, -84.5047, 179.08267, 84.89126] }, { "minZoom": 4, "maxZoom": 4, "bbox": [-179.62723, -84.0159, -179.21112, 85.47958] }, { "minZoom": 6, "maxZoom": 8, "bbox": [-179.49689, -84.02368, 179.74588, 85.30035] }, { "minZoom": 15, "maxZoom": 18, "bbox": [-5.6663494, 41.209736, 10.819784, 51.175068] }, { "minZoom": 14, "maxZoom": 14, "bbox": [-5.713191, 40.852314, 11.429714, 51.44377] }, { "minZoom": 13, "maxZoom": 13, "bbox": [-63.37252, 13.428586, 11.429714, 51.44377] }, { "minZoom": 11, "maxZoom": 12, "bbox": [-63.37252, 13.428586, 11.496459, 51.444122] }, { "minZoom": 9, "maxZoom": 9, "bbox": [-64.81273, 13.428586, 11.496459, 51.444016] }, { "minZoom": 10, "maxZoom": 10, "bbox": [-63.37252, 13.428586, 11.496459, 51.444016] }] } } },
   // Need API key
-  "GEOGRAPHICALGRIDSYSTEMS.MAPS": {"server":"https://wxs.ign.fr/geoportail/wmts","layer":"GEOGRAPHICALGRIDSYSTEMS.MAPS","title":"Cartes IGN","format":"image/jpeg","style":"normal","queryable":true,"tilematrix":"PM","minZoom":0,"maxZoom":18,"bbox":[-180,-75,180,80],"desc":"Cartes IGN","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":0,"maxZoom":18,"constraint":[{"minZoom":7,"maxZoom":7,"bbox":[-178.20573,-68.138855,144.84375,51.909786]},{"minZoom":8,"maxZoom":8,"bbox":[-178.20573,-68.138855,168.24327,51.909786]},{"minZoom":13,"maxZoom":13,"bbox":[-178.20573,-67.101425,168.24327,51.44377]},{"minZoom":14,"maxZoom":14,"bbox":[-178.20573,-67.101425,168.23909,51.44377]},{"minZoom":11,"maxZoom":12,"bbox":[-178.20573,-67.101425,168.24327,51.444122]},{"minZoom":9,"maxZoom":10,"bbox":[-178.20573,-68.138855,168.24327,51.444016]},{"minZoom":15,"maxZoom":15,"bbox":[-178.20573,-46.502903,168.23909,51.175068]},{"minZoom":16,"maxZoom":16,"bbox":[-178.20573,-46.502903,168.29811,51.175068]},{"minZoom":0,"maxZoom":6,"bbox":[-180,-60,180,80]},{"minZoom":18,"maxZoom":18,"bbox":[-5.6663494,41.209736,10.819784,51.175068]},{"minZoom":17,"maxZoom":17,"bbox":[-179.5,-75,179.5,75]}]},"DITTT":{"href":"http://www.dittt.gouv.nc/portal/page/portal/dittt/","attribution":"Direction des Infrastructures, de la Topographie et des Transports Terrestres","logo":"https://wxs.ign.fr/static/logos/DITTT/DITTT.gif","minZoom":8,"maxZoom":16,"constraint":[{"minZoom":8,"maxZoom":10,"bbox":[163.47784,-22.972307,168.24327,-19.402702]},{"minZoom":11,"maxZoom":13,"bbox":[163.47784,-22.972307,168.24327,-19.494438]},{"minZoom":14,"maxZoom":15,"bbox":[163.47784,-22.764496,168.23909,-19.493542]},{"minZoom":16,"maxZoom":16,"bbox":[163.47784,-22.809465,168.29811,-19.403923]}]}}},
+  "GEOGRAPHICALGRIDSYSTEMS.MAPS": { "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "GEOGRAPHICALGRIDSYSTEMS.MAPS", "title": "Cartes IGN", "format": "image/jpeg", "style": "normal", "queryable": true, "tilematrix": "PM", "minZoom": 0, "maxZoom": 18, "bbox": [-180, -75, 180, 80], "desc": "Cartes IGN", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 0, "maxZoom": 18, "constraint": [{ "minZoom": 7, "maxZoom": 7, "bbox": [-178.20573, -68.138855, 144.84375, 51.909786] }, { "minZoom": 8, "maxZoom": 8, "bbox": [-178.20573, -68.138855, 168.24327, 51.909786] }, { "minZoom": 13, "maxZoom": 13, "bbox": [-178.20573, -67.101425, 168.24327, 51.44377] }, { "minZoom": 14, "maxZoom": 14, "bbox": [-178.20573, -67.101425, 168.23909, 51.44377] }, { "minZoom": 11, "maxZoom": 12, "bbox": [-178.20573, -67.101425, 168.24327, 51.444122] }, { "minZoom": 9, "maxZoom": 10, "bbox": [-178.20573, -68.138855, 168.24327, 51.444016] }, { "minZoom": 15, "maxZoom": 15, "bbox": [-178.20573, -46.502903, 168.23909, 51.175068] }, { "minZoom": 16, "maxZoom": 16, "bbox": [-178.20573, -46.502903, 168.29811, 51.175068] }, { "minZoom": 0, "maxZoom": 6, "bbox": [-180, -60, 180, 80] }, { "minZoom": 18, "maxZoom": 18, "bbox": [-5.6663494, 41.209736, 10.819784, 51.175068] }, { "minZoom": 17, "maxZoom": 17, "bbox": [-179.5, -75, 179.5, 75] }] }, "DITTT": { "href": "http://www.dittt.gouv.nc/portal/page/portal/dittt/", "attribution": "Direction des Infrastructures, de la Topographie et des Transports Terrestres", "logo": "https://wxs.ign.fr/static/logos/DITTT/DITTT.gif", "minZoom": 8, "maxZoom": 16, "constraint": [{ "minZoom": 8, "maxZoom": 10, "bbox": [163.47784, -22.972307, 168.24327, -19.402702] }, { "minZoom": 11, "maxZoom": 13, "bbox": [163.47784, -22.972307, 168.24327, -19.494438] }, { "minZoom": 14, "maxZoom": 15, "bbox": [163.47784, -22.764496, 168.23909, -19.493542] }, { "minZoom": 16, "maxZoom": 16, "bbox": [163.47784, -22.809465, 168.29811, -19.403923] }] } } },
   // Other layers
-  "ADMINEXPRESS-COG-CARTO.LATEST": {"key": "administratif", "server":"https://wxs.ign.fr/geoportail/wmts","layer":"ADMINEXPRESS-COG-CARTO.LATEST","title":"ADMINEXPRESS COG CARTO","format":"image/png","style":"normal","queryable":true,"tilematrix":"PM","minZoom":6,"maxZoom":16,"bbox":[-63.37252,-21.475586,55.925865,51.31212],"desc":"Limites administratives Express COG code officiel géographique 2021","originators":{"IGN":{"href":"https://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":6,"maxZoom":16,"constraint":[{"minZoom":6,"maxZoom":16,"bbox":[-63.37252,-21.475586,55.925865,51.31212]}]}}},
-  "GEOGRAPHICALGRIDSYSTEMS.SLOPES.MOUNTAIN": {"key":"altimetrie","server":"https://wxs.ign.fr/geoportail/wmts","layer":"GEOGRAPHICALGRIDSYSTEMS.SLOPES.MOUNTAIN","title":"Carte des pentes","format":"image/png","style":"normal","queryable":false,"tilematrix":"PM","minZoom":0,"maxZoom":17,"bbox":[-63.161392,-21.544624,56.001812,51.099052],"desc":"Carte des zones ayant une valeur de pente supérieure à 30°-35°-40°-45° d'après la BD ALTI au pas de 5m","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":0,"maxZoom":17,"constraint":[{"minZoom":0,"maxZoom":17,"bbox":[-5.1504726,41.32521,9.570543,51.099052]}]}}},
-  "ELEVATION.SLOPES": {"key":"altimetrie","server":"https://wxs.ign.fr/geoportail/wmts","layer":"ELEVATION.SLOPES","title":"Altitude","format":"image/jpeg","style":"normal","queryable":true,"tilematrix":"PM","minZoom":6,"maxZoom":14,"bbox":[-178.20589,-22.595179,167.43176,50.93085],"desc":"La couche altitude se compose d'un MNT (Modèle Numérique de Terrain) affiché en teintes hypsométriques et issu de la BD ALTI®.","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":6,"maxZoom":14,"constraint":[{"minZoom":6,"maxZoom":14,"bbox":[55.205746,-21.392344,55.846554,-20.86271]}]}}},
-  "GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1": { "key":"cartes", "server":"https://wxs.ign.fr/geoportail/wmts","layer":"GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1","title":"Plan IGN j+1","format":"image/png","style":"normal","queryable":false,"tilematrix":"PM","minZoom":0,"maxZoom":18,"bbox":[-179.5,-75,179.5,75],"desc":"Plan IGN j+1","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":0,"maxZoom":18,"constraint":[{"minZoom":0,"maxZoom":18,"bbox":[-179,-80,179,80]}]}}},
-  "TRANSPORTNETWORKS.ROADS": { "key": "topographie", "server":"https://wxs.ign.fr/geoportail/wmts","layer":"TRANSPORTNETWORKS.ROADS","title":"Routes","format":"image/png","style":"normal","queryable":false,"tilematrix":"PM","minZoom":6,"maxZoom":18,"bbox":[-63.969162,-21.49687,55.964417,71.584076],"desc":"Affichage du réseau routier français et européen.","originators":{"IGN":{"href":"http://www.ign.fr","attribution":"Institut national de l'information géographique et forestière","logo":"https://wxs.ign.fr/static/logos/IGN/IGN.gif","minZoom":6,"maxZoom":18,"constraint":[{"minZoom":15,"maxZoom":18,"bbox":[-63.37252,-21.475586,55.925865,51.31212]},{"minZoom":6,"maxZoom":14,"bbox":[-63.969162,-21.49687,55.964417,71.584076]}]}}},
+  "ADMINEXPRESS-COG-CARTO.LATEST": { "key": "administratif", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "ADMINEXPRESS-COG-CARTO.LATEST", "title": "ADMINEXPRESS COG CARTO", "format": "image/png", "style": "normal", "queryable": true, "tilematrix": "PM", "minZoom": 6, "maxZoom": 16, "bbox": [-63.37252, -21.475586, 55.925865, 51.31212], "desc": "Limites administratives Express COG code officiel géographique 2021", "originators": { "IGN": { "href": "https://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 6, "maxZoom": 16, "constraint": [{ "minZoom": 6, "maxZoom": 16, "bbox": [-63.37252, -21.475586, 55.925865, 51.31212] }] } } },
+  "GEOGRAPHICALGRIDSYSTEMS.SLOPES.MOUNTAIN": { "key": "altimetrie", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "GEOGRAPHICALGRIDSYSTEMS.SLOPES.MOUNTAIN", "title": "Carte des pentes", "format": "image/png", "style": "normal", "queryable": false, "tilematrix": "PM", "minZoom": 0, "maxZoom": 17, "bbox": [-63.161392, -21.544624, 56.001812, 51.099052], "desc": "Carte des zones ayant une valeur de pente supérieure à 30°-35°-40°-45° d'après la BD ALTI au pas de 5m", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 0, "maxZoom": 17, "constraint": [{ "minZoom": 0, "maxZoom": 17, "bbox": [-5.1504726, 41.32521, 9.570543, 51.099052] }] } } },
+  "ELEVATION.SLOPES": { "key": "altimetrie", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "ELEVATION.SLOPES", "title": "Altitude", "format": "image/jpeg", "style": "normal", "queryable": true, "tilematrix": "PM", "minZoom": 6, "maxZoom": 14, "bbox": [-178.20589, -22.595179, 167.43176, 50.93085], "desc": "La couche altitude se compose d'un MNT (Modèle Numérique de Terrain) affiché en teintes hypsométriques et issu de la BD ALTI®.", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 6, "maxZoom": 14, "constraint": [{ "minZoom": 6, "maxZoom": 14, "bbox": [55.205746, -21.392344, 55.846554, -20.86271] }] } } },
+  "GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1": { "key": "cartes", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1", "title": "Plan IGN j+1", "format": "image/png", "style": "normal", "queryable": false, "tilematrix": "PM", "minZoom": 0, "maxZoom": 18, "bbox": [-179.5, -75, 179.5, 75], "desc": "Plan IGN j+1", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 0, "maxZoom": 18, "constraint": [{ "minZoom": 0, "maxZoom": 18, "bbox": [-179, -80, 179, 80] }] } } },
+  "TRANSPORTNETWORKS.ROADS": { "key": "topographie", "server": "https://wxs.ign.fr/geoportail/wmts", "layer": "TRANSPORTNETWORKS.ROADS", "title": "Routes", "format": "image/png", "style": "normal", "queryable": false, "tilematrix": "PM", "minZoom": 6, "maxZoom": 18, "bbox": [-63.969162, -21.49687, 55.964417, 71.584076], "desc": "Affichage du réseau routier français et européen.", "originators": { "IGN": { "href": "http://www.ign.fr", "attribution": "Institut national de l'information géographique et forestière", "logo": "https://wxs.ign.fr/static/logos/IGN/IGN.gif", "minZoom": 6, "maxZoom": 18, "constraint": [{ "minZoom": 15, "maxZoom": 18, "bbox": [-63.37252, -21.475586, 55.925865, 51.31212] }, { "minZoom": 6, "maxZoom": 14, "bbox": [-63.969162, -21.49687, 55.964417, 71.584076] }] } } },
 };
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
@@ -33735,7 +33735,7 @@ ol.layer.Geoportail.capabilities = {
  * @return {String} the preview url
  * @api
  */
-ol.source.Source.prototype.getPreview = function(/*lonlat, resolution*/) {
+ol.source.Source.prototype.getPreview = function (/*lonlat, resolution*/) {
   return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAk6QAAJOkBUCTn+AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANeSURBVHic7ZpPiE1RHMc/780MBhkik79JSUlIUbOxI+wkI2yRhYSUlJLNpJF/xcpiJBmZGBZsNM1CkmhKITGkGbH0/BuPmXnP4rxbb/TOn3fvOffeec6nfqvb/b7f93fveeec37ng8Xg8Ho/nf6Uu4d+fDswFssCvhHOJhaXAMeApMAQUyyIPPAdOAiuTStAVy4EHjDWsix5gdRLJ2mY34ulWYz6IEeA4kIk9awtkgTOEM/5vdAKT4k0/Ou3YMR/ELcbRm9AKFLBbgCJwNE4TYZkJfMG++SIwDCyLz0o4bI17WdyJz0r1TAZ+oDcxCBwAFgIzEIuhvcBbg3sLwOK4DFXLFvQGniCGSSUagS4DjUPOHESkA3XiOWCORqMR6Nfo9DjI3QqPUSd+ylBnv0Zn0GrWFvmIOvGNhjqrNDp/EAutyFgRKUM2tgO+Gur81FxvAKYZaimxXYBvmuuLDHWWaK4X0RfJCNsF6NdcbzXU2a65PohYFKWOc+jn8PUajbWIXaBKp9NB7lZYh34OzwFbFfd/NtDYYSth27urLGIm0M31AL3APWAAmIooymaDnPIl/Vz4NN1yHrd7gcvxWQnHAuA3bsyPop8hUsE13BSgK04TUViBeFo2zedJ8S6wElexW4D2eNOPTjNi6WvD/DtEr8E6tk6GGoAmxFY2iFHE9NZiQf8gogiB9gTEH23izAZuE77vHyU+ANucO1QwD3hD/MbLowAcdm20EmkwXx4n3NodS9rMB2HabYpEWs0HcRqHp0fNwAvJD+eBTZr7p6BvmQVxUaEzEbiruNfJekH15L8jtrEm7JJolEcOmKXRqQOuKDQuY7HZY8s8iNfzkSLxIuI43FTrkkLnOlBfRW4VsWk+oAX5weknxFAxJQNckGgVgZuIRVoomoGXEmGTMa+iQ6K7M4SW7k24QYgiuDQPYinbhugiF4H3RGtzZYCzyIvQXfpNI1ybLyeLpf5+iTbkRbiP2EcocTHm4+YI8iI8RFHwWjAfsA95Q+YZFU6wasl8wB7kReijtNbIILa0vcg/PRlGfPQwHmlCviDqAzaA+OREtzqr1ejOIDorxlNEjTGUBV4nnUWCvAJxGDlA8q9j3DEArAn2zvXAfOwfl6eVAmJrPpJ0Ih6Px+PxeJLjLwPul3vj5d0eAAAAAElFTkSuQmCC";
 };
 /**
@@ -33745,7 +33745,7 @@ ol.source.Source.prototype.getPreview = function(/*lonlat, resolution*/) {
  * @return {String} the preview url
  * @api
  */
-ol.source.Tile.prototype.getPreview = function(lonlat, resolution) {
+ol.source.Tile.prototype.getPreview = function (lonlat, resolution) {
   if (!lonlat) lonlat = [21020, 6355964];
   if (!resolution) resolution = 150;
   var coord = this.getTileGrid().getTileCoordForCoordAndResolution(lonlat, resolution);
@@ -33759,7 +33759,7 @@ ol.source.Tile.prototype.getPreview = function(lonlat, resolution) {
  * @return {String} the preview url
  * @api
  */
-ol.source.TileWMS.prototype.getPreview = function(lonlat, resolution) {
+ol.source.TileWMS.prototype.getPreview = function (lonlat, resolution) {
   if (!lonlat) lonlat = [21020, 6355964];
   if (!resolution) resolution = 150;
   var fn = this.getTileUrlFunction();
@@ -33769,10 +33769,10 @@ ol.source.TileWMS.prototype.getPreview = function(lonlat, resolution) {
     return fn.call(this, coord, 1, this.getProjection());
   }
   // Use getfeature info instead
-  var url = this.getGetFeatureInfoUrl ? 
+  var url = this.getGetFeatureInfoUrl ?
     this.getGetFeatureInfoUrl(lonlat, resolution, this.getProjection() || 'EPSG:3857', {})
     : this.getFeatureInfoUrl(lonlat, resolution, this.getProjection() || 'EPSG:3857', {});
-  url = url.replace(/getfeatureinfo/i,"GetMap");
+  url = url.replace(/getfeatureinfo/i, "GetMap");
   return url;
 };
 /**
@@ -33782,17 +33782,17 @@ ol.source.TileWMS.prototype.getPreview = function(lonlat, resolution) {
  * @return {Array<String>} list of preview url
  * @api
  */
-ol.layer.Base.prototype.getPreview = function(lonlat, resolution, projection) {
-  if (this.get("preview")) return [ this.get("preview") ];
+ol.layer.Base.prototype.getPreview = function (lonlat, resolution, projection) {
+  if (this.get("preview")) return [this.get("preview")];
   if (!resolution) resolution = 150;
   // Get middle resolution
   if (resolution < this.getMinResolution() || resolution > this.getMaxResolution()) {
     var rmin = this.getMinResolution(),
       rmax = this.getMaxResolution();
-    if (rmax>100000) rmax = 156543;	// min zoom : world
-    if (rmin<0.15) rmin = 0.15;	// max zoom 
+    if (rmax > 100000) rmax = 156543;	// min zoom : world
+    if (rmin < 0.15) rmin = 0.15;	// max zoom 
     resolution = rmax;
-    while (rmax>rmin) {
+    while (rmax > rmin) {
       rmin *= 2;
       rmax /= 2;
       resolution = rmin;
@@ -33800,12 +33800,12 @@ ol.layer.Base.prototype.getPreview = function(lonlat, resolution, projection) {
   }
   var e = this.getExtent();
   if (!lonlat) lonlat = [21020, 6355964];	// Default lonlat
-  if (e && !ol.extent.containsCoordinate(e,lonlat)) lonlat = [ (e[0]+e[2])/2, (e[1]+e[3])/2 ];
-  if (projection) lonlat = ol.proj.transform (lonlat, projection, this.getSource().getProjection());
+  if (e && !ol.extent.containsCoordinate(e, lonlat)) lonlat = [(e[0] + e[2]) / 2, (e[1] + e[3]) / 2];
+  if (projection) lonlat = ol.proj.transform(lonlat, projection, this.getSource().getProjection());
   if (this.getSource && this.getSource()) {
     try {
-      return [ this.getSource().getPreview(lonlat, resolution) ];
-    } catch(e) { /* nothing to do */ }
+      return [this.getSource().getPreview(lonlat, resolution)];
+    } catch (e) { /* nothing to do */ }
   }
   return [];
 };
@@ -33816,12 +33816,12 @@ ol.layer.Base.prototype.getPreview = function(lonlat, resolution, projection) {
  * @return {Array<String>} list of preview url
  * @api
  */
-ol.layer.Group.prototype.getPreview = function(lonlat, resolution) {
-  if (this.get("preview")) return [ this.get("preview") ];
+ol.layer.Group.prototype.getPreview = function (lonlat, resolution) {
+  if (this.get("preview")) return [this.get("preview")];
   var t = [];
   if (this.getLayers) {
     var l = this.getLayers().getArray();
-    for (var i=0; i<l.length; i++) {
+    for (var i = 0; i < l.length; i++) {
       t = t.concat(l[i].getPreview(lonlat, resolution));
     }
   }
@@ -33840,7 +33840,7 @@ ol.layer.Group.prototype.getPreview = function(lonlat, resolution) {
  *  @param {string} options.gppKey Geoportail API key
  *  @param {olx.source.WMTSOptions=} tileoptions WMTS options if not defined default are used
  */
-ol.layer.Maplibre = function(options) {
+ol.layer.Maplibre = function (options) {
   if (!ol.layer.Layer) {
     console.error('[ol/layer/MapLibre] bad ol version (need ol@6+)');
   }
@@ -33849,7 +33849,7 @@ ol.layer.Maplibre = function(options) {
     // Create map if not exists
     if (!this._container) {
       this._create(options.style);
-    } 
+    }
     /**/
     var fac = 1
     var dzoom = 1
@@ -33859,12 +33859,12 @@ ol.layer.Maplibre = function(options) {
     var fac = 2
     var dzoom = 0
     /**/
-    this._container.style.width = fac*frameState.size[0]+'px';
-    this._container.style.height = fac*frameState.size[1]+'px';
+    this._container.style.width = fac * frameState.size[0] + 'px';
+    this._container.style.height = fac * frameState.size[1] + 'px';
     var glMap = this.glMap;
     if (!glMap) return null;
     var canvas = glMap.getCanvas();
-    canvas.style.transform = 'scale('+(1/fac)+')';
+    canvas.style.transform = 'scale(' + (1 / fac) + ')';
     // Force map to resize
     if (frameState.size[0] !== canvas.width || frameState.size[1] !== canvas.height) {
       glMap.resize();
@@ -33890,18 +33890,18 @@ ol.layer.Maplibre = function(options) {
   }
   ol.layer.Layer.call(this, options);
 };
-if (!ol.layer.Layer) ol.layer.Layer = function() {};
-ol.ext.inherits (ol.layer.Maplibre, ol.layer.Layer);
+if (!ol.layer.Layer) ol.layer.Layer = function () { };
+ol.ext.inherits(ol.layer.Maplibre, ol.layer.Layer);
 /** Get the Maplibre map
  * @return {Object}
  */
-ol.layer.Maplibre.prototype.getMapGL = function() {
+ol.layer.Maplibre.prototype.getMapGL = function () {
   return this.glMap;
 }
 /** Set style
  * @param {Object|string} style Mapbox style Object or a URL to JSON
  */
-ol.layer.Maplibre.prototype.setStyle = function(style) {
+ol.layer.Maplibre.prototype.setStyle = function (style) {
   this.set('style', style);
   if (this.getMapGL()) {
     this.getMapGL().setStyle(style);
@@ -33911,14 +33911,14 @@ ol.layer.Maplibre.prototype.setStyle = function(style) {
 /** Returns the map's Mapbox style object.
  * @returns {Object} 
  */
-ol.layer.Maplibre.prototype.getStyle = function() {
+ol.layer.Maplibre.prototype.getStyle = function () {
   return this.getMapGL().get('style');
 }
 /** Create the map libre map
  * @param {Object|string} style Mapbox style Object or a URL to JSON
  * @private
  */
-ol.layer.Maplibre.prototype._create = function(style) {
+ol.layer.Maplibre.prototype._create = function (style) {
   this._container = ol.ext.element.create('DIV', {
     className: 'ol-maplibre-gl',
     style: {
@@ -34793,47 +34793,47 @@ ol.PerspectiveMap = class olPerspectiveMap extends ol.Map {
     return [pixel[0], pixel[1]];
   }
 }
-/* HACK: Overwrited Overlay function to handle overlay positing in a perspective map */
-;(function() {
-var _updatePixelPosition = ol.Overlay.prototype.updatePixelPosition;
-/** Update pixel projection in a perspective map (apply projection to the position)
- * @private
- */
-ol.Overlay.prototype.updatePixelPosition = function () {
-  var map = this.getMap();
-  if (map && map instanceof ol.PerspectiveMap) {
-    var position = this.getPosition();
-    if (!map || !map.isRendered() || !position) {
-      this.setVisible(false);
-      return;
-    }
-    // Get pixel at screen
-    var pixel = map.getPixelScreenFromCoordinate(position);
-    var mapSize = map.getSize();
-    pixel[0] -= mapSize[0]/4
-    pixel[1] -= mapSize[1]/4
-    /* for ol v6.2.x
-    // Offset according positioning
-    var pos = this.getPositioning();
-    if (/bottom/.test(pos)) {
-      pixel[1] += mapSize[1]/4
-    } else {
-      pixel[1] -= mapSize[1]/4
-    }
-    if (/right/.test(pos)) {
-      pixel[0] += mapSize[0]/4
-    } else {
-      pixel[0] -= mapSize[0]/4
-    }
-    */
-    // Update
-    this.updateRenderedPosition(pixel , mapSize);
-  } else {
-    _updatePixelPosition.call(this);
-  }
-};
-/**/
-})();
+  /* HACK: Overwrited Overlay function to handle overlay positing in a perspective map */
+  ; (function () {
+    var _updatePixelPosition = ol.Overlay.prototype.updatePixelPosition;
+    /** Update pixel projection in a perspective map (apply projection to the position)
+     * @private
+     */
+    ol.Overlay.prototype.updatePixelPosition = function () {
+      var map = this.getMap();
+      if (map && map instanceof ol.PerspectiveMap) {
+        var position = this.getPosition();
+        if (!map || !map.isRendered() || !position) {
+          this.setVisible(false);
+          return;
+        }
+        // Get pixel at screen
+        var pixel = map.getPixelScreenFromCoordinate(position);
+        var mapSize = map.getSize();
+        pixel[0] -= mapSize[0] / 4
+        pixel[1] -= mapSize[1] / 4
+        /* for ol v6.2.x
+        // Offset according positioning
+        var pos = this.getPositioning();
+        if (/bottom/.test(pos)) {
+          pixel[1] += mapSize[1]/4
+        } else {
+          pixel[1] -= mapSize[1]/4
+        }
+        if (/right/.test(pos)) {
+          pixel[0] += mapSize[0]/4
+        } else {
+          pixel[0] -= mapSize[0]/4
+        }
+        */
+        // Update
+        this.updateRenderedPosition(pixel, mapSize);
+      } else {
+        _updatePixelPosition.call(this);
+      }
+    };
+    /**/
+  })();
 
 /*
   Copyright (c) 2020 Jean-Marc VIGLINO,
@@ -34906,7 +34906,7 @@ ol.particule.Bird = class olparticuleBird extends ol.particule.Base {
     options = options || {};
     super(options);
     this.bird = new Image();
-    this.bird.addEventListener('load', function() {
+    this.bird.addEventListener('load', function () {
       this.set('size', [this.bird.width || 50, this.bird.height || 50]);
       console.log(this.bird.width, this.bird.height)
     }.bind(this))
@@ -35058,7 +35058,7 @@ ol.particule.Rain = class olparticuleRain extends ol.particule.Base {
  *  @param {ol.Overlay} options.overlay
  *  @param {ol.pixel} options.coordinate the position of the particule
  */
-ol.particule.RainDrop =class olparticuleRainDrop extends ol.particule.Base {
+ol.particule.RainDrop = class olparticuleRainDrop extends ol.particule.Base {
   constructor(options) {
     options = options || {};
     super(options);
@@ -36174,7 +36174,7 @@ ol.Overlay.Magnify = class olOverlayMagnify extends ol.Overlay {
       var px = this.getMap().getEventCoordinate(e)
       if (!this.external_) this.setPosition(px)
       this.mgview_.setCenter(px)
-      if (!this._elt.querySelector('canvas') || this._elt.querySelector('canvas').style.display == "none"){
+      if (!this._elt.querySelector('canvas') || this._elt.querySelector('canvas').style.display == "none") {
         this.mgmap_.updateSize()
       }
     }
@@ -36241,7 +36241,7 @@ ol.Overlay.Placemark = class olOverlayPlacemark extends ol.Overlay.Popup {
     options = options || {};
     options.popupClass = (options.popupClass || '') + ' placemark anim';
     options.positioning = 'bottom-center',
-    super(options);
+      super(options);
     this.setPositioning = function () { };
     if (options.color) this.element.style.color = options.color;
     if (options.backgroundColor) this.element.style.backgroundColor = options.backgroundColor;
@@ -36484,9 +36484,9 @@ ol.Overlay.PopupFeature = class olOverlayPopupFeature extends ol.Overlay.Popup {
           }
           if (visible) {
             tr = ol.ext.element.create('TR', { parent: table });
-            ol.ext.element.create('TD', { 
-              html: a ? a.title || att : att, 
-              parent: tr 
+            ol.ext.element.create('TD', {
+              html: a ? a.title || att : att,
+              parent: tr
             });
             // Show image or content
             if (this.get('showImage') && /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/.test(val)) {
@@ -36591,22 +36591,22 @@ ol.Overlay.PopupFeature = class olOverlayPopupFeature extends ol.Overlay.Popup {
  * @param {*} options Number or Date toLocaleString options
  * @return {function} a function that takes an attribute and return the formated attribute
  */
-ol.Overlay.PopupFeature.localString = function (locales , options) {
+ol.Overlay.PopupFeature.localString = function (locales, options) {
   return function (a) {
     if (a && a.toLocaleString) {
-      return a.toLocaleString(locales , options);
+      return a.toLocaleString(locales, options);
     } else {
       // Try to get a date from a string
       var date = new Date(a);
       if (isNaN(date)) return a;
-      else return date.toLocaleString(locales , options);
+      else return date.toLocaleString(locales, options);
     }
   };
 };
 
 /*	Copyright (c) 2018 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** A tooltip element to be displayed over the map and attached on the cursor position.
  * @constructor
@@ -36760,92 +36760,92 @@ ol.Overlay.Tooltip = class olOverlayTooltip extends ol.Overlay.Popup {
 }
 
 /*
-	Copyright (c) 2017 Jean-Marc VIGLINO,
-	released under the CeCILL-B license (http://www.cecill.info/).
-	ol.coordinate.convexHull compute a convex hull using Andrew's Monotone Chain Algorithm.
-	@see https://en.wikipedia.org/wiki/Convex_hull_algorithms
+  Copyright (c) 2017 Jean-Marc VIGLINO,
+  released under the CeCILL-B license (http://www.cecill.info/).
+  ol.coordinate.convexHull compute a convex hull using Andrew's Monotone Chain Algorithm.
+  @see https://en.wikipedia.org/wiki/Convex_hull_algorithms
 */
 ol.coordinate.convexHull;
-(function(){
-/** Tests if a point is left or right of line (a,b).
-* @param {ol.coordinate} a point on the line
-* @param {ol.coordinate} b point on the line
-* @param {ol.coordinate} o
-* @return {bool} true if (a,b,o) turns clockwise
-*/
-var clockwise = function (a, b, o) {
-  return ((a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]) <= 0);
-};
-/** Compute a convex hull using Andrew's Monotone Chain Algorithm
- * @param {Array<ol.geom.Point>} points an array of 2D points
- * @return {Array<ol.geom.Point>} the convex hull vertices
- */
-ol.coordinate.convexHull = function (points) {	// Sort by increasing x and then y coordinate
-  var i;
-  points.sort(function(a, b) {
-    return a[0] == b[0] ? a[1] - b[1] : a[0] - b[0];
-  });
-  // Compute the lower hull
-  var lower = [];
-  for (i = 0; i < points.length; i++) {
-    while (lower.length >= 2 && clockwise(lower[lower.length - 2], lower[lower.length - 1], points[i])) {
-      lower.pop();
+(function () {
+  /** Tests if a point is left or right of line (a,b).
+  * @param {ol.coordinate} a point on the line
+  * @param {ol.coordinate} b point on the line
+  * @param {ol.coordinate} o
+  * @return {bool} true if (a,b,o) turns clockwise
+  */
+  var clockwise = function (a, b, o) {
+    return ((a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]) <= 0);
+  };
+  /** Compute a convex hull using Andrew's Monotone Chain Algorithm
+   * @param {Array<ol.geom.Point>} points an array of 2D points
+   * @return {Array<ol.geom.Point>} the convex hull vertices
+   */
+  ol.coordinate.convexHull = function (points) {	// Sort by increasing x and then y coordinate
+    var i;
+    points.sort(function (a, b) {
+      return a[0] == b[0] ? a[1] - b[1] : a[0] - b[0];
+    });
+    // Compute the lower hull
+    var lower = [];
+    for (i = 0; i < points.length; i++) {
+      while (lower.length >= 2 && clockwise(lower[lower.length - 2], lower[lower.length - 1], points[i])) {
+        lower.pop();
+      }
+      lower.push(points[i]);
     }
-    lower.push(points[i]);
-  }
-  // Compute the upper hull
-  var upper = [];
-  for (i = points.length - 1; i >= 0; i--) {
-    while (upper.length >= 2 && clockwise(upper[upper.length - 2], upper[upper.length - 1], points[i])) {
-      upper.pop();
+    // Compute the upper hull
+    var upper = [];
+    for (i = points.length - 1; i >= 0; i--) {
+      while (upper.length >= 2 && clockwise(upper[upper.length - 2], upper[upper.length - 1], points[i])) {
+        upper.pop();
+      }
+      upper.push(points[i]);
     }
-    upper.push(points[i]);
-  }
-  upper.pop();
-  lower.pop();
-  return lower.concat(upper);
-};
-/* Get coordinates of a geometry */
-var getCoordinates = function (geom) {
-  var i, p
-  var h = [];
-  switch (geom.getType()) {
-    case "Point":h.push(geom.getCoordinates());
-      break;
-    case "LineString":
-    case "LinearRing":
-    case "MultiPoint":h = geom.getCoordinates();
-      break;
-    case "MultiLineString":
-      p = geom.getLineStrings();
-      for (i = 0; i < p.length; i++) h.concat(getCoordinates(p[i]));
-      break;
-    case "Polygon":
-      h = getCoordinates(geom.getLinearRing(0));
-      break;
-    case "MultiPolygon":
-      p = geom.getPolygons();
-      for (i = 0; i < p.length; i++) h.concat(getCoordinates(p[i]));
-      break;
-    case "GeometryCollection":
-      p = geom.getGeometries();
-      for (i = 0; i < p.length; i++) h.concat(getCoordinates(p[i]));
-      break;
-    default:break;
-  }
-  return h;
-};
-/** Compute a convex hull on a geometry using Andrew's Monotone Chain Algorithm
- * @return {Array<ol.geom.Point>} the convex hull vertices
- */
-ol.geom.Geometry.prototype.convexHull = function() {
-  return ol.coordinate.convexHull(getCoordinates(this));
-};
+    upper.pop();
+    lower.pop();
+    return lower.concat(upper);
+  };
+  /* Get coordinates of a geometry */
+  var getCoordinates = function (geom) {
+    var i, p
+    var h = [];
+    switch (geom.getType()) {
+      case "Point": h.push(geom.getCoordinates());
+        break;
+      case "LineString":
+      case "LinearRing":
+      case "MultiPoint": h = geom.getCoordinates();
+        break;
+      case "MultiLineString":
+        p = geom.getLineStrings();
+        for (i = 0; i < p.length; i++) h.concat(getCoordinates(p[i]));
+        break;
+      case "Polygon":
+        h = getCoordinates(geom.getLinearRing(0));
+        break;
+      case "MultiPolygon":
+        p = geom.getPolygons();
+        for (i = 0; i < p.length; i++) h.concat(getCoordinates(p[i]));
+        break;
+      case "GeometryCollection":
+        p = geom.getGeometries();
+        for (i = 0; i < p.length; i++) h.concat(getCoordinates(p[i]));
+        break;
+      default: break;
+    }
+    return h;
+  };
+  /** Compute a convex hull on a geometry using Andrew's Monotone Chain Algorithm
+   * @return {Array<ol.geom.Point>} the convex hull vertices
+   */
+  ol.geom.Geometry.prototype.convexHull = function () {
+    return ol.coordinate.convexHull(getCoordinates(this));
+  };
 })();
 
 /*
-	Copyright (c) 2018 Jean-Marc VIGLINO,
-	released under the CeCILL-B license (http://www.cecill.info/).
+  Copyright (c) 2018 Jean-Marc VIGLINO,
+  released under the CeCILL-B license (http://www.cecill.info/).
 */
 /** Convert coordinate to French DFCI grid
  * @param {ol/coordinate} coord
@@ -36854,11 +36854,11 @@ ol.geom.Geometry.prototype.convexHull = function() {
  * @return {String} the DFCI index
  */
 ol.coordinate.toDFCI = function (coord, level, projection) {
-  if (!level && level !==0) level = 3;
+  if (!level && level !== 0) level = 3;
   if (projection) {
     if (!ol.proj.get('EPSG:27572')) {
       // Add Lambert IIe proj 
-      if (!proj4.defs["EPSG:27572"]) proj4.defs("EPSG:27572","+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs");
+      if (!proj4.defs["EPSG:27572"]) proj4.defs("EPSG:27572", "+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs");
       ol.proj.proj4.register(proj4);
     }
     coord = ol.proj.transform(coord, projection, 'EPSG:27572');
@@ -36868,34 +36868,34 @@ ol.coordinate.toDFCI = function (coord, level, projection) {
   var s = '';
   // Level 0
   var step = 100000;
-  s += String.fromCharCode(65 + Math.floor((x<800000?x:x+200000)/step))
-    + String.fromCharCode(65 + Math.floor((y<2300000?y:y+200000)/step) - 1500000/step);
+  s += String.fromCharCode(65 + Math.floor((x < 800000 ? x : x + 200000) / step))
+    + String.fromCharCode(65 + Math.floor((y < 2300000 ? y : y + 200000) / step) - 1500000 / step);
   if (level === 0) return s;
   // Level 1
-  var step1 = 100000/5;
-  s += 2*Math.floor((x%step)/step1);
-  s += 2*Math.floor((y%step)/step1);
+  var step1 = 100000 / 5;
+  s += 2 * Math.floor((x % step) / step1);
+  s += 2 * Math.floor((y % step) / step1);
   if (level === 1) return s;
   // Level 2
   var step2 = step1 / 10;
-  var x0 = Math.floor((x%step1)/step2);
-  s += String.fromCharCode(65 + (x0<8 ? x0 : x0+2));
-  s += Math.floor((y%step1)/step2);
+  var x0 = Math.floor((x % step1) / step2);
+  s += String.fromCharCode(65 + (x0 < 8 ? x0 : x0 + 2));
+  s += Math.floor((y % step1) / step2);
   if (level === 2) return s;
   // Level 3
-  var x3 = Math.floor((x%step2)/500);
-  var y3 = Math.floor((y%step2)/500);
-  if (x3<1) {
-    if (y3>1) s += '.1';
+  var x3 = Math.floor((x % step2) / 500);
+  var y3 = Math.floor((y % step2) / 500);
+  if (x3 < 1) {
+    if (y3 > 1) s += '.1';
     else s += '.4';
-  } else if (x3>2) {
-    if (y3>1) s += '.2';
+  } else if (x3 > 2) {
+    if (y3 > 1) s += '.2';
     else s += '.3';
-  } else if (y3>2) {
-    if (x3<2) s += '.1';
+  } else if (y3 > 2) {
+    if (x3 < 2) s += '.1';
     else s += '.2';
-  } else if (y3<1) {
-    if (x3<2) s += '.4';
+  } else if (y3 < 1) {
+    if (x3 < 2) s += '.4';
     else s += '.3';
   } else {
     s += '.5';
@@ -36912,43 +36912,43 @@ ol.coordinate.fromDFCI = function (index, projection) {
   // Level 0
   var step = 100000;
   var x = index.charCodeAt(0) - 65;
-  x = (x<8 ? x : x-2)*step;
+  x = (x < 8 ? x : x - 2) * step;
   var y = index.charCodeAt(1) - 65;
-  y = (y<8 ? y : y-2)*step + 1500000;
-  if (index.length===2) {
-    coord = [x+step/2, y+step/2];
+  y = (y < 8 ? y : y - 2) * step + 1500000;
+  if (index.length === 2) {
+    coord = [x + step / 2, y + step / 2];
   } else {
     // Level 1
     step /= 5;
-    x += Number(index.charAt(2))/2*step;
-    y += Number(index.charAt(3))/2*step;
-    if (index.length===4) {
-      coord = [x+step/2, y+step/2];
+    x += Number(index.charAt(2)) / 2 * step;
+    y += Number(index.charAt(3)) / 2 * step;
+    if (index.length === 4) {
+      coord = [x + step / 2, y + step / 2];
     } else {
       // Level 2
       step /= 10;
       var x0 = index.charCodeAt(4) - 65;
-      x += (x0<8 ? x0 : x0-2)*step;
-      y += Number(index.charAt(5))*step;
+      x += (x0 < 8 ? x0 : x0 - 2) * step;
+      y += Number(index.charAt(5)) * step;
       if (index.length === 6) {
-        coord = [x+step/2, y+step/2];
+        coord = [x + step / 2, y + step / 2];
       } else {
         // Level 3
         switch (index.charAt(7)) {
           case '1':
-            coord = [x+step/4, y+3*step/4];
+            coord = [x + step / 4, y + 3 * step / 4];
             break;
           case '2':
-            coord = [x+3*step/4, y+3*step/4];
+            coord = [x + 3 * step / 4, y + 3 * step / 4];
             break;
           case '3':
-            coord = [x+3*step/4, y+step/4];
+            coord = [x + 3 * step / 4, y + step / 4];
             break;
           case '4':
-            coord = [x+step/4, y+step/4];
+            coord = [x + step / 4, y + step / 4];
             break;
           default:
-            coord = [x+step/2, y+step/2];
+            coord = [x + step / 2, y + step / 2];
             break;
         }
       }
@@ -36958,7 +36958,7 @@ ol.coordinate.fromDFCI = function (index, projection) {
   if (projection) {
     if (!ol.proj.get('EPSG:27572')) {
       // Add Lambert IIe proj 
-      if (!proj4.defs["EPSG:27572"]) proj4.defs("EPSG:27572","+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs");
+      if (!proj4.defs["EPSG:27572"]) proj4.defs("EPSG:27572", "+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs");
       ol.proj.proj4.register(proj4);
     }
     coord = ol.proj.transform(coord, 'EPSG:27572', projection);
@@ -36970,23 +36970,23 @@ ol.coordinate.fromDFCI = function (index, projection) {
  * @return {boolean}
  */
 ol.coordinate.validDFCI = function (index) {
-  if (index.length<2 || index.length>8) return false;
-  if (/[^A-H|^K-N]/.test(index.substr(0,1))) return false;
-  if (/[^B-H|^K-N]/.test(index.substr(1,1))) return false;
-  if (index.length>2) {
-    if (index.length<4) return false;
-    if (/[^0,^2,^4,^6,^8]/.test(index.substr(2,1))) return false;
-    if (/[^0,^2,^4,^6,^8]/.test(index.substr(3,1))) return false;
+  if (index.length < 2 || index.length > 8) return false;
+  if (/[^A-H|^K-N]/.test(index.substr(0, 1))) return false;
+  if (/[^B-H|^K-N]/.test(index.substr(1, 1))) return false;
+  if (index.length > 2) {
+    if (index.length < 4) return false;
+    if (/[^0,^2,^4,^6,^8]/.test(index.substr(2, 1))) return false;
+    if (/[^0,^2,^4,^6,^8]/.test(index.substr(3, 1))) return false;
   }
-  if (index.length>4) {
-    if (index.length<6) return false;
-    if (/[^A-H|^K-L]/.test(index.substr(4,1))) return false;
-    if (/[^0-9]/.test(index.substr(5,1))) return false;
+  if (index.length > 4) {
+    if (index.length < 6) return false;
+    if (/[^A-H|^K-L]/.test(index.substr(4, 1))) return false;
+    if (/[^0-9]/.test(index.substr(5, 1))) return false;
   }
-  if (index.length>6) {
-    if (index.length<8) return false;
-    if (index.substr(6,1)!=='.') return false;
-    if (/[^1-5]/.test(index.substr(7,1))) return false;
+  if (index.length > 6) {
+    if (index.length < 8) return false;
+    if (index.substr(6, 1) !== '.') return false;
+    if (/[^1-5]/.test(index.substr(7, 1))) return false;
   }
   return true;
 }
@@ -36999,20 +36999,20 @@ ol.coordinate.validDFCICoord = function (coord, projection) {
   if (projection) {
     if (!ol.proj.get('EPSG:27572')) {
       // Add Lambert IIe proj 
-      if (!proj4.defs["EPSG:27572"]) proj4.defs("EPSG:27572","+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs");
+      if (!proj4.defs["EPSG:27572"]) proj4.defs("EPSG:27572", "+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs");
       ol.proj.proj4.register(proj4);
     }
     coord = ol.proj.transform(coord, projection, 'EPSG:27572');
   }
   // Test extent
-  if (0 > coord[0] || coord[0] > 1200000 ) return false;
-  if (1600000 > coord[1] || coord[1] > 2700000 ) return false;
+  if (0 > coord[0] || coord[0] > 1200000) return false;
+  if (1600000 > coord[1] || coord[1] > 2700000) return false;
   return true;
 };
 
 /*
-	Copyright (c) 2018 Jean-Marc VIGLINO,
-	released under the CeCILL-B license (http://www.cecill.info/).
+  Copyright (c) 2018 Jean-Marc VIGLINO,
+  released under the CeCILL-B license (http://www.cecill.info/).
 */
 /* Define namespace
  */
@@ -37348,11 +37348,11 @@ ol.graph.Dijskra = ol.graph.Dijkstra
  *  @param {string} options.success a function that takes the resulting XYZ geometry
  *  @param {string} options.error
  */
-ol.geom.GPAltiCode = function(geom, options) {
+ol.geom.GPAltiCode = function (geom, options) {
   options = options || {};
   var typeGeom = geom.getType();
   if (typeGeom !== 'Point' && typeGeom !== 'LineString') {
-    console.warn('[GPAltiCode] '+typeGeom+' not supported...')
+    console.warn('[GPAltiCode] ' + typeGeom + ' not supported...')
     return;
   }
   var proj = options.projection || 'EPSG:3857';
@@ -37377,31 +37377,31 @@ ol.geom.GPAltiCode = function(geom, options) {
     default: return;
   }
   if (sampling <= g.length) sampling = 0;
-  g.forEach(function(p) {
-    lon.push(Math.round(p[0]*1000000)/1000000);
-    lat.push(Math.round(p[1]*1000000)/1000000);
+  g.forEach(function (p) {
+    lon.push(Math.round(p[0] * 1000000) / 1000000);
+    lat.push(Math.round(p[1] * 1000000) / 1000000);
   });
   // Get elevation
-  var param = 'lon='+lon.join('|')+'&lat='+lat.join('|');
-  if (sampling) param += '&sampling='+sampling;
+  var param = 'lon=' + lon.join('|') + '&lat=' + lat.join('|');
+  if (sampling) param += '&sampling=' + sampling;
   ol.ext.Ajax.get({
-    url: 'https://wxs.ign.fr/'+(options.apiKey || 'essentiels')+'/alti/rest/'+(lon.length>1 ? 'elevationLine' : 'elevation')+'.json?'+param,
-    success: function(res) {
+    url: 'https://wxs.ign.fr/' + (options.apiKey || 'essentiels') + '/alti/rest/' + (lon.length > 1 ? 'elevationLine' : 'elevation') + '.json?' + param,
+    success: function (res) {
       var pts = [];
-      res.elevations.forEach(function(e, i) {
+      res.elevations.forEach(function (e, i) {
         if (sampling) {
           pts.push([e.lon, e.lat, e.z]);
         } else {
           pts.push([g[i][0], g[i][1], e.z]);
         }
       });
-      if (typeGeom==='Point') pts = pts[0];
+      if (typeGeom === 'Point') pts = pts[0];
       var result = ol.geom.createFromType(typeGeom, pts);
       result.transform('EPSG:4326', proj);
-      if (typeof(options.success) === 'function') options.success(result);
+      if (typeof (options.success) === 'function') options.success(result);
     },
-    error: function(e) {
-      if (typeof(options.error) === 'function') options.error(e);
+    error: function (e) {
+      if (typeof (options.error) === 'function') options.error(e);
     }
   });
 }
@@ -37415,7 +37415,7 @@ ol.geom.GPAltiCode = function(geom, options) {
  *  @param {string} options.success a function that takes the resulting XYZ coordinates
  *  @param {string} options.error
  */
-ol.coordinate.GPAltiCode = function(coord, options) {
+ol.coordinate.GPAltiCode = function (coord, options) {
   options = options || {};
   var unique = !coord[0].length;
   var g = unique ? new ol.geom.Point(coord) : new ol.geom.LineString(coord);
@@ -37424,8 +37424,8 @@ ol.coordinate.GPAltiCode = function(coord, options) {
     apiKey: options.apiKey,
     sampling: options.sampling,
     samplingDist: options.samplingDist,
-    success: function(g) {
-      if (typeof(options.success) === 'function') {
+    success: function (g) {
+      if (typeof (options.success) === 'function') {
         options.success(g.getCoordinates())
       }
     },
@@ -37444,10 +37444,10 @@ ol.coordinate.GPAltiCode = function(coord, options) {
  * @param {ol.Coordinate} p2 second point
  * @return {number} distance
  */
-ol.coordinate.dist2d = function(p1, p2) {
-  var dx = p1[0]-p2[0];
-  var dy = p1[1]-p2[1];
-  return Math.sqrt(dx*dx+dy*dy);
+ol.coordinate.dist2d = function (p1, p2) {
+  var dx = p1[0] - p2[0];
+  var dy = p1[1] - p2[1];
+  return Math.sqrt(dx * dx + dy * dy);
 }
 /** 2 points are equal
  *	Usefull geometric functions
@@ -37455,27 +37455,27 @@ ol.coordinate.dist2d = function(p1, p2) {
  * @param {ol.Coordinate} p2 second point
  * @return {boolean}
  */
-ol.coordinate.equal = function(p1, p2) {
-  return (p1[0]==p2[0] && p1[1]==p2[1]);
+ol.coordinate.equal = function (p1, p2) {
+  return (p1[0] == p2[0] && p1[1] == p2[1]);
 }
 /** Get center coordinate of a feature
  * @param {ol.Feature} f
  * @return {ol.coordinate} the center
  */
-ol.coordinate.getFeatureCenter = function(f) {
-  return ol.coordinate.getGeomCenter (f.getGeometry());
+ol.coordinate.getFeatureCenter = function (f) {
+  return ol.coordinate.getGeomCenter(f.getGeometry());
 };
 /** Get center coordinate of a geometry
 * @param {ol.geom.Geometry} geom
 * @return {ol.Coordinate} the center
 */
-ol.coordinate.getGeomCenter = function(geom) {
+ol.coordinate.getGeomCenter = function (geom) {
   switch (geom.getType()) {
-    case 'Point': 
+    case 'Point':
       return geom.getCoordinates();
     case "MultiPolygon":
       geom = geom.getPolygon(0);
-      // fallthrough
+    // fallthrough
     case "Polygon":
       return geom.getInteriorPoint().getCoordinates();
     default:
@@ -37491,17 +37491,17 @@ ol.coordinate.getGeomCenter = function(geom) {
  */
 ol.coordinate.offsetCoords = function (coords, offset) {
   var path = [];
-  var N = coords.length-1;
+  var N = coords.length - 1;
   var max = N;
   var mi, mi1, li, li1, ri, ri1, si, si1, Xi1, Yi1;
   var p0, p1, p2;
-  var isClosed = ol.coordinate.equal(coords[0],coords[N]);
+  var isClosed = ol.coordinate.equal(coords[0], coords[N]);
   if (!isClosed) {
     p0 = coords[0];
     p1 = coords[1];
     p2 = [
-      p0[0] + (p1[1] - p0[1]) / ol.coordinate.dist2d(p0,p1) *offset,
-      p0[1] - (p1[0] - p0[0]) / ol.coordinate.dist2d(p0,p1) *offset
+      p0[0] + (p1[1] - p0[1]) / ol.coordinate.dist2d(p0, p1) * offset,
+      p0[1] - (p1[0] - p0[0]) / ol.coordinate.dist2d(p0, p1) * offset
     ];
     path.push(p2);
     coords.push(coords[N])
@@ -37510,28 +37510,28 @@ ol.coordinate.offsetCoords = function (coords, offset) {
   }
   for (var i = 0; i < max; i++) {
     p0 = coords[i];
-    p1 = coords[(i+1) % N];
-    p2 = coords[(i+2) % N];
-    mi = (p1[1] - p0[1])/(p1[0] - p0[0]);
-    mi1 = (p2[1] - p1[1])/(p2[0] - p1[0]);
+    p1 = coords[(i + 1) % N];
+    p2 = coords[(i + 2) % N];
+    mi = (p1[1] - p0[1]) / (p1[0] - p0[0]);
+    mi1 = (p2[1] - p1[1]) / (p2[0] - p1[0]);
     // Prevent alignements
-    if (Math.abs(mi-mi1) > 1e-10) {
-      li = Math.sqrt((p1[0] - p0[0])*(p1[0] - p0[0])+(p1[1] - p0[1])*(p1[1] - p0[1]));
-      li1 = Math.sqrt((p2[0] - p1[0])*(p2[0] - p1[0])+(p2[1] - p1[1])*(p2[1] - p1[1]));
-      ri = p0[0] + offset*(p1[1] - p0[1])/li;
-      ri1 = p1[0] + offset*(p2[1] - p1[1])/li1;
-      si = p0[1] - offset*(p1[0] - p0[0])/li;
-      si1 = p1[1] - offset*(p2[0] - p1[0])/li1;
-      Xi1 = (mi1*ri1-mi*ri+si-si1) / (mi1-mi);
-      Yi1 = (mi*mi1*(ri1-ri)+mi1*si-mi*si1) / (mi1-mi);
+    if (Math.abs(mi - mi1) > 1e-10) {
+      li = Math.sqrt((p1[0] - p0[0]) * (p1[0] - p0[0]) + (p1[1] - p0[1]) * (p1[1] - p0[1]));
+      li1 = Math.sqrt((p2[0] - p1[0]) * (p2[0] - p1[0]) + (p2[1] - p1[1]) * (p2[1] - p1[1]));
+      ri = p0[0] + offset * (p1[1] - p0[1]) / li;
+      ri1 = p1[0] + offset * (p2[1] - p1[1]) / li1;
+      si = p0[1] - offset * (p1[0] - p0[0]) / li;
+      si1 = p1[1] - offset * (p2[0] - p1[0]) / li1;
+      Xi1 = (mi1 * ri1 - mi * ri + si - si1) / (mi1 - mi);
+      Yi1 = (mi * mi1 * (ri1 - ri) + mi1 * si - mi * si1) / (mi1 - mi);
       // Correction for vertical lines
-      if(p1[0] - p0[0] == 0) {
-        Xi1 = p1[0] + offset*(p1[1] - p0[1])/Math.abs(p1[1] - p0[1]);
-        Yi1 = mi1*Xi1 - mi1*ri1 + si1;
+      if (p1[0] - p0[0] == 0) {
+        Xi1 = p1[0] + offset * (p1[1] - p0[1]) / Math.abs(p1[1] - p0[1]);
+        Yi1 = mi1 * Xi1 - mi1 * ri1 + si1;
       }
-      if (p2[0] - p1[0] == 0 ) {
-        Xi1 = p2[0] + offset*(p2[1] - p1[1])/Math.abs(p2[1] - p1[1]);
-        Yi1 = mi*Xi1 - mi*ri + si;
+      if (p2[0] - p1[0] == 0) {
+        Xi1 = p2[0] + offset * (p2[1] - p1[1]) / Math.abs(p2[1] - p1[1]);
+        Yi1 = mi * Xi1 - mi * ri + si;
       }
       path.push([Xi1, Yi1]);
     }
@@ -37540,11 +37540,11 @@ ol.coordinate.offsetCoords = function (coords, offset) {
     path.push(path[0]);
   } else {
     coords.pop();
-    p0 = coords[coords.length-1];
-    p1 = coords[coords.length-2];
+    p0 = coords[coords.length - 1];
+    p1 = coords[coords.length - 2];
     p2 = [
-      p0[0] - (p1[1] - p0[1]) / ol.coordinate.dist2d(p0,p1) *offset,
-      p0[1] + (p1[0] - p0[0]) / ol.coordinate.dist2d(p0,p1) *offset
+      p0[0] - (p1[1] - p0[1]) / ol.coordinate.dist2d(p0, p1) * offset,
+      p0[1] + (p1[0] - p0[0]) / ol.coordinate.dist2d(p0, p1) * offset
     ];
     path.push(p2);
   }
@@ -37556,18 +37556,18 @@ ol.coordinate.offsetCoords = function (coords, offset) {
  * @return {} the index (-1 if not found) and the segment
  */
 ol.coordinate.findSegment = function (pt, coords) {
-  for (var i=0; i<coords.length-1; i++) {
+  for (var i = 0; i < coords.length - 1; i++) {
     var p0 = coords[i];
-    var p1 = coords[i+1];
+    var p1 = coords[i + 1];
     if (ol.coordinate.equal(pt, p0) || ol.coordinate.equal(pt, p1)) {
-      return { index:1, segment: [p0,p1] };
+      return { index: 1, segment: [p0, p1] };
     } else {
-      var d0 = ol.coordinate.dist2d(p0,p1);
-      var v0 = [ (p1[0] - p0[0]) / d0, (p1[1] - p0[1]) / d0 ];
-      var d1 = ol.coordinate.dist2d(p0,pt);
-      var v1 = [ (pt[0] - p0[0]) / d1, (pt[1] - p0[1]) / d1 ];
-      if (Math.abs(v0[0]*v1[1] - v0[1]*v1[0]) < 1e-10) {
-        return { index:1, segment: [p0,p1] };
+      var d0 = ol.coordinate.dist2d(p0, p1);
+      var v0 = [(p1[0] - p0[0]) / d0, (p1[1] - p0[1]) / d0];
+      var d1 = ol.coordinate.dist2d(p0, pt);
+      var v1 = [(pt[0] - p0[0]) / d1, (pt[1] - p0[1]) / d1];
+      if (Math.abs(v0[0] * v1[1] - v0[1] * v1[0]) < 1e-10) {
+        return { index: 1, segment: [p0, p1] };
       }
     }
   }
@@ -37583,22 +37583,22 @@ ol.coordinate.findSegment = function (pt, coords) {
 ol.coordinate.splitH = function (geom, y, n) {
   var x, abs;
   var list = [];
-  for (var i=0; i<geom.length-1; i++) {
+  for (var i = 0; i < geom.length - 1; i++) {
     // Hole separator?
-    if (!geom[i].length || !geom[i+1].length) continue;
+    if (!geom[i].length || !geom[i + 1].length) continue;
     // Intersect
-    if (geom[i][1]<=y && geom[i+1][1]>y || geom[i][1]>=y && geom[i+1][1]<y) {
-      abs = (y-geom[i][1]) / (geom[i+1][1]-geom[i][1]);
-      x = abs * (geom[i+1][0]-geom[i][0]) + geom[i][0];
-      list.push ({ contour: n, index: i, pt: [x,y], abs: abs });
+    if (geom[i][1] <= y && geom[i + 1][1] > y || geom[i][1] >= y && geom[i + 1][1] < y) {
+      abs = (y - geom[i][1]) / (geom[i + 1][1] - geom[i][1]);
+      x = abs * (geom[i + 1][0] - geom[i][0]) + geom[i][0];
+      list.push({ contour: n, index: i, pt: [x, y], abs: abs });
     }
   }
   // Sort x
-  list.sort(function(a,b) { return a.pt[0] - b.pt[0] });
+  list.sort(function (a, b) { return a.pt[0] - b.pt[0] });
   // Horizontal segment
   var result = [];
-  for (var j=0; j<list.length-1; j += 2) {
-    result.push([list[j], list[j+1]])
+  for (var j = 0; j < list.length - 1; j += 2) {
+    result.push([list[j], list[j + 1]])
   }
   return result;
 };
@@ -37613,7 +37613,7 @@ ol.geom.createFromType = function (type, coordinates) {
     case 'Point': return new ol.geom.Point(coordinates);
     case 'Polygon': return new ol.geom.Polygon(coordinates);
     default:
-      console.error('[createFromType] Unsupported type: '+type);
+      console.error('[createFromType] Unsupported type: ' + type);
       return null;
   }
 };
@@ -37629,68 +37629,68 @@ ol.coordinate.getIntersectionPoint = function (d1, d2) {
   var det = d1x * d2y - d1y * d2x;
   if (det != 0) {
     var k = (d1x * d1[0][1] - d1x * d2[0][1] - d1y * d1[0][0] + d1y * d2[0][0]) / det;
-    return [d2[0][0] + k*d2x, d2[0][1] + k*d2y];
+    return [d2[0][0] + k * d2x, d2[0][1] + k * d2y];
   } else {
     return false;
   }
 };
 ol.extent.intersection;
-(function() {
-// Split at x
-function splitX(pts, x) {
-  var pt;
-  for (var i=pts.length-1; i>0; i--) {
-    if ((pts[i][0]>x && pts[i-1][0]<x) || (pts[i][0]<x && pts[i-1][0]>x)) {
-      pt = [ x, (x - pts[i][0]) / (pts[i-1][0]-pts[i][0]) * (pts[i-1][1]-pts[i][1]) + pts[i][1]];
-      pts.splice(i, 0, pt);
+(function () {
+  // Split at x
+  function splitX(pts, x) {
+    var pt;
+    for (var i = pts.length - 1; i > 0; i--) {
+      if ((pts[i][0] > x && pts[i - 1][0] < x) || (pts[i][0] < x && pts[i - 1][0] > x)) {
+        pt = [x, (x - pts[i][0]) / (pts[i - 1][0] - pts[i][0]) * (pts[i - 1][1] - pts[i][1]) + pts[i][1]];
+        pts.splice(i, 0, pt);
+      }
     }
   }
-}
-// Split at y
-function splitY(pts, y) {
-  var pt;
-  for (var i=pts.length-1; i>0; i--) {
-    if ((pts[i][1]>y && pts[i-1][1]<y) || (pts[i][1]<y && pts[i-1][1]>y)) {
-      pt = [ (y - pts[i][1]) / (pts[i-1][1]-pts[i][1]) * (pts[i-1][0]-pts[i][0]) + pts[i][0], y];
-      pts.splice(i, 0, pt);
+  // Split at y
+  function splitY(pts, y) {
+    var pt;
+    for (var i = pts.length - 1; i > 0; i--) {
+      if ((pts[i][1] > y && pts[i - 1][1] < y) || (pts[i][1] < y && pts[i - 1][1] > y)) {
+        pt = [(y - pts[i][1]) / (pts[i - 1][1] - pts[i][1]) * (pts[i - 1][0] - pts[i][0]) + pts[i][0], y];
+        pts.splice(i, 0, pt);
+      }
     }
   }
-}
-/** Fast polygon intersection with an extent (used for area calculation)
- * @param {ol.extent.Extent} extent
- * @param {ol.geom.Polygon|ol.geom.MultiPolygon} polygon
- * @returns {ol.geom.Polygon|ol.geom.MultiPolygon|null} return null if not a polygon geometry
- */
-ol.extent.intersection = function(extent, polygon) {
-  var poly = (polygon.getType() === 'Polygon');
-  if (!poly && polygon.getType() !== 'MultiPolygon') return null;
-  var geom = polygon.getCoordinates();
-  if (poly) geom = [geom];
-  geom.forEach(function(g) {
-    g.forEach(function(c) {
-      splitX(c, extent[0]);
-      splitX(c, extent[2]);
-      splitY(c, extent[1]);
-      splitY(c, extent[3]);
-    });
-  })
-  // Snap geom to the extent 
-  geom.forEach(function(g) {
-    g.forEach(function(c) {
-      c.forEach(function(p) {
-        if (p[0]<extent[0]) p[0] = extent[0];
-        else if (p[0]>extent[2]) p[0] = extent[2];
-        if (p[1]<extent[1]) p[1] = extent[1];
-        else if (p[1]>extent[3]) p[1] = extent[3];
+  /** Fast polygon intersection with an extent (used for area calculation)
+   * @param {ol.extent.Extent} extent
+   * @param {ol.geom.Polygon|ol.geom.MultiPolygon} polygon
+   * @returns {ol.geom.Polygon|ol.geom.MultiPolygon|null} return null if not a polygon geometry
+   */
+  ol.extent.intersection = function (extent, polygon) {
+    var poly = (polygon.getType() === 'Polygon');
+    if (!poly && polygon.getType() !== 'MultiPolygon') return null;
+    var geom = polygon.getCoordinates();
+    if (poly) geom = [geom];
+    geom.forEach(function (g) {
+      g.forEach(function (c) {
+        splitX(c, extent[0]);
+        splitX(c, extent[2]);
+        splitY(c, extent[1]);
+        splitY(c, extent[3]);
+      });
+    })
+    // Snap geom to the extent 
+    geom.forEach(function (g) {
+      g.forEach(function (c) {
+        c.forEach(function (p) {
+          if (p[0] < extent[0]) p[0] = extent[0];
+          else if (p[0] > extent[2]) p[0] = extent[2];
+          if (p[1] < extent[1]) p[1] = extent[1];
+          else if (p[1] > extent[3]) p[1] = extent[3];
+        })
       })
     })
-  })
-  if (poly) {
-    return new ol.geom.Polygon(geom[0]);
-  } else {
-    return new ol.geom.MultiPolygon(geom);
-  }
-};
+    if (poly) {
+      return new ol.geom.Polygon(geom[0]);
+    } else {
+      return new ol.geom.MultiPolygon(geom);
+    }
+  };
 })();
 /** Add points along a segment
  * @param {ol.Coordinate} p1 
@@ -37699,17 +37699,17 @@ ol.extent.intersection = function(extent, polygon) {
  * @param {boolean} start include starting point, default true
  * @returns {Array<ol.Coordinate>}
  */
-ol.coordinate.sampleAt = function(p1, p2, d, start) {
+ol.coordinate.sampleAt = function (p1, p2, d, start) {
   var pts = [];
-  if (start!==false) pts.push(p1);
-  var dl = ol.coordinate.dist2d(p1,p2);
+  if (start !== false) pts.push(p1);
+  var dl = ol.coordinate.dist2d(p1, p2);
   if (dl) {
-    var nb = Math.round(dl/d);
-    if (nb>1) {
-      var dx = (p2[0]-p1[0]) / nb;
-      var dy = (p2[1]-p1[1]) / nb;
-      for (var i=1; i<nb; i++) {
-        pts.push([p1[0] + dx*i, p1[1] + dy*i])
+    var nb = Math.round(dl / d);
+    if (nb > 1) {
+      var dx = (p2[0] - p1[0]) / nb;
+      var dy = (p2[1] - p1[1]) / nb;
+      for (var i = 1; i < nb; i++) {
+        pts.push([p1[0] + dx * i, p1[1] + dy * i])
       }
     }
   }
@@ -37720,11 +37720,11 @@ ol.coordinate.sampleAt = function(p1, p2, d, start) {
  * @param {number} d
  * @returns {ol.geom.LineString}
  */
-ol.geom.LineString.prototype.sampleAt = function(d) {
+ol.geom.LineString.prototype.sampleAt = function (d) {
   var line = this.getCoordinates();
   var result = [];
-  for (var i=1; i<line.length; i++) {
-    result = result.concat(ol.coordinate.sampleAt(line[i-1], line[i], d, i===1));
+  for (var i = 1; i < line.length; i++) {
+    result = result.concat(ol.coordinate.sampleAt(line[i - 1], line[i], d, i === 1));
   }
   return new ol.geom.LineString(result);
 };
@@ -37732,13 +37732,13 @@ ol.geom.LineString.prototype.sampleAt = function(d) {
  * @param {number} d
  * @returns {ol.geom.MultiLineString}
  */
-ol.geom.MultiLineString.prototype.sampleAt = function(d) {
+ol.geom.MultiLineString.prototype.sampleAt = function (d) {
   var lines = this.getCoordinates();
   var result = [];
-  lines.forEach(function(p) {
+  lines.forEach(function (p) {
     var l = [];
-    for (var i=1; i<p.length; i++) {
-      l = l.concat(ol.coordinate.sampleAt(p[i-1], p[i], d, i===1));
+    for (var i = 1; i < p.length; i++) {
+      l = l.concat(ol.coordinate.sampleAt(p[i - 1], p[i], d, i === 1));
     }
     result.push(l);
   })
@@ -37748,13 +37748,13 @@ ol.geom.MultiLineString.prototype.sampleAt = function(d) {
  * @param {number} d
  * @returns {ol.geom.Polygon}
  */
-ol.geom.Polygon.prototype.sampleAt = function(res) {
+ol.geom.Polygon.prototype.sampleAt = function (res) {
   var poly = this.getCoordinates();
   var result = [];
-  poly.forEach(function(p) {
+  poly.forEach(function (p) {
     var l = [];
-    for (var i=1; i<p.length; i++) {
-      l = l.concat(ol.coordinate.sampleAt(p[i-1], p[i], res, i===1));
+    for (var i = 1; i < p.length; i++) {
+      l = l.concat(ol.coordinate.sampleAt(p[i - 1], p[i], res, i === 1));
     }
     result.push(l);
   })
@@ -37764,16 +37764,16 @@ ol.geom.Polygon.prototype.sampleAt = function(res) {
  * @param {number} res
  * @returns {ol.geom.MultiPolygon}
  */
-ol.geom.MultiPolygon.prototype.sampleAt = function(res) {
+ol.geom.MultiPolygon.prototype.sampleAt = function (res) {
   var mpoly = this.getCoordinates();
   var result = [];
-  mpoly.forEach(function(poly) {
+  mpoly.forEach(function (poly) {
     var a = [];
     result.push(a);
-    poly.forEach(function(p) {
+    poly.forEach(function (p) {
       var l = [];
-      for (var i=1; i<p.length; i++) {
-        l = l.concat(ol.coordinate.sampleAt(p[i-1], p[i], res, i===1));
+      for (var i = 1; i < p.length; i++) {
+        l = l.concat(ol.coordinate.sampleAt(p[i - 1], p[i], res, i === 1));
       }
       a.push(l);
     })
@@ -37785,7 +37785,7 @@ ol.geom.MultiPolygon.prototype.sampleAt = function(res) {
  * @param {number} resolution circle resolution to sample the polygon on the circle, default 1
  * @returns {ol.geom.Geometry}
  */
-ol.geom.Circle.prototype.intersection = function(geom, resolution) {
+ol.geom.Circle.prototype.intersection = function (geom, resolution) {
   if (geom.sampleAt) {
     var ext = ol.extent.buffer(this.getCenter().concat(this.getCenter()), this.getRadius());
     geom = ol.extent.intersection(ext, geom);
@@ -37796,24 +37796,24 @@ ol.geom.Circle.prototype.intersection = function(geom, resolution) {
     var g = geom.sampleAt(resolution).getCoordinates();
     switch (geom.getType()) {
       case 'Polygon': g = [g];
-        // fallthrough
+      // fallthrough
       case 'MultiPolygon': {
         var hasout = false;
         // var hasin = false;
         var result = [];
-        g.forEach(function(poly) {
+        g.forEach(function (poly) {
           var a = [];
           result.push(a);
-          poly.forEach(function(ring) {
+          poly.forEach(function (ring) {
             var l = [];
             a.push(l);
-            ring.forEach(function(p) {
+            ring.forEach(function (p) {
               var d = ol.coordinate.dist2d(c, p);
               if (d > r) {
                 hasout = true;
                 l.push([
-                  c[0] + r / d * (p[0]-c[0]),
-                  c[1] + r / d * (p[1]-c[1])
+                  c[0] + r / d * (p[0] - c[0]),
+                  c[1] + r / d * (p[1] - c[1])
                 ]);
               } else {
                 // hasin = true;
@@ -37831,7 +37831,7 @@ ol.geom.Circle.prototype.intersection = function(geom, resolution) {
       }
     }
   } else {
-    console.warn('[ol/geom/Circle~intersection] Unsupported geometry type: '+geom.getType());
+    console.warn('[ol/geom/Circle~intersection] Unsupported geometry type: ' + geom.getType());
   }
   return geom;
 };
@@ -37841,73 +37841,73 @@ ol.geom.Circle.prototype.intersection = function(geom, resolution) {
  * @param {ol.Coordinate | Array<ol.Coordinate>} pt points to split the line
  * @param {Number} tol distance tolerance for 2 points to be equal
  */
-ol.geom.LineString.prototype.splitAt = function(pt, tol) {
+ol.geom.LineString.prototype.splitAt = function (pt, tol) {
   var i;
   if (!pt) return [this];
-    if (!tol) tol = 1e-10;
-    // Test if list of points
-    if (pt.length && pt[0].length) {
-      var result = [this];
-      for (i=0; i<pt.length; i++) {
-        var r = [];
-        for (var k=0; k<result.length; k++) {
-          var ri = result[k].splitAt(pt[i], tol);
-          r = r.concat(ri);
-        }
-        result = r;
+  if (!tol) tol = 1e-10;
+  // Test if list of points
+  if (pt.length && pt[0].length) {
+    var result = [this];
+    for (i = 0; i < pt.length; i++) {
+      var r = [];
+      for (var k = 0; k < result.length; k++) {
+        var ri = result[k].splitAt(pt[i], tol);
+        r = r.concat(ri);
       }
-      return result;
+      result = r;
     }
-    // Nothing to do
-    if (ol.coordinate.equal(pt,this.getFirstCoordinate())
-    || ol.coordinate.equal(pt,this.getLastCoordinate())) {
-      return [this];
+    return result;
+  }
+  // Nothing to do
+  if (ol.coordinate.equal(pt, this.getFirstCoordinate())
+    || ol.coordinate.equal(pt, this.getLastCoordinate())) {
+    return [this];
+  }
+  // Get
+  var c0 = this.getCoordinates();
+  var ci = [c0[0]];
+  var c = [];
+  for (i = 0; i < c0.length - 1; i++) {
+    // Filter equal points
+    if (ol.coordinate.equal(c0[i], c0[i + 1])) continue;
+    // Extremity found
+    if (ol.coordinate.equal(pt, c0[i + 1])) {
+      ci.push(c0[i + 1]);
+      c.push(new ol.geom.LineString(ci));
+      ci = [];
     }
-    // Get
-    var c0 = this.getCoordinates();
-    var ci=[c0[0]];
-    var c = [];
-    for (i=0; i<c0.length-1; i++) {
-      // Filter equal points
-      if (ol.coordinate.equal(c0[i],c0[i+1])) continue;
-      // Extremity found
-      if (ol.coordinate.equal(pt,c0[i+1])) {
-        ci.push(c0[i+1]);
+    // Test alignement
+    else if (!ol.coordinate.equal(pt, c0[i])) {
+      var d1, d2, split = false;
+      if (c0[i][0] == c0[i + 1][0]) {
+        d1 = (c0[i][1] - pt[1]) / (c0[i][1] - c0[i + 1][1]);
+        split = (c0[i][0] == pt[0]) && (0 < d1 && d1 <= 1)
+      } else if (c0[i][1] == c0[i + 1][1]) {
+        d1 = (c0[i][0] - pt[0]) / (c0[i][0] - c0[i + 1][0]);
+        split = (c0[i][1] == pt[1]) && (0 < d1 && d1 <= 1)
+      } else {
+        d1 = (c0[i][0] - pt[0]) / (c0[i][0] - c0[i + 1][0]);
+        d2 = (c0[i][1] - pt[1]) / (c0[i][1] - c0[i + 1][1]);
+        split = (Math.abs(d1 - d2) <= tol && 0 < d1 && d1 <= 1)
+      }
+      // pt is inside the segment > split
+      if (split) {
+        ci.push(pt);
         c.push(new ol.geom.LineString(ci));
-        ci = [];
+        ci = [pt];
       }
-      // Test alignement
-      else if (!ol.coordinate.equal(pt,c0[i])) {
-        var d1, d2, split=false;
-        if (c0[i][0] == c0[i+1][0]) {
-          d1 = (c0[i][1]-pt[1]) / (c0[i][1]-c0[i+1][1]);
-          split = (c0[i][0] == pt[0]) && (0 < d1 && d1 <= 1)
-        } else if (c0[i][1] == c0[i+1][1]) {
-          d1 = (c0[i][0]-pt[0]) / (c0[i][0]-c0[i+1][0]);
-          split = (c0[i][1] == pt[1]) && (0 < d1 && d1 <= 1)
-        } else {
-          d1 = (c0[i][0]-pt[0]) / (c0[i][0]-c0[i+1][0]);
-          d2 = (c0[i][1]-pt[1]) / (c0[i][1]-c0[i+1][1]);
-          split = (Math.abs(d1-d2) <= tol && 0 < d1 && d1 <= 1)
-        }
-        // pt is inside the segment > split
-        if (split) {
-          ci.push(pt);
-          c.push (new ol.geom.LineString(ci));
-          ci = [pt];
-        }
-      }
-      ci.push(c0[i+1]);
     }
-    if (ci.length>1) c.push (new ol.geom.LineString(ci));
-    if (c.length) return c;
-    else return [this];
+    ci.push(c0[i + 1]);
+  }
+  if (ci.length > 1) c.push(new ol.geom.LineString(ci));
+  if (c.length) return c;
+  else return [this];
 }
 // import('ol-ext/geom/LineStringSplitAt')
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
-	Usefull function to handle geometric operations
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  Usefull function to handle geometric operations
 */
 /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
 /**
@@ -37921,20 +37921,20 @@ ol.geom.MultiPolygon.prototype.scribbleFill = function (options) {
   var scribbles = [];
   var poly = this.getPolygons();
   var i, p, s;
-  for (i=0; p=poly[i]; i++) {
+  for (i = 0; p = poly[i]; i++) {
     var mls = p.scribbleFill(options);
     if (mls) scribbles.push(mls);
-  } 
+  }
   if (!scribbles.length) return null;
   // Merge scribbles
   var scribble = scribbles[0];
-    var ls;
-    for (i = 0; s = scribbles[i]; i++) {
-      ls = s.getLineStrings();
-      for (var k = 0; k < ls.length; k++) {
-        scribble.appendLineString(ls[k]);
-      }
+  var ls;
+  for (i = 0; s = scribbles[i]; i++) {
+    ls = s.getLineStrings();
+    for (var k = 0; k < ls.length; k++) {
+      scribble.appendLineString(ls[k]);
     }
+  }
   return scribble;
 };
 /**
@@ -37945,40 +37945,40 @@ ol.geom.MultiPolygon.prototype.scribbleFill = function (options) {
  * @return {ol.geom.MultiLineString|null} the resulting MultiLineString geometry or null if none
  */
 ol.geom.Polygon.prototype.scribbleFill = function (options) {
-	var step = options.interval;
-  var angle = options.angle || Math.PI/2;
-  var i, k,l;
+  var step = options.interval;
+  var angle = options.angle || Math.PI / 2;
+  var i, k, l;
   // Geometry + rotate
-	var geom = this.clone();
-	geom.rotate(angle, [0,0]);
+  var geom = this.clone();
+  geom.rotate(angle, [0, 0]);
   var coords = geom.getCoordinates();
   // Merge holes
   var coord = coords[0];
-  for (i=1; i<coords.length; i++) {
+  for (i = 1; i < coords.length; i++) {
     // Add a separator
     coord.push([]);
     // Add the hole
     coord = coord.concat(coords[i]);
   }
   // Extent 
-	var ext = geom.getExtent();
-	// Split polygon with horizontal lines
+  var ext = geom.getExtent();
+  // Split polygon with horizontal lines
   var lines = [];
-	for (var y = (Math.floor(ext[1]/step)+1)*step; y<ext[3]; y += step) {
+  for (var y = (Math.floor(ext[1] / step) + 1) * step; y < ext[3]; y += step) {
     l = ol.coordinate.splitH(coord, y, i);
     lines = lines.concat(l);
   }
   if (!lines.length) return null;
   // Order lines on segment index
-  var mod = coord.length-1;
-	var first = lines[0][0].index;
-	for (k=0; l=lines[k]; k++) {
-		lines[k][0].index = (lines[k][0].index-first+mod) % mod;
-		lines[k][1].index = (lines[k][1].index-first+mod) % mod;
-	}
+  var mod = coord.length - 1;
+  var first = lines[0][0].index;
+  for (k = 0; l = lines[k]; k++) {
+    lines[k][0].index = (lines[k][0].index - first + mod) % mod;
+    lines[k][1].index = (lines[k][1].index - first + mod) % mod;
+  }
   var scribble = [];
   while (true) {
-    for (k=0; l=lines[k]; k++) {
+    for (k = 0; l = lines[k]; k++) {
       if (!l[0].done) break;
     }
     if (!l) break;
@@ -38001,7 +38001,7 @@ ol.geom.Polygon.prototype.scribbleFill = function (options) {
             (l[1].index - l[0].index + mod) % mod,
             (l[0].index - l[1].index + mod) % mod
           );
-          if (d<d0 && d<d2) {
+          if (d < d0 && d < d2) {
             d0 = d;
             if (!lines[k][0].done) l2 = lines[k];
             else l2 = null;
@@ -38018,8 +38018,8 @@ ol.geom.Polygon.prototype.scribbleFill = function (options) {
   // Return the scribble as MultiLineString
   if (!scribble.length) return null;
   var mline = new ol.geom.MultiLineString(scribble);
-  mline.rotate(-angle,[0,0]);
-	return mline.cspline({ pointsPerSeg:8, tension:.9 });
+  mline.rotate(-angle, [0, 0]);
+  return mline.cspline({ pointsPerSeg: 8, tension: .9 });
 };
 /** Calculate a MultiPolyline to fill a geomatry (Polygon or MultiPolygon) with a scribble effect that appears hand-made
  * @param {ol.geom.Geometry} geom the geometry to scribble
@@ -38028,7 +38028,7 @@ ol.geom.Polygon.prototype.scribbleFill = function (options) {
  *  @param {Number} options.angle hatch angle in radian, default PI/2
  * @return {ol.geom.Geometry} the resulting MultiLineString geometry or initial geometry
  */
-ol.geom.scribbleFill = function(geom, options) {
+ol.geom.scribbleFill = function (geom, options) {
   switch (geom.getType()) {
     case 'Polygon': {
       return ol.geom.Polygon.prototype.scribbleFill.call(geom, options)
@@ -38083,10 +38083,10 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
    */
   getFeatures() {
     var features = [];
-    this._edges.forEach(function(edge) {
-      edge.get('edge').forEach(function(ed) {
+    this._edges.forEach(function (edge) {
+      edge.get('edge').forEach(function (ed) {
         // Already inserted?
-        var f = features.find(function(e) {
+        var f = features.find(function (e) {
           return ed.feature === e.feature;
         })
         // New one
@@ -38106,7 +38106,7 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
       })
     })
     // Recreate objects
-    features.forEach(function(f) {
+    features.forEach(function (f) {
       f.typeGeom = f.feature.getGeometry().getType();
       f.nom = f.feature.get('nom');
       var g = [];
@@ -38123,24 +38123,24 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
           coordinates = coordinates[i];
         }
         // Join
-        f.contour[c].sort(function(a,b) { return a.index - b.index; });
-        f.contour[c].forEach(function(contour) {
+        f.contour[c].sort(function (a, b) { return a.index - b.index; });
+        f.contour[c].forEach(function (contour) {
           var coord = contour.edge.getGeometry().getCoordinates();
-          if (!coordinates.length || ol.coordinate.equal(coordinates[coordinates.length-1], coord[0])) {
-            for (var i= coordinates.length ? 1 : 0; i<coord.length; i++) {
+          if (!coordinates.length || ol.coordinate.equal(coordinates[coordinates.length - 1], coord[0])) {
+            for (var i = coordinates.length ? 1 : 0; i < coord.length; i++) {
               coordinates.push(coord[i]);
             }
           } else if (ol.coordinate.equal(coordinates[0], coord[0])) {
-            for (var i=1; i<coord.length; i++) {
+            for (var i = 1; i < coord.length; i++) {
               coordinates.unshift(coord[i]);
             }
-          } else if (ol.coordinate.equal(coordinates[0], coord[coord.length-1])) {
-            for (var i=coord.length-2; i>=0; i--) {
+          } else if (ol.coordinate.equal(coordinates[0], coord[coord.length - 1])) {
+            for (var i = coord.length - 2; i >= 0; i--) {
               coordinates.unshift(coord[i]);
             }
           } else {
             // revert
-            for (var i=coord.length-2; i>=0; i--) {
+            for (var i = coord.length - 2; i >= 0; i--) {
               coordinates.push(coord[i]);
             }
           }
@@ -38159,7 +38159,7 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
    *  @param {string} options.algo
    */
   simplifyVisvalingam(options) {
-    this._edges.forEach(function(f) {
+    this._edges.forEach(function (f) {
       var gtype = f.get('edge')[0].feature.getGeometry().getType();
       f.setGeometry(f.get('geom').simplifyVisvalingam({
         area: options.area,
@@ -38174,7 +38174,7 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
    * @param {number} tolerance
    */
   simplify(tolerance) {
-    this._edges.forEach(function(f) {
+    this._edges.forEach(function (f) {
       f.setGeometry(f.get('geom').simplify(tolerance))
     })
   }
@@ -38187,12 +38187,12 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
     var edges = {};
     var prev, prevEdge;
     function createEdge(f, a, i) {
-      var id = a.seg[0] +'-'+ a.seg[1];
+      var id = a.seg[0] + '-' + a.seg[1];
       // Existing edge
       var e = edges[id];
       // Test revert
       if (!e) {
-        id = a.seg[1] +'-'+ a.seg[0];
+        id = a.seg[1] + '-' + a.seg[0];
         e = edges[id];
       }
       // Add or create a new one
@@ -38219,7 +38219,7 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
       }
     }
     // Get all edges
-    features.forEach(function(f) {
+    features.forEach(function (f) {
       if (!/Point/.test(f.getGeometry().getType())) {
         var arcs = this._getArcs(f.getGeometry().getCoordinates(), [], '0', round);
         // Create edges for arcs
@@ -38242,15 +38242,15 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
   _getArcs(coords, arcs, contour, round) {
     // New contour
     if (coords[0][0][0].length) {
-      coords.forEach(function(c, i) {
+      coords.forEach(function (c, i) {
         this._getArcs(c, arcs, contour + '-' + i, round)
       }.bind(this))
     } else {
-      coords.forEach(function(c, k) {
+      coords.forEach(function (c, k) {
         var p1, p0 = c[0];
         // p0 = round ? [Math.round(c[0][0] * round) / round, Math.round(c[0][1] * round) / round] : c[0];
         var ct = contour + '-' + k;
-        for (var i=1; i<c.length; i++) {
+        for (var i = 1; i < c.length; i++) {
           p1 = c[i];
           // p1 = round ? [Math.round(c[i][0] * round) / round, Math.round(c[i][1] * round) / round] : c[i];
           if (!ol.coordinate.equal(p0, p1)) {
@@ -38271,10 +38271,10 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
     function isConnected(edge1, edge2) {
       if (edge1.length === edge2.length) {
         var connected, e1, e2;
-        for (var i=0; i < edge1.length; i++) {
+        for (var i = 0; i < edge1.length; i++) {
           e1 = edge1[i]
           connected = false;
-          for (var j=0; j < edge2.length; j++) {
+          for (var j = 0; j < edge2.length; j++) {
             e2 = edge2[j];
             if (e1.feature === e2.feature && e1.contour === e2.contour) {
               connected = true;
@@ -38311,7 +38311,7 @@ ol.geom.Simplificator = class olgeomSimplificator extends ol.Object {
     edges.forEach(chainBack)
     // New arcs features
     var result = [];
-    edges.forEach(function(f) { 
+    edges.forEach(function (f) {
       if (!f.del) {
         result.push(new ol.Feature({
           geometry: new ol.geom.LineString(f.geometry),
@@ -38339,16 +38339,16 @@ ol.geohash = {
  * @param   {number} [precision] Number of characters in resulting geohash.
  * @returns {string} Geohash of supplied latitude/longitude.
  */
-ol.geohash.fromLonLat = function(lonlat, precision) {
+ol.geohash.fromLonLat = function (lonlat, precision) {
   var lon = lonlat[0];
   var lat = lonlat[1];
   // infer precision?
   if (!precision) {
     // refine geohash until it matches precision of supplied lat/lon
-    for (var p=1; p<=12; p++) {
-        var hash = ol.geohash.fromLonLat([lon, lat], p);
-        var posn = ol.geohash.toLonLat(hash);
-        if (posn.lat==lat && posn.lon==lon) return hash;
+    for (var p = 1; p <= 12; p++) {
+      var hash = ol.geohash.fromLonLat([lon, lat], p);
+      var posn = ol.geohash.toLonLat(hash);
+      if (posn.lat == lat && posn.lon == lon) return hash;
     }
     precision = 12; // set to maximum
   }
@@ -38357,27 +38357,27 @@ ol.geohash.fromLonLat = function(lonlat, precision) {
   var bit = 0; // each char holds 5 bits
   var evenBit = true;
   var geohash = '';
-  var latMin =  -90, latMax =  90;
+  var latMin = -90, latMax = 90;
   var lonMin = -180, lonMax = 180;
   while (geohash.length < precision) {
     if (evenBit) {
       // bisect E-W longitude
       var lonMid = (lonMin + lonMax) / 2;
       if (lon >= lonMid) {
-        idx = idx*2 + 1;
+        idx = idx * 2 + 1;
         lonMin = lonMid;
       } else {
-        idx = idx*2;
+        idx = idx * 2;
         lonMax = lonMid;
       }
     } else {
       // bisect N-S latitude
       var latMid = (latMin + latMax) / 2;
       if (lat >= latMid) {
-        idx = idx*2 + 1;
+        idx = idx * 2 + 1;
         latMin = latMid;
       } else {
-        idx = idx*2;
+        idx = idx * 2;
         latMax = latMid;
       }
     }
@@ -38396,38 +38396,38 @@ ol.geohash.fromLonLat = function(lonlat, precision) {
  * @param   {string} geohash - Geohash string to be converted to latitude/longitude.
  * @returns {ol.coordinate}
  */
-ol.geohash.toLonLat = function(geohash) {
+ol.geohash.toLonLat = function (geohash) {
   var extent = ol.geohash.getExtent(geohash); // <-- the hard work
   // now just determine the centre of the cell...
   var latMin = extent[1], lonMin = extent[0];
   var latMax = extent[3], lonMax = extent[2];
   // cell centre
-  var lat = (latMin + latMax)/2;
-  var lon = (lonMin + lonMax)/2;
+  var lat = (latMin + latMax) / 2;
+  var lon = (lonMin + lonMax) / 2;
   // round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
-  lat = lat.toFixed(Math.floor(2-Math.log(latMax-latMin)/Math.LN10));
-  lon = lon.toFixed(Math.floor(2-Math.log(lonMax-lonMin)/Math.LN10));
+  lat = lat.toFixed(Math.floor(2 - Math.log(latMax - latMin) / Math.LN10));
+  lon = lon.toFixed(Math.floor(2 - Math.log(lonMax - lonMin) / Math.LN10));
   return [Number(lon), Number(lat)];
 };
 /** Returns SW/NE latitude/longitude bounds of specified geohash.
  * @param   {string} geohash Cell that bounds are required of.
  * @returns {ol.extent | false} 
  */
-ol.geohash.getExtent = function(geohash) {
+ol.geohash.getExtent = function (geohash) {
   if (!geohash) return false;
   geohash = geohash.toLowerCase();
   var evenBit = true;
-  var latMin =  -90, latMax =  90;
+  var latMin = -90, latMax = 90;
   var lonMin = -180, lonMax = 180;
-  for (var i=0; i<geohash.length; i++) {
+  for (var i = 0; i < geohash.length; i++) {
     var chr = geohash.charAt(i);
     var idx = ol.geohash.base32.indexOf(chr);
     if (idx == -1) return false;
-    for (var n=4; n>=0; n--) {
+    for (var n = 4; n >= 0; n--) {
       var bitN = idx >> n & 1;
       if (evenBit) {
         // longitude
-        var lonMid = (lonMin+lonMax) / 2;
+        var lonMid = (lonMin + lonMax) / 2;
         if (bitN == 1) {
           lonMin = lonMid;
         } else {
@@ -38435,7 +38435,7 @@ ol.geohash.getExtent = function(geohash) {
         }
       } else {
         // latitude
-        var latMid = (latMin+latMax) / 2;
+        var latMid = (latMin + latMax) / 2;
         if (bitN == 1) {
           latMin = latMid;
         } else {
@@ -38459,16 +38459,16 @@ ol.geohash.getAdjacent = function (geohash, direction) {
   if (!geohash) return false;
   if ('nsew'.indexOf(direction) == -1) return false;
   var neighbour = {
-      n: [ 'p0r21436x8zb9dcf5h7kjnmqesgutwvy', 'bc01fg45238967deuvhjyznpkmstqrwx' ],
-      s: [ '14365h7k9dcfesgujnmqp0r2twvyx8zb', '238967debc01fg45kmstqrwxuvhjyznp' ],
-      e: [ 'bc01fg45238967deuvhjyznpkmstqrwx', 'p0r21436x8zb9dcf5h7kjnmqesgutwvy' ],
-      w: [ '238967debc01fg45kmstqrwxuvhjyznp', '14365h7k9dcfesgujnmqp0r2twvyx8zb' ],
+    n: ['p0r21436x8zb9dcf5h7kjnmqesgutwvy', 'bc01fg45238967deuvhjyznpkmstqrwx'],
+    s: ['14365h7k9dcfesgujnmqp0r2twvyx8zb', '238967debc01fg45kmstqrwxuvhjyznp'],
+    e: ['bc01fg45238967deuvhjyznpkmstqrwx', 'p0r21436x8zb9dcf5h7kjnmqesgutwvy'],
+    w: ['238967debc01fg45kmstqrwxuvhjyznp', '14365h7k9dcfesgujnmqp0r2twvyx8zb'],
   };
   var border = {
-      n: [ 'prxz',     'bcfguvyz' ],
-      s: [ '028b',     '0145hjnp' ],
-      e: [ 'bcfguvyz', 'prxz'     ],
-      w: [ '0145hjnp', '028b'     ],
+    n: ['prxz', 'bcfguvyz'],
+    s: ['028b', '0145hjnp'],
+    e: ['bcfguvyz', 'prxz'],
+    w: ['0145hjnp', '028b'],
   };
   var lastCh = geohash.slice(-1);    // last character of hash
   var parent = geohash.slice(0, -1); // hash without last character
@@ -38484,15 +38484,15 @@ ol.geohash.getAdjacent = function (geohash, direction) {
  * @param   {string} geohash Geohash neighbours are required of.
  * @returns {{n,ne,e,se,s,sw,w,nw: string}}
  */
-ol.geohash.getNeighbours = function(geohash) {
+ol.geohash.getNeighbours = function (geohash) {
   return {
-    'n':  ol.geohash.getAdjacent(geohash, 'n'),
+    'n': ol.geohash.getAdjacent(geohash, 'n'),
     'ne': ol.geohash.getAdjacent(ol.geohash.getAdjacent(geohash, 'n'), 'e'),
-    'e':  ol.geohash.getAdjacent(geohash, 'e'),
+    'e': ol.geohash.getAdjacent(geohash, 'e'),
     'se': ol.geohash.getAdjacent(ol.geohash.getAdjacent(geohash, 's'), 'e'),
-    's':  ol.geohash.getAdjacent(geohash, 's'),
+    's': ol.geohash.getAdjacent(geohash, 's'),
     'sw': ol.geohash.getAdjacent(ol.geohash.getAdjacent(geohash, 's'), 'w'),
-    'w':  ol.geohash.getAdjacent(geohash, 'w'),
+    'w': ol.geohash.getAdjacent(geohash, 'w'),
     'nw': ol.geohash.getAdjacent(ol.geohash.getAdjacent(geohash, 'n'), 'w'),
   };
 }
@@ -38503,10 +38503,10 @@ ol.geohash.getNeighbours = function(geohash) {
  * @param {ol.coordinate} destination destination in lonlat
  * @return {number} bearing angle in radian
  */
-ol.sphere.greatCircleBearing = function(origin, destination) {
-  var toRad = Math.PI/180;
-  var ori = [ origin[0]*toRad, origin[1]*toRad ];
-  var dest = [ destination[0]*toRad, destination[1]*toRad ];
+ol.sphere.greatCircleBearing = function (origin, destination) {
+  var toRad = Math.PI / 180;
+  var ori = [origin[0] * toRad, origin[1] * toRad];
+  var dest = [destination[0] * toRad, destination[1] * toRad];
   var bearing = Math.atan2(
     Math.sin(dest[0] - ori[0]) * Math.cos(dest[1]),
     Math.cos(ori[1]) * Math.sin(dest[1]) - Math.sin(ori[1]) * Math.cos(dest[1]) * Math.cos(dest[0] - ori[0])
@@ -38523,9 +38523,9 @@ ol.sphere.greatCircleBearing = function(origin, destination) {
  *  @param {booelan} normalize normalize longitude beetween -180/180, deafulet true
  *  @param {number|undefined} options.radius sphere radius, default 6371008.8
  */
-ol.sphere.computeDestinationPoint = function(origin, distance, bearing, options) {
+ol.sphere.computeDestinationPoint = function (origin, distance, bearing, options) {
   options = options || {};
-  var toRad = Math.PI/180;
+  var toRad = Math.PI / 180;
   var radius = options.radius || 6371008.8;
   var phi1 = origin[1] * toRad;
   var lambda1 = origin[0] * toRad;
@@ -38541,10 +38541,10 @@ ol.sphere.computeDestinationPoint = function(origin, distance, bearing, options)
     );
   var lon = lambda2 / toRad;
   // normalise to >=-180 and <=180° 
-  if (options.normalize!==false && (lon < -180 || lon > 180)) {
+  if (options.normalize !== false && (lon < -180 || lon > 180)) {
     lon = ((lon * 540) % 360) - 180;
   }
-  return [ lon, phi2 / toRad ];
+  return [lon, phi2 / toRad];
 };
 /** Calculate a track along the great circle given an origin and a destination
  * @param {ol.coordinate} origin origin in lonlat
@@ -38553,7 +38553,7 @@ ol.sphere.computeDestinationPoint = function(origin, distance, bearing, options)
  * @param {number|undefined} radius sphere radius, default 6371008.8
  * @return {Array<ol.coordinate>}
  */
-ol.sphere.greatCircleTrack = function(origin, destination, options) {
+ol.sphere.greatCircleTrack = function (origin, destination, options) {
   options = options || {};
   var bearing = ol.sphere.greatCircleBearing(origin, destination);
   var dist = ol.sphere.getDistance(origin, destination, options.radius);
@@ -38565,10 +38565,10 @@ ol.sphere.greatCircleTrack = function(origin, destination, options) {
     d += distance;
   }
   var pt = ol.sphere.computeDestinationPoint(origin, dist, bearing, { radius: options.radius, normalize: false });
-  if (Math.abs(pt[0]-destination[0]) > 1) {
+  if (Math.abs(pt[0] - destination[0]) > 1) {
     if (pt[0] > destination[0]) destination[0] += 360;
     else destination[0] -= 360;
-  } 
+  }
   geom.push(destination);
   return geom;
 };
@@ -38587,7 +38587,7 @@ ol.sphere.getMapScale = function (map, dpi) {
   var d = ol.sphere.getDistance(
     ol.proj.transform(center, proj, 'EPSG:4326'),
     ol.proj.transform(coord, proj, 'EPSG:4326'));
-  d *= (dpi||96) /.0254
+  d *= (dpi || 96) / .0254
   return d;
 };
 /** Set map scale factor
@@ -38599,10 +38599,10 @@ ol.sphere.getMapScale = function (map, dpi) {
 ol.sphere.setMapScale = function (map, scale, dpi) {
   if (map && scale) {
     var fac = scale;
-    if (typeof(scale)==='string') {
+    if (typeof (scale) === 'string') {
       fac = scale.split('/')[1];
       if (!fac) fac = scale;
-      fac = fac.replace(/[^\d]/g,'');
+      fac = fac.replace(/[^\d]/g, '');
       fac = parseInt(fac);
     }
     if (!fac) return;
@@ -38616,172 +38616,172 @@ ol.sphere.setMapScale = function (map, scale, dpi) {
     var d = ol.sphere.getDistance(
       ol.proj.transform(center, proj, 'EPSG:4326'),
       ol.proj.transform(coord, proj, 'EPSG:4326'));
-    d *= (dpi || 96) /.0254
-    view.setResolution(view.getResolution()*fac/d);
+    d *= (dpi || 96) / .0254
+    view.setResolution(view.getResolution() * fac / d);
     return fac;
   }
 };
 
 (function () {
-/**
- * Visvalingam polyline simplification algorithm, adapted from http://bost.ocks.org/mike/simplify/simplify.js
- * This uses the [Visvalingam–Whyatt](https://en.wikipedia.org/wiki/Visvalingam%E2%80%93Whyatt_algorithm) algorithm.
- * @param {Object} options
- *  @param {number} [area] the tolerance area for simplification
- *  @param {number} [dist] a tolerance distance for simplification
- *  @param {number} [ratio=.8] a ratio of points to keep
- *  @param {number} [minPoints=2] minimum number of points to keep
- *  @param {boolean} [keepEnds] keep line ends
- * @return { LineString } A new, simplified version of the original geometry.
- * @api
- */
-ol.geom.LineString.prototype.simplifyVisvalingam = function (options) {
-  var points = this.getCoordinates();
-  if (options.minPoints && options.minPoints >= points.length) {
-    return new ol.geom.LineString(points);
-  }
-  var heap = minHeap(),
+  /**
+   * Visvalingam polyline simplification algorithm, adapted from http://bost.ocks.org/mike/simplify/simplify.js
+   * This uses the [Visvalingam–Whyatt](https://en.wikipedia.org/wiki/Visvalingam%E2%80%93Whyatt_algorithm) algorithm.
+   * @param {Object} options
+   *  @param {number} [area] the tolerance area for simplification
+   *  @param {number} [dist] a tolerance distance for simplification
+   *  @param {number} [ratio=.8] a ratio of points to keep
+   *  @param {number} [minPoints=2] minimum number of points to keep
+   *  @param {boolean} [keepEnds] keep line ends
+   * @return { LineString } A new, simplified version of the original geometry.
+   * @api
+   */
+  ol.geom.LineString.prototype.simplifyVisvalingam = function (options) {
+    var points = this.getCoordinates();
+    if (options.minPoints && options.minPoints >= points.length) {
+      return new ol.geom.LineString(points);
+    }
+    var heap = minHeap(),
       maxArea = 0,
       triangle,
       triangles = [];
-  points = points.map(function (d) { return d.slice(0,2); });
-  for (var i = 1, n = points.length - 1; i < n; ++i) {
-    triangle = points.slice(i - 1, i + 2);
-    if (triangle[1][2] = area(triangle)) {
-      triangles.push(triangle);
+    points = points.map(function (d) { return d.slice(0, 2); });
+    for (var i = 1, n = points.length - 1; i < n; ++i) {
+      triangle = points.slice(i - 1, i + 2);
+      if (triangle[1][2] = area(triangle)) {
+        triangles.push(triangle);
+        heap.push(triangle);
+      }
+    }
+    for (i = 0, n = triangles.length; i < n; ++i) {
+      triangle = triangles[i];
+      triangle.previous = triangles[i - 1];
+      triangle.next = triangles[i + 1];
+    }
+    while (triangle = heap.pop()) {
+      // If the area of the current point is less than that of the previous point
+      // to be eliminated, use the latters area instead. This ensures that the
+      // current point cannot be eliminated without eliminating previously-
+      // eliminated points.
+      if (triangle[1][2] < maxArea) triangle[1][2] = maxArea;
+      else maxArea = triangle[1][2];
+      if (triangle.previous) {
+        triangle.previous.next = triangle.next;
+        triangle.previous[2] = triangle[2];
+        update(triangle.previous);
+      } else {
+        triangle[0][2] = triangle[1][2];
+      }
+      if (triangle.next) {
+        triangle.next.previous = triangle.previous;
+        triangle.next[0] = triangle[0];
+        update(triangle.next);
+      } else {
+        triangle[2][2] = triangle[1][2];
+      }
+    }
+    function update(triangle) {
+      heap.remove(triangle);
+      triangle[1][2] = area(triangle);
       heap.push(triangle);
     }
-  }
-  for (i = 0, n = triangles.length; i < n; ++i) {
-    triangle = triangles[i];
-    triangle.previous = triangles[i - 1];
-    triangle.next = triangles[i + 1];
-  }
-  while (triangle = heap.pop()) {
-    // If the area of the current point is less than that of the previous point
-    // to be eliminated, use the latters area instead. This ensures that the
-    // current point cannot be eliminated without eliminating previously-
-    // eliminated points.
-    if (triangle[1][2] < maxArea) triangle[1][2] = maxArea;
-    else maxArea = triangle[1][2];
-    if (triangle.previous) {
-      triangle.previous.next = triangle.next;
-      triangle.previous[2] = triangle[2];
-      update(triangle.previous);
-    } else {
-      triangle[0][2] = triangle[1][2];
+    // Get area to remove
+    var w = options.area;
+    if (options.dist) w = options.dist * options.dist / 2;
+    // If no area
+    if (w === undefined || options.minPoints) {
+      // Get ordered weights 
+      var weights = points.map(function (d) { return d.length < 3 ? Infinity : d[2] += Math.random(); /* break ties */ });
+      weights.sort(function (a, b) {
+        return b - a;
+      });
+      if (w) {
+        // Check min points
+        if (weights[options.minPoints] < w) {
+          w = weights[options.minPoints]
+        }
+      } else {
+        var pointsToKeep = options.minPoints;
+        // Calculate ratio
+        if (!pointsToKeep) {
+          var ratio = options.ratio || .8
+          pointsToKeep = Math.round(points.length * ratio);
+        }
+        pointsToKeep = Math.min(pointsToKeep, weights.length - 1);
+        w = weights[pointsToKeep]
+      }
     }
-    if (triangle.next) {
-      triangle.next.previous = triangle.previous;
-      triangle.next[0] = triangle[0];
-      update(triangle.next);
-    } else {
-      triangle[2][2] = triangle[1][2];
-    }
-  }
-  function update(triangle) {
-    heap.remove(triangle);
-    triangle[1][2] = area(triangle);
-    heap.push(triangle);
-  }
-  // Get area to remove
-  var w = options.area;
-  if (options.dist) w = options.dist * options.dist / 2;
-  // If no area
-  if (w === undefined || options.minPoints) {
-    // Get ordered weights 
-    var weights = points.map(function (d) { return d.length < 3 ? Infinity : d[2] += Math.random(); /* break ties */ });
-    weights.sort(function (a, b) {
-      return b - a;
+    var result = points.filter(function (d) {
+      return d[2] > w;
     });
-    if (w) {
-      // Check min points
-      if (weights[options.minPoints] < w) {
-        w = weights[options.minPoints]
-      }
-    } else {
-      var pointsToKeep = options.minPoints;
-      // Calculate ratio
-      if (!pointsToKeep) {
-        var ratio = options.ratio || .8
-        pointsToKeep = Math.round(points.length * ratio);
-      }
-      pointsToKeep = Math.min(pointsToKeep, weights.length -1);
-      w = weights[pointsToKeep]
+    if (options.keepEnds) {
+      if (!ol.coordinate.equal(result[0], points[0])) result.unshift(points[0]);
+      if (!ol.coordinate.equal(result[result.length - 1], points[points.length - 1])) result.push(points[points.length - 1]);
     }
+    return new ol.geom.LineString(result);
+  };
+  function compare(a, b) {
+    return a[1][2] - b[1][2];
   }
-  var result = points.filter(function (d) {
-    return d[2] > w;
-  });
-  if (options.keepEnds) {
-    if (!ol.coordinate.equal(result[0], points[0])) result.unshift(points[0]);
-    if (!ol.coordinate.equal(result[result.length-1], points[points.length-1])) result.push(points[points.length-1]);
+  function area(t) {
+    return Math.abs((t[0][0] - t[2][0]) * (t[1][1] - t[0][1]) - (t[0][0] - t[1][0]) * (t[2][1] - t[0][1]));
   }
-  return new ol.geom.LineString(result);
-};
-function compare(a, b) {
-  return a[1][2] - b[1][2];
-}
-function area(t) {
-  return Math.abs((t[0][0] - t[2][0]) * (t[1][1] - t[0][1]) - (t[0][0] - t[1][0]) * (t[2][1] - t[0][1]));
-}
-function minHeap() {
-  var heap = {},
+  function minHeap() {
+    var heap = {},
       array = [];
-  heap.push = function() {
-    for (var i = 0, n = arguments.length; i < n; ++i) {
-      var object = arguments[i];
-      up(object.index = array.push(object) - 1);
-    }
-    return array.length;
-  };
-  heap.pop = function() {
-    var removed = array[0],
+    heap.push = function () {
+      for (var i = 0, n = arguments.length; i < n; ++i) {
+        var object = arguments[i];
+        up(object.index = array.push(object) - 1);
+      }
+      return array.length;
+    };
+    heap.pop = function () {
+      var removed = array[0],
         object = array.pop();
-    if (array.length) {
-      array[object.index = 0] = object;
-      down(0);
-    }
-    return removed;
-  };
-  heap.size = function () {
-    return array.length;
-  };
-  heap.remove = function(removed) {
-    var i = removed.index,
+      if (array.length) {
+        array[object.index = 0] = object;
+        down(0);
+      }
+      return removed;
+    };
+    heap.size = function () {
+      return array.length;
+    };
+    heap.remove = function (removed) {
+      var i = removed.index,
         object = array.pop();
-    if (i !== array.length) {
-      array[object.index = i] = object;
-      (compare(object, removed) < 0 ? up : down)(i);
-    }
-    return i;
-  };
-  function up(i) {
-    var object = array[i];
-    while (i > 0) {
-      var up = ((i + 1) >> 1) - 1,
+      if (i !== array.length) {
+        array[object.index = i] = object;
+        (compare(object, removed) < 0 ? up : down)(i);
+      }
+      return i;
+    };
+    function up(i) {
+      var object = array[i];
+      while (i > 0) {
+        var up = ((i + 1) >> 1) - 1,
           parent = array[up];
-      if (compare(object, parent) >= 0) break;
-      array[parent.index = i] = parent;
-      array[object.index = i = up] = object;
+        if (compare(object, parent) >= 0) break;
+        array[parent.index = i] = parent;
+        array[object.index = i = up] = object;
+      }
     }
-  }
-  function down(i) {
-    var object = array[i];
-    for (;;) {
-      var right = (i + 1) * 2,
+    function down(i) {
+      var object = array[i];
+      for (; ;) {
+        var right = (i + 1) * 2,
           left = right - 1,
           down = i,
           child = array[down];
-      if (left < array.length && compare(array[left], child) < 0) child = array[down = left];
-      if (right < array.length && compare(array[right], child) < 0) child = array[down = right];
-      if (down === i) break;
-      array[child.index = i] = child;
-      array[object.index = i = down] = object;
+        if (left < array.length && compare(array[left], child) < 0) child = array[down = left];
+        if (right < array.length && compare(array[right], child) < 0) child = array[down = right];
+        if (down === i) break;
+        array[child.index = i] = child;
+        array[object.index = i = down] = object;
+      }
     }
+    return heap;
   }
-  return heap;
-}
 })();
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
@@ -38796,12 +38796,12 @@ function minHeap() {
 *	  @param {ol.easing} options.easing easing function, default ol.easing.upAndDown
 *	  @param {ol.style.Stroke} options.style stroke style, default 2px red
 */
-ol.Map.prototype.animExtent = function(extent, options){
+ol.Map.prototype.animExtent = function (extent, options) {
   var listenerKey;
   options = options || {};
   // Change to map's projection
   if (options.projection) {
-    extent = ol.proj.transformExtent (extent, options.projection, this.getView().getProjection());
+    extent = ol.proj.transformExtent(extent, options.projection, this.getView().getProjection());
   }
   // options
   var start = new Date().getTime();
@@ -38818,17 +38818,17 @@ ol.Map.prototype.animExtent = function(extent, options){
       ol.Observable.unByKey(listenerKey);
     } else {
       var elapsedRatio = elapsed / duration;
-      var p0 = this.getPixelFromCoordinate([extent[0],extent[1]]);
-      var p1 = this.getPixelFromCoordinate([extent[2],extent[3]]);
+      var p0 = this.getPixelFromCoordinate([extent[0], extent[1]]);
+      var p1 = this.getPixelFromCoordinate([extent[2], extent[3]]);
       var context = event.context;
       context.save();
-      context.scale(ratio,ratio);
+      context.scale(ratio, ratio);
       context.beginPath();
       // var e = easing(elapsedRatio)
       context.globalAlpha = easing(1 - elapsedRatio);
       context.lineWidth = width;
       context.strokeStyle = color;
-      context.rect(p0[0], p0[1], p1[0]-p0[0], p1[1]-p0[1]);
+      context.rect(p0[0], p0[1], p1[0] - p0[0], p1[1] - p0[1]);
       context.stroke();
       context.restore();
       // tell OL3 to continue postcompose animation
@@ -38837,7 +38837,7 @@ ol.Map.prototype.animExtent = function(extent, options){
   }
   // Launch animation
   listenerKey = this.on('postcompose', animate.bind(this));
-  try { this.renderSync(); } catch(e) { /* ok */ }
+  try { this.renderSync(); } catch (e) { /* ok */ }
 }
 
 /** Create a cardinal spline version of this geometry.
@@ -38856,45 +38856,45 @@ ol.Map.prototype.animExtent = function(extent, options){
  *	@param {Integer} options.pointsPerSeg number of points per segment to add if no resolution is provided, default add 10 points per segment
  * @return {ol.geom.Geometry}
  */
-ol.geom.Geometry.prototype.cspline = function(options){
+ol.geom.Geometry.prototype.cspline = function (options) {
   // Calculate cspline
-  if (this.calcCSpline_){
-    if (this.csplineGeometryRevision != this.getRevision() 
+  if (this.calcCSpline_) {
+    if (this.csplineGeometryRevision != this.getRevision()
       || this.csplineOption != JSON.stringify(options)) {
       this.csplineGeometry_ = this.calcCSpline_(options)
       this.csplineGeometryRevision = this.getRevision();
       this.csplineOption = JSON.stringify(options);
     }
     return this.csplineGeometry_;
-  } else {	
+  } else {
     // Default do nothing
     return this;
   }
 };
-ol.geom.GeometryCollection.prototype.calcCSpline_ = function(options) {
-  var g=[], g0=this.getGeometries();
-  for (var i=0; i<g0.length; i++) {
+ol.geom.GeometryCollection.prototype.calcCSpline_ = function (options) {
+  var g = [], g0 = this.getGeometries();
+  for (var i = 0; i < g0.length; i++) {
     g.push(g0[i].cspline(options));
   }
   return new ol.geom.GeometryCollection(g);
 };
-ol.geom.MultiLineString.prototype.calcCSpline_ = function(options) {
-  var g=[], lines = this.getLineStrings();
-  for (var i=0; i<lines.length; i++) {
+ol.geom.MultiLineString.prototype.calcCSpline_ = function (options) {
+  var g = [], lines = this.getLineStrings();
+  for (var i = 0; i < lines.length; i++) {
     g.push(lines[i].cspline(options).getCoordinates());
   }
   return new ol.geom.MultiLineString(g);
 };
-ol.geom.Polygon.prototype.calcCSpline_ = function(options){
-  var g=[], g0=this.getCoordinates();
-  for (var i=0; i<g0.length; i++){
+ol.geom.Polygon.prototype.calcCSpline_ = function (options) {
+  var g = [], g0 = this.getCoordinates();
+  for (var i = 0; i < g0.length; i++) {
     g.push((new ol.geom.LineString(g0[i])).cspline(options).getCoordinates());
   }
   return new ol.geom.Polygon(g);
 };
-ol.geom.MultiPolygon.prototype.calcCSpline_ = function(options) {
-  var g=[], g0=this.getPolygons();
-  for (var i=0; i<g0.length; i++) {
+ol.geom.MultiPolygon.prototype.calcCSpline_ = function (options) {
+  var g = [], g0 = this.getPolygons();
+  for (var i = 0; i < g0.length; i++) {
     g.push(g0[i].cspline(options).getCoordinates());
   }
   return new ol.geom.MultiPolygon(g);
@@ -38907,12 +38907,12 @@ ol.geom.MultiPolygon.prototype.calcCSpline_ = function(options) {
  *	@param {Integer} options.pointsPerSeg number of points per segment to add if no resolution is provided, default add 10 points per segment
  * @return {Array<ol.geom.Geometry.coordinate>}
  */
-ol.coordinate.cspline = function(line, options) {
-  if (!options) options={};
+ol.coordinate.cspline = function (line, options) {
+  if (!options) options = {};
   var tension = typeof options.tension === "number" ? options.tension : 0.5;
   var length = 0;
   var p0 = line[0];
-  line.forEach(function(p) {
+  line.forEach(function (p) {
     length += ol.coordinate.dist2d(p0, p);
     p0 = p;
   })
@@ -38929,55 +38929,55 @@ ol.coordinate.cspline = function(line, options) {
   // Check if we will draw closed or open curve.
   // If closed, copy end points to beginning and first points to end
   // If open, duplicate first points to beginning, end points to end
-  if (line.length>2 && line[0][0]==line[line.length-1][0] && line[0][1]==line[line.length-1][1]) {
-    pts.unshift(line[line.length-2]);
+  if (line.length > 2 && line[0][0] == line[line.length - 1][0] && line[0][1] == line[line.length - 1][1]) {
+    pts.unshift(line[line.length - 2]);
     pts.push(line[1]);
   } else {
     pts.unshift(line[0]);
-    pts.push(line[line.length-1]);
+    pts.push(line[line.length - 1]);
   }
   // ok, lets start..
   function dist2d(x1, y1, x2, y2) {
-    var dx = x2-x1;
-    var dy = y2-y1;
-    return Math.sqrt(dx*dx+dy*dy);
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+    return Math.sqrt(dx * dx + dy * dy);
   }
   // 1. loop goes through point array
   // 2. loop goes through each segment between the 2 pts + 1e point before and after
-  for (i=1; i < (pts.length - 2); i++) {
-    var d1 = dist2d (pts[i][0], pts[i][1], pts[i+1][0], pts[i+1][1]);
-    var numOfSegments = Math.round(d1/resolution);
-    var d=1;
+  for (i = 1; i < (pts.length - 2); i++) {
+    var d1 = dist2d(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1]);
+    var numOfSegments = Math.round(d1 / resolution);
+    var d = 1;
     if (options.normalize) {
-      d1 = dist2d (pts[i+1][0], pts[i+1][1], pts[i-1][0], pts[i-1][1]);
-      var d2 = dist2d (pts[i+2][0], pts[i+2][1], pts[i][0], pts[i][1]);
-      if (d1<d2) d = d1/d2;
-      else d = d2/d1;
+      d1 = dist2d(pts[i + 1][0], pts[i + 1][1], pts[i - 1][0], pts[i - 1][1]);
+      var d2 = dist2d(pts[i + 2][0], pts[i + 2][1], pts[i][0], pts[i][1]);
+      if (d1 < d2) d = d1 / d2;
+      else d = d2 / d1;
     }
     // calc tension vectors
-    t1x = (pts[i+1][0] - pts[i-1][0]) * tension *d;
-    t2x = (pts[i+2][0] - pts[i][0]) * tension *d;
-    t1y = (pts[i+1][1] - pts[i-1][1]) * tension *d;
-    t2y = (pts[i+2][1] - pts[i][1]) * tension *d;
-    for (t=0; t <= numOfSegments; t++) {
+    t1x = (pts[i + 1][0] - pts[i - 1][0]) * tension * d;
+    t2x = (pts[i + 2][0] - pts[i][0]) * tension * d;
+    t1y = (pts[i + 1][1] - pts[i - 1][1]) * tension * d;
+    t2y = (pts[i + 2][1] - pts[i][1]) * tension * d;
+    for (t = 0; t <= numOfSegments; t++) {
       // calc step
       st = t / numOfSegments;
       // calc cardinals
-      c1 =   2 * Math.pow(st, 3)  - 3 * Math.pow(st, 2) + 1; 
-      c2 = -(2 * Math.pow(st, 3)) + 3 * Math.pow(st, 2); 
-      c3 = 	   Math.pow(st, 3)    - 2 * Math.pow(st, 2) + st; 
-      c4 = 	   Math.pow(st, 3)    - 	  Math.pow(st, 2);
+      c1 = 2 * Math.pow(st, 3) - 3 * Math.pow(st, 2) + 1;
+      c2 = -(2 * Math.pow(st, 3)) + 3 * Math.pow(st, 2);
+      c3 = Math.pow(st, 3) - 2 * Math.pow(st, 2) + st;
+      c4 = Math.pow(st, 3) - Math.pow(st, 2);
       // calc x and y cords with common control vectors
-      x = c1 * pts[i][0] + c2 * pts[i+1][0] + c3 * t1x + c4 * t2x;
-      y = c1 * pts[i][1] + c2 * pts[i+1][1] + c3 * t1y + c4 * t2y;
+      x = c1 * pts[i][0] + c2 * pts[i + 1][0] + c3 * t1x + c4 * t2x;
+      y = c1 * pts[i][1] + c2 * pts[i + 1][1] + c3 * t1y + c4 * t2y;
       //store points in array
-      if (x && y) res.push([x,y]);
+      if (x && y) res.push([x, y]);
     }
   }
   return res;
 };
 /** @private */
-ol.geom.LineString.prototype.calcCSpline_ = function(options) {
+ol.geom.LineString.prototype.calcCSpline_ = function (options) {
   var line = this.getCoordinates();
   var res = ol.coordinate.cspline(line, options)
   return new ol.geom.LineString(res);
@@ -39250,25 +39250,25 @@ ol.HexGrid = class olHexGrid extends ol.Object {
  */
 ol.HexGrid.prototype.layout = {
   pointy: [
-    Math.sqrt(3), Math.sqrt(3)/2, 0, 3/2, 
-    Math.sqrt(3)/3, -1/3, 0, 2/3, 
+    Math.sqrt(3), Math.sqrt(3) / 2, 0, 3 / 2,
+    Math.sqrt(3) / 3, -1 / 3, 0, 2 / 3,
     // corners
-    Math.cos(Math.PI / 180 * (60 * 0 + 30)), Math.sin(Math.PI / 180 * (60 * 0 + 30)), 
-    Math.cos(Math.PI / 180 * (60 * 1 + 30)), Math.sin(Math.PI / 180 * (60 * 1 + 30)), 
-    Math.cos(Math.PI / 180 * (60 * 2 + 30)), Math.sin(Math.PI / 180 * (60 * 2 + 30)), 
-    Math.cos(Math.PI / 180 * (60 * 3 + 30)), Math.sin(Math.PI / 180 * (60 * 3 + 30)), 
-    Math.cos(Math.PI / 180 * (60 * 4 + 30)), Math.sin(Math.PI / 180 * (60 * 4 + 30)), 
+    Math.cos(Math.PI / 180 * (60 * 0 + 30)), Math.sin(Math.PI / 180 * (60 * 0 + 30)),
+    Math.cos(Math.PI / 180 * (60 * 1 + 30)), Math.sin(Math.PI / 180 * (60 * 1 + 30)),
+    Math.cos(Math.PI / 180 * (60 * 2 + 30)), Math.sin(Math.PI / 180 * (60 * 2 + 30)),
+    Math.cos(Math.PI / 180 * (60 * 3 + 30)), Math.sin(Math.PI / 180 * (60 * 3 + 30)),
+    Math.cos(Math.PI / 180 * (60 * 4 + 30)), Math.sin(Math.PI / 180 * (60 * 4 + 30)),
     Math.cos(Math.PI / 180 * (60 * 5 + 30)), Math.sin(Math.PI / 180 * (60 * 5 + 30))
   ],
   flat: [
-    3/2, 0, Math.sqrt(3)/2, Math.sqrt(3), 2/3, 
-    0, -1/3, Math.sqrt(3) / 3, 
+    3 / 2, 0, Math.sqrt(3) / 2, Math.sqrt(3), 2 / 3,
+    0, -1 / 3, Math.sqrt(3) / 3,
     // corners
-    Math.cos(Math.PI / 180 * (60 * 0)), Math.sin(Math.PI / 180 * (60 * 0)), 
-    Math.cos(Math.PI / 180 * (60 * 1)), Math.sin(Math.PI / 180 * (60 * 1)), 
-    Math.cos(Math.PI / 180 * (60 * 2)), Math.sin(Math.PI / 180 * (60 * 2)), 
-    Math.cos(Math.PI / 180 * (60 * 3)), Math.sin(Math.PI / 180 * (60 * 3)), 
-    Math.cos(Math.PI / 180 * (60 * 4)), Math.sin(Math.PI / 180 * (60 * 4)), 
+    Math.cos(Math.PI / 180 * (60 * 0)), Math.sin(Math.PI / 180 * (60 * 0)),
+    Math.cos(Math.PI / 180 * (60 * 1)), Math.sin(Math.PI / 180 * (60 * 1)),
+    Math.cos(Math.PI / 180 * (60 * 2)), Math.sin(Math.PI / 180 * (60 * 2)),
+    Math.cos(Math.PI / 180 * (60 * 3)), Math.sin(Math.PI / 180 * (60 * 3)),
+    Math.cos(Math.PI / 180 * (60 * 4)), Math.sin(Math.PI / 180 * (60 * 4)),
     Math.cos(Math.PI / 180 * (60 * 5)), Math.sin(Math.PI / 180 * (60 * 5))
   ]
 };
@@ -39276,8 +39276,8 @@ ol.HexGrid.prototype.layout = {
  * @private
  */
 ol.HexGrid.prototype.neighbors = {
-  'cube':	[ [+1, -1,  0], [+1,  0, -1], [0, +1, -1], [-1, +1,  0], [-1,  0, +1], [0, -1, +1] ],
-  'hex':	[ [+1, 0], [+1,  -1], [0, -1], [-1, 0], [-1, +1], [0, +1] ]
+  'cube': [[+1, -1, 0], [+1, 0, -1], [0, +1, -1], [-1, +1, 0], [-1, 0, +1], [0, -1, +1]],
+  'hex': [[+1, 0], [+1, -1], [0, -1], [-1, 0], [-1, +1], [0, +1]]
 };
 
 /*	Copyright (c) 2017 Jean-Marc VIGLINO, 
@@ -39330,11 +39330,11 @@ ol.InseeGrid = class olInseeGrid extends ol.Object {
 }
 /** Default grid extent (in EPSG:3035)
  */
-ol.InseeGrid.extent = [3200000,2000000,4300000,3140000];
+ol.InseeGrid.extent = [3200000, 2000000, 4300000, 3140000];
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Show a markup a point on postcompose
 *	@deprecated use map.animateFeature instead
@@ -39346,71 +39346,71 @@ ol.InseeGrid.extent = [3200000,2000000,4300000,3140000];
 *		- style {ol.style.Image|ol.style.Style|Array<ol.style.Style>} Image to draw as markup, default red circle
 *	@return Unique key for the listener with a stop function to stop animation
 */
-ol.Map.prototype.markup = function(coords, options)
-{	var listenerKey;
-	var self = this;
-	options = options || {};
-	// Change to map's projection
-	if (options.projection)
-	{	coords = ol.proj.transform(coords, options.projection, this.getView().getProjection());
-	}
-	// options
-	var start = new Date().getTime();
-	var delay = options.delay || 3000;
-	var duration = 1000;
-	var maxZoom = options.maxZoom || 100;
-	var easing = ol.easing.easeOut;
-	var style = options.style;
-	if (!style) style = new ol.style.Circle({ radius:10, stroke:new ol.style.Stroke({color:'red', width:2 }) });
-	if (style instanceof ol.style.Image) style = new ol.style.Style({ image: style });
-	if (!(style instanceof Array)) style = [style];
-	// Animate function
-	function animate(event) 
-	{	var frameState = event.frameState;
-		var elapsed = frameState.time - start;
-		if (elapsed > delay+duration) 
-		{	ol.Observable.unByKey(listenerKey);
-			listenerKey = null;
-		}
-		else 
-		{	if (delay>elapsed && this.getView().getZoom()>maxZoom) delay = elapsed;
-			var ratio = frameState.pixelRatio;
-			var elapsedRatio = 0;
-			if (elapsed > delay) elapsedRatio = (elapsed-delay) / duration;
-			var context = event.context;
-			context.save();
-			context.beginPath();
-			context.globalAlpha = easing(1 - elapsedRatio);
-			for (var i=0; i<style.length; i++)
-			{	var imgs = style[i].getImage();
-				var sc = imgs.getScale(); 
-				imgs.setScale(sc*ratio);
-				event.vectorContext.setStyle(style[i]);
-				event.vectorContext.drawGeometry(new ol.geom.Point(coords));
-				imgs.setScale(sc);
-			}
-			context.restore();
-			// tell OL3 to continue postcompose animation
-			if (elapsed >= delay) frameState.animate = true;
-		}
-	}
-	setTimeout (function() {
-		if (listenerKey) {
-			try { self.renderSync(); } catch(e) { /* ok */ }
-		}
-	}, delay);
-	// Launch animation
-	listenerKey = this.on('postcompose', animate.bind(this));
-	try { this.renderSync(); } catch(e) { /* ok */ }
-	listenerKey.stop = function()
-	{	delay = duration = 0;
-		try { this.target.renderSync(); } catch(e) { /* ok */ }
-	};
-	return listenerKey;
+ol.Map.prototype.markup = function (coords, options) {
+  var listenerKey;
+  var self = this;
+  options = options || {};
+  // Change to map's projection
+  if (options.projection) {
+    coords = ol.proj.transform(coords, options.projection, this.getView().getProjection());
+  }
+  // options
+  var start = new Date().getTime();
+  var delay = options.delay || 3000;
+  var duration = 1000;
+  var maxZoom = options.maxZoom || 100;
+  var easing = ol.easing.easeOut;
+  var style = options.style;
+  if (!style) style = new ol.style.Circle({ radius: 10, stroke: new ol.style.Stroke({ color: 'red', width: 2 }) });
+  if (style instanceof ol.style.Image) style = new ol.style.Style({ image: style });
+  if (!(style instanceof Array)) style = [style];
+  // Animate function
+  function animate(event) {
+    var frameState = event.frameState;
+    var elapsed = frameState.time - start;
+    if (elapsed > delay + duration) {
+      ol.Observable.unByKey(listenerKey);
+      listenerKey = null;
+    }
+    else {
+      if (delay > elapsed && this.getView().getZoom() > maxZoom) delay = elapsed;
+      var ratio = frameState.pixelRatio;
+      var elapsedRatio = 0;
+      if (elapsed > delay) elapsedRatio = (elapsed - delay) / duration;
+      var context = event.context;
+      context.save();
+      context.beginPath();
+      context.globalAlpha = easing(1 - elapsedRatio);
+      for (var i = 0; i < style.length; i++) {
+        var imgs = style[i].getImage();
+        var sc = imgs.getScale();
+        imgs.setScale(sc * ratio);
+        event.vectorContext.setStyle(style[i]);
+        event.vectorContext.drawGeometry(new ol.geom.Point(coords));
+        imgs.setScale(sc);
+      }
+      context.restore();
+      // tell OL3 to continue postcompose animation
+      if (elapsed >= delay) frameState.animate = true;
+    }
+  }
+  setTimeout(function () {
+    if (listenerKey) {
+      try { self.renderSync(); } catch (e) { /* ok */ }
+    }
+  }, delay);
+  // Launch animation
+  listenerKey = this.on('postcompose', animate.bind(this));
+  try { this.renderSync(); } catch (e) { /* ok */ }
+  listenerKey.stop = function () {
+    delay = duration = 0;
+    try { this.target.renderSync(); } catch (e) { /* ok */ }
+  };
+  return listenerKey;
 }
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /** Ordering function for ol.layer.Vector renderOrder parameter
 *	ol.ordering.fn (options)
@@ -39421,10 +39421,10 @@ ol.ordering = {};
 /** y-Ordering
 *	@return ordering function (f0,f1)
 */
-ol.ordering.yOrdering = function()
-{	return function(f0,f1)
-	{	return f1.getGeometry().getExtent()[1] - f0.getGeometry().getExtent()[1] ;
-	};
+ol.ordering.yOrdering = function () {
+  return function (f0, f1) {
+    return f1.getGeometry().getExtent()[1] - f0.getGeometry().getExtent()[1];
+  };
 };
 /** Order with a feature attribute
  * @param options
@@ -39432,21 +39432,21 @@ ol.ordering.yOrdering = function()
  *  @param {function} options.equalFn ordering function for equal values
  * @return ordering function (f0,f1)
  */
-ol.ordering.zIndex = function(options)
-{	if (!options) options = {};
-	var attr = options.attribute || 'zIndex';
-	if (options.equalFn)
-	{	return function(f0,f1)
-		{	if (f0.get(attr) == f1.get(attr)) return options.equalFn(f0,f1);
-			else return f0.get(attr) < f1.get(attr) ? 1:-1;
-		};
-	}
-	else
-	{	return function(f0,f1)
-		{	if (f0.get(attr) == f1.get(attr)) return 0;
-			else return f0.get(attr) < f1.get(attr) ? 1:-1;
-		};
-	}
+ol.ordering.zIndex = function (options) {
+  if (!options) options = {};
+  var attr = options.attribute || 'zIndex';
+  if (options.equalFn) {
+    return function (f0, f1) {
+      if (f0.get(attr) == f1.get(attr)) return options.equalFn(f0, f1);
+      else return f0.get(attr) < f1.get(attr) ? 1 : -1;
+    };
+  }
+  else {
+    return function (f0, f1) {
+      if (f0.get(attr) == f1.get(attr)) return 0;
+      else return f0.get(attr) < f1.get(attr) ? 1 : -1;
+    };
+  }
 };
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
@@ -39463,7 +39463,7 @@ ol.ordering.zIndex = function(options)
 *		- easing {ol.easing} easing function, default ol.easing.easeOut
 *		- style {ol.style.Image|ol.style.Style|Array<ol.style.Style>} Image to draw as markup, default red circle
 */
-ol.Map.prototype.pulse = function(coords, options) {
+ol.Map.prototype.pulse = function (coords, options) {
   var listenerKey;
   options = options || {};
   // Change to map's projection
@@ -39475,13 +39475,13 @@ ol.Map.prototype.pulse = function(coords, options) {
   var duration = options.duration || 3000;
   var easing = options.easing || ol.easing.easeOut;
   var style = options.style;
-  if (!style) style = new ol.style.Circle({ radius:30, stroke:new ol.style.Stroke({color:'red', width:2 }) });
+  if (!style) style = new ol.style.Circle({ radius: 30, stroke: new ol.style.Stroke({ color: 'red', width: 2 }) });
   if (style instanceof ol.style.Image) style = new ol.style.Style({ image: style });
   if (!(style instanceof Array)) style = [style];
   var amplitude = options.amplitude || 1;
-  if (amplitude<0) amplitude=0;
+  if (amplitude < 0) amplitude = 0;
   var maxRadius = options.radius || 15;
-  if (maxRadius<0) maxRadius = 5;
+  if (maxRadius < 0) maxRadius = 5;
   /*
   var minRadius = maxRadius - (options.amplitude || maxRadius); //options.minRadius || 0;
   var width = options.lineWidth || 2;
@@ -39495,17 +39495,18 @@ ol.Map.prototype.pulse = function(coords, options) {
     var elapsed = frameState.time - start;
     if (elapsed > duration) {
       ol.Observable.unByKey(listenerKey);
-    } else {	var elapsedRatio = elapsed / duration;
+    } else {
+      var elapsedRatio = elapsed / duration;
       var context = event.context;
       context.save();
       context.beginPath();
       var e = easing(elapsedRatio)
       context.globalAlpha = easing(1 - elapsedRatio);
       // console.log("anim")
-      for (var i=0; i<style.length; i++) {
+      for (var i = 0; i < style.length; i++) {
         var imgs = style[i].getImage();
-        var sc = imgs.getScale(); 
-        imgs.setScale(ratio*sc*(1+amplitude*(e-1)));
+        var sc = imgs.getScale();
+        imgs.setScale(ratio * sc * (1 + amplitude * (e - 1)));
         event.vectorContext.setStyle(style[i]);
         event.vectorContext.drawGeometry(new ol.geom.Point(coords));
         imgs.setScale(sc);
@@ -39517,7 +39518,7 @@ ol.Map.prototype.pulse = function(coords, options) {
   }
   // Launch animation
   listenerKey = this.on('postcompose', animate.bind(this));
-  try { this.renderSync(); } catch(e) { /* ok */ }
+  try { this.renderSync(); } catch (e) { /* ok */ }
 }
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
@@ -39772,11 +39773,11 @@ ol.style.Chart = class olstyleChart extends ol.style.RegularShape {
 /** Default color set: classic, dark, pale, pastel, neon
 */
 ol.style.Chart.colors = {
-  "classic":	["#ffa500","blue","red","green","cyan","magenta","yellow","#0f0"],
-  "dark":		["#960","#003","#900","#060","#099","#909","#990","#090"],
-  "pale":		["#fd0","#369","#f64","#3b7","#880","#b5d","#666"],
-  "pastel":	["#fb4","#79c","#f66","#7d7","#acc","#fdd","#ff9","#b9b"], 
-  "neon":		["#ff0","#0ff","#0f0","#f0f","#f00","#00f"]
+  "classic": ["#ffa500", "blue", "red", "green", "cyan", "magenta", "yellow", "#0f0"],
+  "dark": ["#960", "#003", "#900", "#060", "#099", "#909", "#990", "#090"],
+  "pale": ["#fd0", "#369", "#f64", "#3b7", "#880", "#b5d", "#666"],
+  "pastel": ["#fb4", "#79c", "#f66", "#7d7", "#acc", "#fdd", "#ff9", "#b9b"],
+  "neon": ["#ff0", "#0ff", "#0f0", "#f0f", "#f00", "#00f"]
 };
 
 /*	Copyright (c) 2016 Jean-Marc VIGLINO, 
@@ -40072,322 +40073,322 @@ ol.style.FillPattern = class olstyleFillPattern extends ol.style.Fill {
  */
 ol.style.FillPattern.patterns = {
   "hatch": {
-    width:5,
-    height:5,
-    lines:[[0,2.5,5,2.5]],
-    stroke:1
+    width: 5,
+    height: 5,
+    lines: [[0, 2.5, 5, 2.5]],
+    stroke: 1
   },
   "cross": {
-    width:7,
-    height:7,
-    lines:[[0,3,10,3],[3,0,3,10]],
-    stroke:1
+    width: 7,
+    height: 7,
+    lines: [[0, 3, 10, 3], [3, 0, 3, 10]],
+    stroke: 1
   },
   "dot": {
-    width:8,
-    height:8,
-    circles:[[5,5,2]],
-    stroke:false,
-    fill:true,
+    width: 8,
+    height: 8,
+    circles: [[5, 5, 2]],
+    stroke: false,
+    fill: true,
   },
   "circle": {
-    width:10,
-    height:10,
-    circles:[[5,5,2]],
-    stroke:1,
-    fill:false,
+    width: 10,
+    height: 10,
+    circles: [[5, 5, 2]],
+    stroke: 1,
+    fill: false,
   },
   "square": {
-    width:10,
-    height:10,
-    lines:[[3,3, 3,8, 8,8, 8,3, 3,3]],
-    stroke:1,
-    fill:false,
+    width: 10,
+    height: 10,
+    lines: [[3, 3, 3, 8, 8, 8, 8, 3, 3, 3]],
+    stroke: 1,
+    fill: false,
   },
   "tile": {
-    width:10,
-    height:10,
-    lines:[[3,3, 3,8, 8,8, 8,3, 3,3]],
-    fill:true,
+    width: 10,
+    height: 10,
+    lines: [[3, 3, 3, 8, 8, 8, 8, 3, 3, 3]],
+    fill: true,
   },
   "woven": {
     width: 12,
     height: 12,
-    lines: [[ 3,3, 9,9 ],[0,12, 3,9], [9,3, 12,0], [-1,1,1,-1], [13,11,11,13]],
+    lines: [[3, 3, 9, 9], [0, 12, 3, 9], [9, 3, 12, 0], [-1, 1, 1, -1], [13, 11, 11, 13]],
     stroke: 1
   },
   "crosses": {
     width: 8,
     height: 8,
-    lines: [[ 2,2, 6,6 ],[2,6,6,2]],
+    lines: [[2, 2, 6, 6], [2, 6, 6, 2]],
     stroke: 1
   },
   "caps": {
     width: 8,
     height: 8,
-    lines: [[ 2,6, 4,2, 6,6 ]],
+    lines: [[2, 6, 4, 2, 6, 6]],
     stroke: 1
   },
   "nylon": {
     width: 20,
     height: 20,
-//		lines: [[ 0,5, 0,0, 5,0 ],[ 5,10, 10,10, 10,5 ], [ 10,15, 10,20, 15,20 ],[ 15,10, 20,10, 20,15 ]],
-//		repeat: [[0,0], [20,0], [0,20], [-20,0], [0,-20], [-20,-20]],
-    lines: [[ 1,6, 1,1, 6,1 ],[ 6,11, 11,11, 11,6 ], [ 11,16, 11,21, 16,21 ],[ 16,11, 21,11, 21,16 ]],
-    repeat: [[0,0], [-20,0], [0,-20] ],
+    //		lines: [[ 0,5, 0,0, 5,0 ],[ 5,10, 10,10, 10,5 ], [ 10,15, 10,20, 15,20 ],[ 15,10, 20,10, 20,15 ]],
+    //		repeat: [[0,0], [20,0], [0,20], [-20,0], [0,-20], [-20,-20]],
+    lines: [[1, 6, 1, 1, 6, 1], [6, 11, 11, 11, 11, 6], [11, 16, 11, 21, 16, 21], [16, 11, 21, 11, 21, 16]],
+    repeat: [[0, 0], [-20, 0], [0, -20]],
     stroke: 1
   },
   "hexagon": {
     width: 20,
     height: 12,
-    lines: [[ 0,10, 4,4, 10,4, 14,10, 10,16, 4,16, 0,10 ]],
-    stroke:1,
-    repeat:[[0,0],[10,6],[10,-6],[-10,-6]]
+    lines: [[0, 10, 4, 4, 10, 4, 14, 10, 10, 16, 4, 16, 0, 10]],
+    stroke: 1,
+    repeat: [[0, 0], [10, 6], [10, -6], [-10, -6]]
   },
   "cemetry": {
-    width:15,
-    height:19,
-    lines:[[0,3.5,7,3.5],[3.5,0,3.5,10],
+    width: 15,
+    height: 19,
+    lines: [[0, 3.5, 7, 3.5], [3.5, 0, 3.5, 10],
       //[7,12.5,14,12.5],[10.5,9,10.5,19]
-      ],
-    stroke:1,
-    repeat:[[0,0],[7,9]]
+    ],
+    stroke: 1,
+    repeat: [[0, 0], [7, 9]]
   },
   "sand": {
     width: 20,
     height: 20,
-    circles:[
-      [1,2,1],[9,3,1],[2,16,1],
-      [7,8,1],[6,14,1],[4,19,1],
-      [14,2,1],[12,10,1],[14,18,1],
-      [18,8,1],[18,14,1]
+    circles: [
+      [1, 2, 1], [9, 3, 1], [2, 16, 1],
+      [7, 8, 1], [6, 14, 1], [4, 19, 1],
+      [14, 2, 1], [12, 10, 1], [14, 18, 1],
+      [18, 8, 1], [18, 14, 1]
     ],
-    fill:1
+    fill: 1
   },
   "conglomerate": {
     width: 60,
     height: 40,
-    circles:[[2,4,1],[17,3,1],[26,18,1],[12,17,1],[5,17,2],[28,11,2]],
-    lines:[[7,5, 6,7, 9,9, 11,8, 11,6, 9,5, 7,5], 
-      [16,10, 15,13, 16,14, 19,15, 21,13, 22,9, 20,8, 19,8, 16,10], 
-      [24,6, 26,7, 27,5, 26,4, 24,4, 24,6]],
-    repeat: [[30,0], [-15,20], [15,20], [45,20]],
-    stroke:1
+    circles: [[2, 4, 1], [17, 3, 1], [26, 18, 1], [12, 17, 1], [5, 17, 2], [28, 11, 2]],
+    lines: [[7, 5, 6, 7, 9, 9, 11, 8, 11, 6, 9, 5, 7, 5],
+    [16, 10, 15, 13, 16, 14, 19, 15, 21, 13, 22, 9, 20, 8, 19, 8, 16, 10],
+    [24, 6, 26, 7, 27, 5, 26, 4, 24, 4, 24, 6]],
+    repeat: [[30, 0], [-15, 20], [15, 20], [45, 20]],
+    stroke: 1
   },
   "conglomerate2": {
-    width:60,
-    height:40,
-    circles:[[2,4,1],[17,3,1],[26,18,1],[12,17,1],[5,17,2],[28,11,2]],
-    lines:[
-      [7,5, 6,7, 9,9, 11,8, 11,6, 9,5, 7,5], 
-      [16,10, 15,13, 16,14, 19,15, 21,13, 22,9, 20,8, 19,8, 16,10], 
-      [24,6, 26,7, 27,5, 26,4, 24,4, 24,6]
+    width: 60,
+    height: 40,
+    circles: [[2, 4, 1], [17, 3, 1], [26, 18, 1], [12, 17, 1], [5, 17, 2], [28, 11, 2]],
+    lines: [
+      [7, 5, 6, 7, 9, 9, 11, 8, 11, 6, 9, 5, 7, 5],
+      [16, 10, 15, 13, 16, 14, 19, 15, 21, 13, 22, 9, 20, 8, 19, 8, 16, 10],
+      [24, 6, 26, 7, 27, 5, 26, 4, 24, 4, 24, 6]
     ],
-    repeat: [[30,0], [-15,20], [15,20], [45,20]],
-    fill:1
+    repeat: [[30, 0], [-15, 20], [15, 20], [45, 20]],
+    fill: 1
   },
   "gravel": {
-    width:15,
-    height:10,
-    circles:[[4,2,1],[5,9,1],[1,7,1]],//[9,9,1],,[15,2,1]],
-    lines:[[7,5, 6,6, 7,7, 8,7, 9,7, 10,5, 9,4, 7,5], [11,2, 14,4, 14,1, 12,1, 11,2]],
-    stroke:1
+    width: 15,
+    height: 10,
+    circles: [[4, 2, 1], [5, 9, 1], [1, 7, 1]],//[9,9,1],,[15,2,1]],
+    lines: [[7, 5, 6, 6, 7, 7, 8, 7, 9, 7, 10, 5, 9, 4, 7, 5], [11, 2, 14, 4, 14, 1, 12, 1, 11, 2]],
+    stroke: 1
   },
   "brick": {
-    width:18,
-    height:16,
-    lines:[	[0,1,18,1],[0,10,18,10], [6,1,6,10],[12,10,12,18],[12,0,12,1]],
-    stroke:1
+    width: 18,
+    height: 16,
+    lines: [[0, 1, 18, 1], [0, 10, 18, 10], [6, 1, 6, 10], [12, 10, 12, 18], [12, 0, 12, 1]],
+    stroke: 1
   },
   "dolomite": {
-    width:20,
-    height:16,
-    lines:[[0,1,20,1],[0,9,20,9],[1,9,6,1],[11,9,14,16],[14,0,14.4,1]],
-    stroke:1
+    width: 20,
+    height: 16,
+    lines: [[0, 1, 20, 1], [0, 9, 20, 9], [1, 9, 6, 1], [11, 9, 14, 16], [14, 0, 14.4, 1]],
+    stroke: 1
   },
   "coal": {
-    width:20,
-    height:16,
-    lines:[[1,5, 7,1, 7,7], [11,10, 12,5, 18,9], [5,10, 2,15, 9,15,], [15,16, 15,13, 20,16], [15,0, 15,2, 20,0]],
-    fill:1
+    width: 20,
+    height: 16,
+    lines: [[1, 5, 7, 1, 7, 7], [11, 10, 12, 5, 18, 9], [5, 10, 2, 15, 9, 15,], [15, 16, 15, 13, 20, 16], [15, 0, 15, 2, 20, 0]],
+    fill: 1
   },
   "breccia": {
-    width:20,
-    height:16,
-    lines:[[1,5, 7,1, 7,7, 1,5], [11,10, 12,5, 18,9, 11,10], [5,10, 2,15, 9,15, 5,10], [15,16, 15,13, 22,18], [15,0, 15,2, 20,0] ],
-    stroke:1,
+    width: 20,
+    height: 16,
+    lines: [[1, 5, 7, 1, 7, 7, 1, 5], [11, 10, 12, 5, 18, 9, 11, 10], [5, 10, 2, 15, 9, 15, 5, 10], [15, 16, 15, 13, 22, 18], [15, 0, 15, 2, 20, 0]],
+    stroke: 1,
   },
   "clay": {
-    width:20,
-    height:20,
-    lines:[[0,0, 3,11, 0,20], [11,0, 10,3, 13,13, 11,20], [0,0, 10,3, 20,0], [0,12, 3,11, 13,13, 20,12]],
-    stroke:1
+    width: 20,
+    height: 20,
+    lines: [[0, 0, 3, 11, 0, 20], [11, 0, 10, 3, 13, 13, 11, 20], [0, 0, 10, 3, 20, 0], [0, 12, 3, 11, 13, 13, 20, 12]],
+    stroke: 1
   },
   "flooded": {
-    width:15,
-    height:10,
-    lines:[	[0,1,10,1],[0,6,5,6], [10,6,15,6]],
-    stroke:1
+    width: 15,
+    height: 10,
+    lines: [[0, 1, 10, 1], [0, 6, 5, 6], [10, 6, 15, 6]],
+    stroke: 1
   },
   "chaos": {
-    width:40,
-    height:40,
-    lines:[[40,2, 40,0, 38,0, 40,2], 
-      [4,0, 3,2, 2,5, 0,0, 0,3, 2,7, 5,6, 7,7, 8,10, 9,12, 9,13, 9,14, 8,14, 6,15, 2,15, 0,20, 0,22, 2,20, 5,19, 
-        8,15, 10,14, 11,12.25, 10,12, 10,10, 12,9, 13,7, 12,6, 13,4, 16,7, 17,4, 20,0, 18,0, 15,3, 14,2, 14,0,
-        12,1, 11,0, 10,1, 11,4, 10,7, 9,8, 8,5, 6,4, 5,3, 5,1, 5,0, 4,0],
-      [7,1, 7,3, 8,3, 8,2, 7,1], [4,3, 5,5, 4,5, 4,3], [34,5, 33,7, 38,10, 38,8, 36,5, 34,5], 
-      [ 27,0, 23,2, 21,8, 30,0, 27,0], 
-      [25,8, 26,12, 26,16, 22.71875,15.375, 20,13, 18,15, 17,18, 13,22, 17,21, 19,22, 21,20, 19,18, 22,17, 30,25, 
-      26,26, 24,28, 21.75,33.34375, 20,36, 18,40, 20,40, 24,37, 25,32, 27,31, 26,38, 27,37, 30,32, 32,35, 36,37, 
-      38,40, 38,39, 40,40, 37,36, 34,32, 37,31, 36,29, 33,27, 34,24, 39,21, 40,21, 40,16, 37,20, 31,22, 32,25, 
-      27,20, 29,15, 30,20, 32,20, 34,18, 33,12, 31,11, 29,14, 26,9, 25,8], [39,24, 37,26, 40,28, 39,24], 
-      [13,15, 9,19, 14,18, 13,15], [18,23, 14,27, 16,27, 17,25, 20,26, 18,23], 
-      [6,24, 2,26, 1,28, 2,30, 5,28, 12,30, 16,32, 18,30, 15,30, 12,28, 9,25, 7,27, 6,24], 
-      [29,27, 32,28, 33,31, 30,29, 27,28, 29,27], 
-      [5,35, 1,33, 3,36, 13,38, 15,35, 10,36, 5,35]],
-    fill:1,
+    width: 40,
+    height: 40,
+    lines: [[40, 2, 40, 0, 38, 0, 40, 2],
+    [4, 0, 3, 2, 2, 5, 0, 0, 0, 3, 2, 7, 5, 6, 7, 7, 8, 10, 9, 12, 9, 13, 9, 14, 8, 14, 6, 15, 2, 15, 0, 20, 0, 22, 2, 20, 5, 19,
+      8, 15, 10, 14, 11, 12.25, 10, 12, 10, 10, 12, 9, 13, 7, 12, 6, 13, 4, 16, 7, 17, 4, 20, 0, 18, 0, 15, 3, 14, 2, 14, 0,
+      12, 1, 11, 0, 10, 1, 11, 4, 10, 7, 9, 8, 8, 5, 6, 4, 5, 3, 5, 1, 5, 0, 4, 0],
+    [7, 1, 7, 3, 8, 3, 8, 2, 7, 1], [4, 3, 5, 5, 4, 5, 4, 3], [34, 5, 33, 7, 38, 10, 38, 8, 36, 5, 34, 5],
+    [27, 0, 23, 2, 21, 8, 30, 0, 27, 0],
+    [25, 8, 26, 12, 26, 16, 22.71875, 15.375, 20, 13, 18, 15, 17, 18, 13, 22, 17, 21, 19, 22, 21, 20, 19, 18, 22, 17, 30, 25,
+      26, 26, 24, 28, 21.75, 33.34375, 20, 36, 18, 40, 20, 40, 24, 37, 25, 32, 27, 31, 26, 38, 27, 37, 30, 32, 32, 35, 36, 37,
+      38, 40, 38, 39, 40, 40, 37, 36, 34, 32, 37, 31, 36, 29, 33, 27, 34, 24, 39, 21, 40, 21, 40, 16, 37, 20, 31, 22, 32, 25,
+      27, 20, 29, 15, 30, 20, 32, 20, 34, 18, 33, 12, 31, 11, 29, 14, 26, 9, 25, 8], [39, 24, 37, 26, 40, 28, 39, 24],
+    [13, 15, 9, 19, 14, 18, 13, 15], [18, 23, 14, 27, 16, 27, 17, 25, 20, 26, 18, 23],
+    [6, 24, 2, 26, 1, 28, 2, 30, 5, 28, 12, 30, 16, 32, 18, 30, 15, 30, 12, 28, 9, 25, 7, 27, 6, 24],
+    [29, 27, 32, 28, 33, 31, 30, 29, 27, 28, 29, 27],
+    [5, 35, 1, 33, 3, 36, 13, 38, 15, 35, 10, 36, 5, 35]],
+    fill: 1,
   },
   "grass": {
-    width:27,
-    height:22,
-    lines: [[0,10.5,13,10.5], [2.5,10,1.5,7], [4.5,10, 4.5,5, 3.5,4 ], [7,10, 7.5,6, 8.5,3], [10,10,11,6]],
-    repeat: [[0,0],[14,10]],
-    stroke:1
+    width: 27,
+    height: 22,
+    lines: [[0, 10.5, 13, 10.5], [2.5, 10, 1.5, 7], [4.5, 10, 4.5, 5, 3.5, 4], [7, 10, 7.5, 6, 8.5, 3], [10, 10, 11, 6]],
+    repeat: [[0, 0], [14, 10]],
+    stroke: 1
   },
   "swamp": {
-    width:24,
-    height:23,
-    lines:[ [0,10.5,9.5,10.5], [2.5,10,2.5,7], [4.5,10,4.5,4], [6.5,10,6.5,6], [3,12.5,7,12.5] ],
-    repeat: [[0,0],[14,10]],
-    stroke:1
+    width: 24,
+    height: 23,
+    lines: [[0, 10.5, 9.5, 10.5], [2.5, 10, 2.5, 7], [4.5, 10, 4.5, 4], [6.5, 10, 6.5, 6], [3, 12.5, 7, 12.5]],
+    repeat: [[0, 0], [14, 10]],
+    stroke: 1
   },
   "reed": {
-    width:26,
-    height:23,
-    lines:[ [2.5,10,2,7], [4.5,10,4.2,4], [6.5,10,6.8,4], [8.5,10,9,6],
-            [3.7,4,3.7,2.5], [4.7,4,4.7,2.5], [6.3,4,6.3,2.5], [7.3,4,7.3,2.5] ],
-    circles:[ [4.2,2.5,.5], [18.2,12.5,.5], [6.8,2.5,.5], [20.8,12.5,.5], [9,6,.5], [23,16,.5] ],
-    repeat: [[0,0],[14,10]],
-    stroke:1
+    width: 26,
+    height: 23,
+    lines: [[2.5, 10, 2, 7], [4.5, 10, 4.2, 4], [6.5, 10, 6.8, 4], [8.5, 10, 9, 6],
+    [3.7, 4, 3.7, 2.5], [4.7, 4, 4.7, 2.5], [6.3, 4, 6.3, 2.5], [7.3, 4, 7.3, 2.5]],
+    circles: [[4.2, 2.5, .5], [18.2, 12.5, .5], [6.8, 2.5, .5], [20.8, 12.5, .5], [9, 6, .5], [23, 16, .5]],
+    repeat: [[0, 0], [14, 10]],
+    stroke: 1
   },
   "wave": {
-    width:10,
-    height:8,
-    lines:[ [0,0, 5,4, 10,0] ],
-    stroke:1
+    width: 10,
+    height: 8,
+    lines: [[0, 0, 5, 4, 10, 0]],
+    stroke: 1
   },
   "vine": {
-    width:13,
-    height:13,
-    lines:[[3,0,3,6],[9,7,9,13]],
-    stroke:1.0
+    width: 13,
+    height: 13,
+    lines: [[3, 0, 3, 6], [9, 7, 9, 13]],
+    stroke: 1.0
   },
   "forest": {
-    width:55,
-    height:30,
-    circles:[[7,7,3.5],[20,20,1.5],[42,22,3.5],[35,5,1.5]],
-    stroke:1
+    width: 55,
+    height: 30,
+    circles: [[7, 7, 3.5], [20, 20, 1.5], [42, 22, 3.5], [35, 5, 1.5]],
+    stroke: 1
   },
   "forest2": {
-    width:55,
-    height:30,
-    circles:[[7,7,3.5],[20,20,1.5],[42,22,3.5],[35,5,1.5]],
-    fill:1,
-    stroke:1
+    width: 55,
+    height: 30,
+    circles: [[7, 7, 3.5], [20, 20, 1.5], [42, 22, 3.5], [35, 5, 1.5]],
+    fill: 1,
+    stroke: 1
   },
   "scrub": {
-    width:26,
-    height:20,
-    lines:[ [1,4, 4,8, 6,4] ],
-    circles:[[20,13,1.5]],
-    stroke:1,
+    width: 26,
+    height: 20,
+    lines: [[1, 4, 4, 8, 6, 4]],
+    circles: [[20, 13, 1.5]],
+    stroke: 1,
   },
   "tree": {
-    width:30,
-    height:30,
-    lines:[[7.78,10.61,4.95,10.61,4.95,7.78,3.54,7.78,2.12,6.36,0.71,6.36,0,4.24,0.71,2.12,4.24,0,7.78,0.71,9.19,3.54,7.78,4.95,7.07,7.07,4.95,7.78]],
-    repeat: [[3,1],[18,16]],
-    stroke:1
+    width: 30,
+    height: 30,
+    lines: [[7.78, 10.61, 4.95, 10.61, 4.95, 7.78, 3.54, 7.78, 2.12, 6.36, 0.71, 6.36, 0, 4.24, 0.71, 2.12, 4.24, 0, 7.78, 0.71, 9.19, 3.54, 7.78, 4.95, 7.07, 7.07, 4.95, 7.78]],
+    repeat: [[3, 1], [18, 16]],
+    stroke: 1
   },
   "tree2": {
-    width:30,
-    height:30,
-    lines:[[7.78,10.61,4.95,10.61,4.95,7.78,3.54,7.78,2.12,6.36,0.71,6.36,0,4.24,0.71,2.12,4.24,0,7.78,0.71,9.19,3.54,7.78,4.95,7.07,7.07,4.95,7.78,4.95,10.61,7.78,10.61]],
-    repeat: [[3,1],[18,16]],
-    fill:1,
-    stroke:1
+    width: 30,
+    height: 30,
+    lines: [[7.78, 10.61, 4.95, 10.61, 4.95, 7.78, 3.54, 7.78, 2.12, 6.36, 0.71, 6.36, 0, 4.24, 0.71, 2.12, 4.24, 0, 7.78, 0.71, 9.19, 3.54, 7.78, 4.95, 7.07, 7.07, 4.95, 7.78, 4.95, 10.61, 7.78, 10.61]],
+    repeat: [[3, 1], [18, 16]],
+    fill: 1,
+    stroke: 1
   },
   "pine": {
-    width:30,
-    height:30,
-    lines:[[5.66,11.31,2.83,11.31,2.83,8.49,0,8.49,2.83,0,5.66,8.49,2.83,8.49]],
-    repeat:[[3,1],[18,16]],
-    stroke:1
+    width: 30,
+    height: 30,
+    lines: [[5.66, 11.31, 2.83, 11.31, 2.83, 8.49, 0, 8.49, 2.83, 0, 5.66, 8.49, 2.83, 8.49]],
+    repeat: [[3, 1], [18, 16]],
+    stroke: 1
   },
   "pine2": {
-    width:30,
-    height:30,
-    lines:[[5.66,11.31,2.83,11.31,2.83,8.49,0,8.49,2.83,0,5.66,8.49,2.83,8.49,2.83,11.31,5.66,11.31]],
-    repeat:[[3,1],[18,16]],
-    fill:1,
-    stroke:1
+    width: 30,
+    height: 30,
+    lines: [[5.66, 11.31, 2.83, 11.31, 2.83, 8.49, 0, 8.49, 2.83, 0, 5.66, 8.49, 2.83, 8.49, 2.83, 11.31, 5.66, 11.31]],
+    repeat: [[3, 1], [18, 16]],
+    fill: 1,
+    stroke: 1
   },
   "mixtree": {
-    width:30,
-    height:30,
-    lines:[
-      [7.78,10.61,4.95,10.61,4.95,7.78,3.54,7.78,2.12,6.36,0.71,6.36,0,4.24,0.71,2.12,4.24,0,7.78,0.71,9.19,3.54,7.78,4.95,7.07,7.07,4.95,7.78,4.95,10.61,7.78,10.61],
+    width: 30,
+    height: 30,
+    lines: [
+      [7.78, 10.61, 4.95, 10.61, 4.95, 7.78, 3.54, 7.78, 2.12, 6.36, 0.71, 6.36, 0, 4.24, 0.71, 2.12, 4.24, 0, 7.78, 0.71, 9.19, 3.54, 7.78, 4.95, 7.07, 7.07, 4.95, 7.78, 4.95, 10.61, 7.78, 10.61],
       [23.66, 27.31, 20.83, 27.31, 20.83, 24.49, 18, 24.49, 20.83, 16, 23.66, 24.49, 20.83, 24.49, 20.83, 27.31, 23.66, 27.31]
     ],
-    repeat: [[3,1]],
-    stroke:1
+    repeat: [[3, 1]],
+    stroke: 1
   },
   "mixtree2": {
-    width:30,
-    height:30,
-    lines:[
-      [7.78,10.61,4.95,10.61,4.95,7.78,3.54,7.78,2.12,6.36,0.71,6.36,0,4.24,0.71,2.12,4.24,0,7.78,0.71,9.19,3.54,7.78,4.95,7.07,7.07,4.95,7.78,4.95,10.61,7.78,10.61],
+    width: 30,
+    height: 30,
+    lines: [
+      [7.78, 10.61, 4.95, 10.61, 4.95, 7.78, 3.54, 7.78, 2.12, 6.36, 0.71, 6.36, 0, 4.24, 0.71, 2.12, 4.24, 0, 7.78, 0.71, 9.19, 3.54, 7.78, 4.95, 7.07, 7.07, 4.95, 7.78, 4.95, 10.61, 7.78, 10.61],
       [23.66, 27.31, 20.83, 27.31, 20.83, 24.49, 18, 24.49, 20.83, 16, 23.66, 24.49, 20.83, 24.49, 20.83, 27.31, 23.66, 27.31]
     ],
-    repeat: [[3,1]],
-    fill:1,
-    stroke:1
+    repeat: [[3, 1]],
+    fill: 1,
+    stroke: 1
   },
   "pines": {
-    width:22,
-    height:20,
-    lines:[[1,4,3.5,1,6,4],[1,8,3.5,5,6,8],[3.5,1,3.5,11],[12,14.5,14.5,14,17,14.5],[12,18,17,18],[14.5,12,14.5,18]],
-    repeat: [[2,1]],
-    stroke:1
+    width: 22,
+    height: 20,
+    lines: [[1, 4, 3.5, 1, 6, 4], [1, 8, 3.5, 5, 6, 8], [3.5, 1, 3.5, 11], [12, 14.5, 14.5, 14, 17, 14.5], [12, 18, 17, 18], [14.5, 12, 14.5, 18]],
+    repeat: [[2, 1]],
+    stroke: 1
   },
   "rock": {
-    width:20,
-    height:20,
-    lines:[	[1,0,1,9],[4,0,4,9],[7,0,7,9], 
-        [10,1,19,1],[10,4,19,4],[10,7,19,7],
-        [0,11,9,11],[0,14,9,14],[0,17,9,17], 
-        [12,10,12,19],[15,10,15,19],[18,10,18,19] ],
-    repeat:[[0.5,0.5]],
-    stroke:1
+    width: 20,
+    height: 20,
+    lines: [[1, 0, 1, 9], [4, 0, 4, 9], [7, 0, 7, 9],
+    [10, 1, 19, 1], [10, 4, 19, 4], [10, 7, 19, 7],
+    [0, 11, 9, 11], [0, 14, 9, 14], [0, 17, 9, 17],
+    [12, 10, 12, 19], [15, 10, 15, 19], [18, 10, 18, 19]],
+    repeat: [[0.5, 0.5]],
+    stroke: 1
   },
   "rocks": {
-    width:20,
-    height:20,
-    lines:[	[5,0, 3,0, 5,4, 4,6, 0,3, 0,5, 3,6, 5,9, 3.75,10, 2.5,10, 0,9, 0,10, 4,11, 5,14, 4,15, 0,13,
-      0,13, 0,13, 0,14, 0,14, 5,16, 5,18, 3,19, 0,19, -0.25,19.9375, 5,20, 10,19, 10,20, 11,20, 12,19,
-      14,20, 15,20, 17,19, 20,20, 20,19, 19,16, 20,15, 20,11, 20,10, 19,8, 20,5, 20,0, 19,0, 20,2, 19,4,
-      17,4, 16,3, 15,0, 14,0, 15,4, 11,5, 10,4, 11,0, 10,0, 9,4, 6,5, 5,0,],
-      [18,5, 19,6, 18,10, 16,10, 14,9, 16,5, 18,5], 
-      [5,6, 9,5, 10,6, 10,9, 6,10, 5,6], 
-      [14,5, 14,8, 13,9, 12,9, 11,7, 12,5, 14,5], 
-      [ 5,11, 8,10, 9,11, 10,14, 6,15, 6,15, 5,11], 
-      [13,10, 14,11, 15,14, 15,14, 15,14, 11,15, 10,11, 11,10, 13,10], 
-      [15,12, 16,11, 19,11, 19,15, 16,14, 16,14, 15,12], 
-      [6,16, 9,15, 10,18, 5,19, 6,16], 
-      [10,16, 14,16, 14,18, 13,19, 11,18, 10,16], 
-      [15,15, 18,16, 18,18, 16,19, 15,18, 15,15]],
-    stroke:1
+    width: 20,
+    height: 20,
+    lines: [[5, 0, 3, 0, 5, 4, 4, 6, 0, 3, 0, 5, 3, 6, 5, 9, 3.75, 10, 2.5, 10, 0, 9, 0, 10, 4, 11, 5, 14, 4, 15, 0, 13,
+      0, 13, 0, 13, 0, 14, 0, 14, 5, 16, 5, 18, 3, 19, 0, 19, -0.25, 19.9375, 5, 20, 10, 19, 10, 20, 11, 20, 12, 19,
+      14, 20, 15, 20, 17, 19, 20, 20, 20, 19, 19, 16, 20, 15, 20, 11, 20, 10, 19, 8, 20, 5, 20, 0, 19, 0, 20, 2, 19, 4,
+      17, 4, 16, 3, 15, 0, 14, 0, 15, 4, 11, 5, 10, 4, 11, 0, 10, 0, 9, 4, 6, 5, 5, 0,],
+    [18, 5, 19, 6, 18, 10, 16, 10, 14, 9, 16, 5, 18, 5],
+    [5, 6, 9, 5, 10, 6, 10, 9, 6, 10, 5, 6],
+    [14, 5, 14, 8, 13, 9, 12, 9, 11, 7, 12, 5, 14, 5],
+    [5, 11, 8, 10, 9, 11, 10, 14, 6, 15, 6, 15, 5, 11],
+    [13, 10, 14, 11, 15, 14, 15, 14, 15, 14, 11, 15, 10, 11, 11, 10, 13, 10],
+    [15, 12, 16, 11, 19, 11, 19, 15, 16, 14, 16, 14, 15, 12],
+    [6, 16, 9, 15, 10, 18, 5, 19, 6, 16],
+    [10, 16, 14, 16, 14, 18, 13, 19, 11, 18, 10, 16],
+    [15, 15, 18, 16, 18, 18, 16, 19, 15, 18, 15, 15]],
+    stroke: 1
   }
 };
 
@@ -40809,7 +40810,7 @@ ol.style.FontSymbol = class olstyleFontSymbol extends ol.style.RegularShape {
     if (!options.displacement) {
       options.displacement = [options.offsetX || 0, -options.offsetY || 0];
     }
-    super ({
+    super({
       radius: options.radius,
       fill: options.fill,
       rotation: options.rotation,
@@ -41176,7 +41177,7 @@ ol.style.FontSymbol = class olstyleFontSymbol extends ol.style.RegularShape {
 }
 /** Font defs
  */
-ol.style.FontSymbol.defs = { 'fonts':{}, 'glyphs':{} };
+ol.style.FontSymbol.defs = { 'fonts': {}, 'glyphs': {} };
 /* Cool stuff to get the image symbol for a style
  * @param {number} ratio pixelratio
  * /
@@ -41392,12 +41393,12 @@ ol.style.Photo = class olstylePhoto extends ol.style.RegularShape {
     }
     // Draw hitdetection image
     this._gethit = true
-      var context = this.getHitDetectionImage().getContext('2d')
-      context.save()
-      context.setTransform(1, 0, 0, 1, 0, 0)
-      this.drawBack_(context, "#000", strokeWidth, 1)
-      context.fill()
-      context.restore()
+    var context = this.getHitDetectionImage().getContext('2d')
+    context.save()
+    context.setTransform(1, 0, 0, 1, 0, 0)
+    this.drawBack_(context, "#000", strokeWidth, 1)
+    context.fill()
+    context.restore()
     this._gethit = false
     // Draw the image
     context = canvas.getContext('2d')
@@ -41515,16 +41516,16 @@ ol.style.Photo = class olstylePhoto extends ol.style.RegularShape {
  */
 CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
   if (!r) {
-    this.rect(x,y,w,h);
+    this.rect(x, y, w, h);
   } else {
     if (w < 2 * r) r = w / 2;
     if (h < 2 * r) r = h / 2;
     this.beginPath();
-    this.moveTo(x+r, y);
-    this.arcTo(x+w, y, x+w, y+h, r);
-    this.arcTo(x+w, y+h, x, y+h, r);
-    this.arcTo(x, y+h, x, y, r);
-    this.arcTo(x, y, x+w, y, r);
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
     this.closePath();
   }
   return this;
@@ -41661,216 +41662,212 @@ ol.style.Profile = class olstyleProfile extends ol.style.Style {
   }
 }
 
-/** Add a setTextPath style to draw text along linestrings
-@toto letterpadding/spacing, wordpadding/spacing
-*/
-;(function()
-{
-/** Internal drawing function called on postcompose
-* @param {ol.eventPoscompose} e postcompose event
-*/
-function drawTextPath (e)
-{	// Prent drawing at large resolution
-	if (e.frameState.viewState.resolution > this.textPathMaxResolution_) return;
-	var extent = e.frameState.extent;
-	var c2p = e.frameState.coordinateToPixelTransform;
-	// Get pixel path with coordinates
-	var k;
-	function getPath(c, readable)
-	{	var path1 = [];
-		for (k=0; k<c.length; k++) 
-		{	path1.push(c2p[0]*c[k][0]+c2p[1]*c[k][1]+c2p[4]);
-			path1.push(c2p[2]*c[k][0]+c2p[3]*c[k][1]+c2p[5]);
-		}
-		// Revert line ?
-		if (readable && path1[0]>path1[path1.length-2])
-		{	var path2 = [];
-			for (k=path1.length-2; k>=0; k-=2)
-			{	path2.push(path1[k]);
-				path2.push(path1[k+1]);
-			}
-			return path2;
-		}
-		else return path1;
-	}
-	var ctx = e.context;
-	ctx.save();
-	ctx.scale(e.frameState.pixelRatio,e.frameState.pixelRatio);
-	var features = this.getSource().getFeaturesInExtent(extent);
-	for (var i=0, f; f=features[i]; i++)
-	{	{	var style = this.textPathStyle_(f,e.frameState.viewState.resolution);
-			for (var s,j=0; s=style[j]; j++)
-			{	
-				var g = s.getGeometry() || f.getGeometry();
-				var c;
-				switch (g.getType())
-				{	case "LineString": c = g.getCoordinates(); break;
-					case "MultiLineString": c = g.getLineString(0).getCoordinates(); break;
-					default: continue;
-				}
-				var st = s.getText();
-				var path = getPath(c, st.getRotateWithView() );
-				ctx.font = st.getFont();
-				ctx.textBaseline = st.getTextBaseline();
-				ctx.textAlign = st.getTextAlign();
-				ctx.lineWidth = st.getStroke() ? (st.getStroke().getWidth()||0) : 0;
-				ctx.strokeStyle = st.getStroke() ? (st.getStroke().getColor()||"#fff") : "#fff";
-				ctx.fillStyle = st.getFill() ? st.getFill().getColor()||"#000" : "#000";
-				// New params
-				ctx.textJustify = st.getTextAlign()=="justify";
-				ctx.textOverflow = st.getTextOverflow ? st.getTextOverflow():"";
-				ctx.minWidth = st.getMinWidth ? st.getMinWidth():0;
-				// Draw textpath
-				ctx.textPath(st.getText()||f.get("name"), path);
-			}
-		}
-	}
-	ctx.restore();
-}
-/** Set the style for features. 
-*	This can be a single style object, an array of styles, or a function that takes a feature and resolution and 
-*	returns an array of styles. If it is undefined the default style is used. 
-*	If it is null the layer has no style (a null style). 
-*	See ol.style for information on the default style.
-* @deprecated use ol/style/Text with placement:line
-*	@param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction} style
-*	@param {Number} maxResolution to display text, default: 0
-*/
-ol.layer.Vector.prototype.setTextPathStyle = function(style, maxResolution)
-{
-	// Remove existing style
-	if (style===null)
-	{	if (this.textPath_) this.unByKey(this.textPath_);
-		this.textPath_ = null;
-		this.changed();
-		return;
-	}
-	// New postcompose
-	if (!this.textPath_)
-	{	this.textPath_ = this.on(['postcompose','postrender'], drawTextPath.bind(this));
-	}
-	// Set textPathStyle
-	if (style===undefined)
-	{	style = [ new ol.style.Style({ text: new ol.style.Text()}) ];
-	}
-	if (typeof(style) == "function") this.textPathStyle_ = style;
-	else this.textPathStyle_ = function() { return style; };
-	this.textPathMaxResolution_ = Number(maxResolution) || Number.MAX_VALUE;
-	// Force redraw
-	this.changed();
-}
-/** Add new properties to ol.style.Text
-* to use with ol.layer.Vector.prototype.setTextPathStyle
-* @constructor
-* @param {} options
-*	@param {visible|ellipsis|string} textOverflow
-*	@param {number} minWidth minimum width (px) to draw text, default 0
-*/
-ol.style.TextPath = function(options)
-{	if (!options) options={};
-	ol.style.Text.call (this, options);
-	this.textOverflow_ = typeof(options.textOverflow)!="undefined" ?  options.textOverflow : "visible";
-	this.minWidth_ = options.minWidth || 0;
-}
-ol.ext.inherits(ol.style.TextPath, ol.style.Text);
-ol.style.TextPath.prototype.getTextOverflow = function()
-{	return this.textOverflow_; 
-};
-ol.style.TextPath.prototype.getMinWidth = function()
-{	return this.minWidth_; 
-};
-/**/
-})();
+  /** Add a setTextPath style to draw text along linestrings
+  @toto letterpadding/spacing, wordpadding/spacing
+  */
+  ; (function () {
+    /** Internal drawing function called on postcompose
+    * @param {ol.eventPoscompose} e postcompose event
+    */
+    function drawTextPath(e) {	// Prent drawing at large resolution
+      if (e.frameState.viewState.resolution > this.textPathMaxResolution_) return;
+      var extent = e.frameState.extent;
+      var c2p = e.frameState.coordinateToPixelTransform;
+      // Get pixel path with coordinates
+      var k;
+      function getPath(c, readable) {
+        var path1 = [];
+        for (k = 0; k < c.length; k++) {
+          path1.push(c2p[0] * c[k][0] + c2p[1] * c[k][1] + c2p[4]);
+          path1.push(c2p[2] * c[k][0] + c2p[3] * c[k][1] + c2p[5]);
+        }
+        // Revert line ?
+        if (readable && path1[0] > path1[path1.length - 2]) {
+          var path2 = [];
+          for (k = path1.length - 2; k >= 0; k -= 2) {
+            path2.push(path1[k]);
+            path2.push(path1[k + 1]);
+          }
+          return path2;
+        }
+        else return path1;
+      }
+      var ctx = e.context;
+      ctx.save();
+      ctx.scale(e.frameState.pixelRatio, e.frameState.pixelRatio);
+      var features = this.getSource().getFeaturesInExtent(extent);
+      for (var i = 0, f; f = features[i]; i++) {
+        {
+          var style = this.textPathStyle_(f, e.frameState.viewState.resolution);
+          for (var s, j = 0; s = style[j]; j++) {
+            var g = s.getGeometry() || f.getGeometry();
+            var c;
+            switch (g.getType()) {
+              case "LineString": c = g.getCoordinates(); break;
+              case "MultiLineString": c = g.getLineString(0).getCoordinates(); break;
+              default: continue;
+            }
+            var st = s.getText();
+            var path = getPath(c, st.getRotateWithView());
+            ctx.font = st.getFont();
+            ctx.textBaseline = st.getTextBaseline();
+            ctx.textAlign = st.getTextAlign();
+            ctx.lineWidth = st.getStroke() ? (st.getStroke().getWidth() || 0) : 0;
+            ctx.strokeStyle = st.getStroke() ? (st.getStroke().getColor() || "#fff") : "#fff";
+            ctx.fillStyle = st.getFill() ? st.getFill().getColor() || "#000" : "#000";
+            // New params
+            ctx.textJustify = st.getTextAlign() == "justify";
+            ctx.textOverflow = st.getTextOverflow ? st.getTextOverflow() : "";
+            ctx.minWidth = st.getMinWidth ? st.getMinWidth() : 0;
+            // Draw textpath
+            ctx.textPath(st.getText() || f.get("name"), path);
+          }
+        }
+      }
+      ctx.restore();
+    }
+    /** Set the style for features. 
+    *	This can be a single style object, an array of styles, or a function that takes a feature and resolution and 
+    *	returns an array of styles. If it is undefined the default style is used. 
+    *	If it is null the layer has no style (a null style). 
+    *	See ol.style for information on the default style.
+    * @deprecated use ol/style/Text with placement:line
+    *	@param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction} style
+    *	@param {Number} maxResolution to display text, default: 0
+    */
+    ol.layer.Vector.prototype.setTextPathStyle = function (style, maxResolution) {
+      // Remove existing style
+      if (style === null) {
+        if (this.textPath_) this.unByKey(this.textPath_);
+        this.textPath_ = null;
+        this.changed();
+        return;
+      }
+      // New postcompose
+      if (!this.textPath_) {
+        this.textPath_ = this.on(['postcompose', 'postrender'], drawTextPath.bind(this));
+      }
+      // Set textPathStyle
+      if (style === undefined) {
+        style = [new ol.style.Style({ text: new ol.style.Text() })];
+      }
+      if (typeof (style) == "function") this.textPathStyle_ = style;
+      else this.textPathStyle_ = function () { return style; };
+      this.textPathMaxResolution_ = Number(maxResolution) || Number.MAX_VALUE;
+      // Force redraw
+      this.changed();
+    }
+    /** Add new properties to ol.style.Text
+    * to use with ol.layer.Vector.prototype.setTextPathStyle
+    * @constructor
+    * @param {} options
+    *	@param {visible|ellipsis|string} textOverflow
+    *	@param {number} minWidth minimum width (px) to draw text, default 0
+    */
+    ol.style.TextPath = function (options) {
+      if (!options) options = {};
+      ol.style.Text.call(this, options);
+      this.textOverflow_ = typeof (options.textOverflow) != "undefined" ? options.textOverflow : "visible";
+      this.minWidth_ = options.minWidth || 0;
+    }
+    ol.ext.inherits(ol.style.TextPath, ol.style.Text);
+    ol.style.TextPath.prototype.getTextOverflow = function () {
+      return this.textOverflow_;
+    };
+    ol.style.TextPath.prototype.getMinWidth = function () {
+      return this.minWidth_;
+    };
+    /**/
+  })();
 /** CanvasRenderingContext2D: draw text along path
 * @param {string} text
 * @param {Array<Number>} path
 */
-CanvasRenderingContext2D.prototype.textPath = function (text, path)
-{
-	var ctx = this;
-	function dist2D(x1,y1,x2,y2)
-	{	var dx = x2-x1;
-		var dy = y2-y1;
-		return Math.sqrt(dx*dx+dy*dy);
-	}
-	var di, dpos=0;
-	var pos=2;
-	function getPoint(path, dl)
-	{	if (!di || dpos+di<dl)
-		{ for (; pos<path.length; )
-			{	di = dist2D(path[pos-2],path[pos-1],path[pos],path[pos+1]);
-				if (dpos+di>dl) break;
-				pos += 2;
-				if (pos>=path.length) break;
-				dpos += di;
-			}
-		}
-		var x, y, a, dt = dl-dpos;
-		if (pos>=path.length) 
-		{	pos = path.length-2;
-		}
-		if (!dt) 
-		{	x = path[pos-2];
-			y = path[pos-1];
-			a = Math.atan2(path[pos+1]-path[pos-1], path[pos]-path[pos-2]);
-		}
-		else
-		{	x = path[pos-2]+ (path[pos]-path[pos-2])*dt/di;
-			y = path[pos-1]+(path[pos+1]-path[pos-1])*dt/di;
-			a = Math.atan2(path[pos+1]-path[pos-1], path[pos]-path[pos-2]);
-		}
-		return [x,y,a];
-	}
-	var letterPadding = ctx.measureText(" ").width *0.25;
-	var start = 0;
-	var d = 0;
-	for (var i=2; i<path.length; i+=2)
-	{	d += dist2D(path[i-2],path[i-1],path[i],path[i+1])
-	}
-	if (d < ctx.minWidth) return;
-	var nbspace = text.split(" ").length -1;
-	// Remove char for overflow
-	if (ctx.textOverflow != "visible")
-	{	if (d < ctx.measureText(text).width + (text.length-1 + nbspace) * letterPadding)
-		{	var overflow = (ctx.textOverflow=="ellipsis") ? '\u2026' : ctx.textOverflow;
-			do
-			{	nbspace = text.split(" ").length -1;
-				text = text.slice(0,text.length-1);
-			} while (text && d < ctx.measureText(text+overflow).width + (text.length + overflow.length-1 + nbspace) * letterPadding)
-			text += overflow;
-		}
-	}
-	switch (ctx.textJustify || ctx.textAlign)
-	{	case true: // justify
-		case "center":
-		case "end":
-		case "right":
-		{	// Text align
-			if (ctx.textJustify) 
-			{	start = 0;
-				letterPadding = (d - ctx.measureText(text).width) / (text.length-1 + nbspace);
-			}
-			else
-			{	start = d - ctx.measureText(text).width - (text.length + nbspace) * letterPadding;
-				if (ctx.textAlign == "center") start /= 2;
-			}
-			break;
-		}
-		default: break;
-	}
-	for (var t=0; t<text.length; t++)
-	{	var letter = text[t];
-		var wl = ctx.measureText(letter).width;
-		var p = getPoint(path, start+wl/2);
-		ctx.save();
-		ctx.textAlign = "center";
-		ctx.translate(p[0], p[1]);
-		ctx.rotate(p[2]);
-		if (ctx.lineWidth) ctx.strokeText(letter,0,0);
-		ctx.fillText(letter,0,0);
-		ctx.restore();
-		start += wl+letterPadding*(letter==" "?2:1);
-	}
+CanvasRenderingContext2D.prototype.textPath = function (text, path) {
+  var ctx = this;
+  function dist2D(x1, y1, x2, y2) {
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  var di, dpos = 0;
+  var pos = 2;
+  function getPoint(path, dl) {
+    if (!di || dpos + di < dl) {
+      for (; pos < path.length;) {
+        di = dist2D(path[pos - 2], path[pos - 1], path[pos], path[pos + 1]);
+        if (dpos + di > dl) break;
+        pos += 2;
+        if (pos >= path.length) break;
+        dpos += di;
+      }
+    }
+    var x, y, a, dt = dl - dpos;
+    if (pos >= path.length) {
+      pos = path.length - 2;
+    }
+    if (!dt) {
+      x = path[pos - 2];
+      y = path[pos - 1];
+      a = Math.atan2(path[pos + 1] - path[pos - 1], path[pos] - path[pos - 2]);
+    }
+    else {
+      x = path[pos - 2] + (path[pos] - path[pos - 2]) * dt / di;
+      y = path[pos - 1] + (path[pos + 1] - path[pos - 1]) * dt / di;
+      a = Math.atan2(path[pos + 1] - path[pos - 1], path[pos] - path[pos - 2]);
+    }
+    return [x, y, a];
+  }
+  var letterPadding = ctx.measureText(" ").width * 0.25;
+  var start = 0;
+  var d = 0;
+  for (var i = 2; i < path.length; i += 2) {
+    d += dist2D(path[i - 2], path[i - 1], path[i], path[i + 1])
+  }
+  if (d < ctx.minWidth) return;
+  var nbspace = text.split(" ").length - 1;
+  // Remove char for overflow
+  if (ctx.textOverflow != "visible") {
+    if (d < ctx.measureText(text).width + (text.length - 1 + nbspace) * letterPadding) {
+      var overflow = (ctx.textOverflow == "ellipsis") ? '\u2026' : ctx.textOverflow;
+      do {
+        nbspace = text.split(" ").length - 1;
+        text = text.slice(0, text.length - 1);
+      } while (text && d < ctx.measureText(text + overflow).width + (text.length + overflow.length - 1 + nbspace) * letterPadding)
+      text += overflow;
+    }
+  }
+  switch (ctx.textJustify || ctx.textAlign) {
+    case true: // justify
+    case "center":
+    case "end":
+    case "right":
+      {	// Text align
+        if (ctx.textJustify) {
+          start = 0;
+          letterPadding = (d - ctx.measureText(text).width) / (text.length - 1 + nbspace);
+        }
+        else {
+          start = d - ctx.measureText(text).width - (text.length + nbspace) * letterPadding;
+          if (ctx.textAlign == "center") start /= 2;
+        }
+        break;
+      }
+    default: break;
+  }
+  for (var t = 0; t < text.length; t++) {
+    var letter = text[t];
+    var wl = ctx.measureText(letter).width;
+    var p = getPoint(path, start + wl / 2);
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.translate(p[0], p[1]);
+    ctx.rotate(p[2]);
+    if (ctx.lineWidth) ctx.strokeText(letter, 0, 0);
+    ctx.fillText(letter, 0, 0);
+    ctx.restore();
+    start += wl + letterPadding * (letter == " " ? 2 : 1);
+  }
 };
 
 /*	Copyright (c) 2015 Jean-Marc VIGLINO, 
@@ -41966,8 +41963,8 @@ ol.style.Shadow = class olstyleShadow extends ol.style.RegularShape {
 }
 
 /*	Copyright (c) 2018 Jean-Marc VIGLINO, 
-	released under the CeCILL-B license (French BSD license)
-	(http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
+  released under the CeCILL-B license (French BSD license)
+  (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
 /**
  * @classdesc
@@ -41990,301 +41987,301 @@ ol.style.Shadow = class olstyleShadow extends ol.style.RegularShape {
  * @api
  */
 ol.style.StrokePattern = class olstyleStrokePattern extends ol.style.Stroke {
-	constructor(options) {
-		super(options)
-		options = options || {}
-		var pattern, i;
-		var canvas = this.canvas_ = document.createElement('canvas')
-		var scale = Number(options.scale) > 0 ? Number(options.scale) : 1
-		var ratio = scale * ol.has.DEVICE_PIXEL_RATIO || ol.has.DEVICE_PIXEL_RATIO
-		var ctx = canvas.getContext('2d')
-		if (options.image) {
-			options.image.load()
-			var img = options.image.getImage()
-			if (img.width) {
-				canvas.width = Math.round(img.width * ratio)
-				canvas.height = Math.round(img.height * ratio)
-				ctx.globalAlpha = typeof (options.opacity) == 'number' ? options.opacity : 1
-				ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height)
-				pattern = ctx.createPattern(canvas, 'repeat')
-			} else {
-				var self = this
-				pattern = [0, 0, 0, 0]
-				img.onload = function () {
-					canvas.width = Math.round(img.width * ratio)
-					canvas.height = Math.round(img.height * ratio)
-					ctx.globalAlpha = typeof (options.opacity) == 'number' ? options.opacity : 1
-					ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height)
-					pattern = ctx.createPattern(canvas, 'repeat')
-					self.setColor(pattern)
-				}
-			}
-		} else {
-			var pat = this.getPattern_(options)
-			canvas.width = Math.round(pat.width * ratio)
-			canvas.height = Math.round(pat.height * ratio)
-			ctx.beginPath()
-			if (options.fill) {
-				ctx.fillStyle = ol.color.asString(options.fill.getColor())
-				ctx.fillRect(0, 0, canvas.width, canvas.height)
-			}
-			ctx.scale(ratio, ratio)
-			ctx.lineCap = "round"
-			ctx.lineWidth = pat.stroke || 1
-			ctx.fillStyle = ol.color.asString(options.color || "#000")
-			ctx.strokeStyle = ol.color.asString(options.color || "#000")
-			if (pat.circles)
-				for (i = 0; i < pat.circles.length; i++) {
-					var ci = pat.circles[i]
-					ctx.beginPath()
-					ctx.arc(ci[0], ci[1], ci[2], 0, 2 * Math.PI)
-					if (pat.fill)
-						ctx.fill()
-					if (pat.stroke)
-						ctx.stroke()
-				}
-			if (!pat.repeat)
-				pat.repeat = [[0, 0]]
-			if (pat.char) {
-				ctx.font = pat.font || (pat.width) + "px Arial"
-				ctx.textAlign = 'center'
-				ctx.textBaseline = 'middle'
-				if (pat.angle) {
-					ctx.fillText(pat.char, pat.width / 4, pat.height / 4)
-					ctx.fillText(pat.char, 5 * pat.width / 4, 5 * pat.height / 4)
-					ctx.fillText(pat.char, pat.width / 4, 5 * pat.height / 4)
-					ctx.fillText(pat.char, 5 * pat.width / 4, pat.height / 4)
-					ctx.fillText(pat.char, 3 * pat.width / 4, 3 * pat.height / 4)
-					ctx.fillText(pat.char, -pat.width / 4, -pat.height / 4)
-					ctx.fillText(pat.char, 3 * pat.width / 4, -pat.height / 4)
-					ctx.fillText(pat.char, -pat.width / 4, 3 * pat.height / 4)
-				}
-				else
-					ctx.fillText(pat.char, pat.width / 2, pat.height / 2)
-			}
-			if (pat.lines)
-				for (i = 0; i < pat.lines.length; i++)
-					for (var r = 0; r < pat.repeat.length; r++) {
-						var li = pat.lines[i]
-						ctx.beginPath()
-						ctx.moveTo(li[0] + pat.repeat[r][0], li[1] + pat.repeat[r][1])
-						for (var k = 2; k < li.length; k += 2) {
-							ctx.lineTo(li[k] + pat.repeat[r][0], li[k + 1] + pat.repeat[r][1])
-						}
-						if (pat.fill)
-							ctx.fill()
-						if (pat.stroke)
-							ctx.stroke()
-						ctx.save()
-						ctx.strokeStyle = 'red'
-						ctx.strokeWidth = 0.1
-						//ctx.strokeRect(0,0,canvas.width,canvas.height);
-						ctx.restore()
-					}
-			pattern = ctx.createPattern(canvas, 'repeat')
-			if (options.offset) {
-				var offset = options.offset
-				if (typeof (offset) == "number")
-					offset = [offset, offset]
-				if (offset instanceof Array) {
-					var dx = Math.round((offset[0] * ratio))
-					var dy = Math.round((offset[1] * ratio))
-					// New pattern
-					ctx.scale(1 / ratio, 1 / ratio)
-					ctx.clearRect(0, 0, canvas.width, canvas.height)
-					ctx.translate(dx, dy)
-					ctx.fillStyle = pattern
-					ctx.fillRect(-dx, -dy, canvas.width, canvas.height)
-					pattern = ctx.createPattern(canvas, 'repeat')
-				}
-			}
-		}
-		this.setColor (pattern);
-	}
-	/**
-	 * Clones the style.
-	 * @return {ol.style.StrokePattern}
-	 */
-	clone() {
-		var s = super.clone()
-		s.canvas_ = this.canvas_
-		return s
-	}
-	/** Get canvas used as pattern
-	*	@return {canvas}
-	*/
-	getImage() {
-		return this.canvas_
-	}
-	/** Get pattern
-	*	@param {olx.style.FillPatternOption}
-	*/
-	getPattern_(options) {
-		var pat = ol.style.FillPattern.patterns[options.pattern]
-			|| ol.style.FillPattern.patterns.dot
-		var d = Math.round(options.spacing) || 10
-		var size
-		//	var d2 = Math.round(d/2)+0.5;
-		switch (options.pattern) {
-			case 'dot':
-			case 'circle':
-				{
-					size = options.size === 0 ? 0 : options.size / 2 || 2
-					if (!options.angle) {
-						pat.width = pat.height = d
-						pat.circles = [[d / 2, d / 2, size]]
-						if (options.pattern == 'circle') {
-							pat.circles = pat.circles.concat([
-								[d / 2 + d, d / 2, size],
-								[d / 2 - d, d / 2, size],
-								[d / 2, d / 2 + d, size],
-								[d / 2, d / 2 - d, size],
-								[d / 2 + d, d / 2 + d, size],
-								[d / 2 + d, d / 2 - d, size],
-								[d / 2 - d, d / 2 + d, size],
-								[d / 2 - d, d / 2 - d, size]
-							])
-						}
-					}
-					else {
-						d = pat.width = pat.height = Math.round(d * 1.4)
-						pat.circles = [[d / 4, d / 4, size], [3 * d / 4, 3 * d / 4, size]]
-						if (options.pattern == 'circle') {
-							pat.circles = pat.circles.concat([
-								[d / 4 + d, d / 4, size],
-								[d / 4, d / 4 + d, size],
-								[3 * d / 4 - d, 3 * d / 4, size],
-								[3 * d / 4, 3 * d / 4 - d, size],
-								[d / 4 + d, d / 4 + d, size],
-								[3 * d / 4 - d, 3 * d / 4 - d, size]
-							])
-						}
-					}
-					break
-				}
-			case 'tile':
-			case 'square':
-				{
-					size = options.size === 0 ? 0 : options.size / 2 || 2
-					if (!options.angle) {
-						pat.width = pat.height = d
-						pat.lines = [[d / 2 - size, d / 2 - size, d / 2 + size, d / 2 - size, d / 2 + size, d / 2 + size, d / 2 - size, d / 2 + size, d / 2 - size, d / 2 - size]]
-					}
-					else {
-						pat.width = pat.height = d
-						//size *= Math.sqrt(2);
-						pat.lines = [[d / 2 - size, d / 2, d / 2, d / 2 - size, d / 2 + size, d / 2, d / 2, d / 2 + size, d / 2 - size, d / 2]]
-					}
-					if (options.pattern == 'square')
-						pat.repeat = [[0, 0], [0, d], [d, 0], [0, -d], [-d, 0], [-d, -d], [d, d], [-d, d], [d, -d]]
-					break
-				}
-			case 'cross':
-				{ // Limit angle to 0 | 45
-					if (options.angle)
-						options.angle = 45
-				}
-			// fallthrough
-			case 'hatch':
-				{
-					var a = Math.round(((options.angle || 0) - 90) % 360)
-					if (a > 180)
-						a -= 360
-					a *= Math.PI / 180
-					var cos = Math.cos(a)
-					var sin = Math.sin(a)
-					if (Math.abs(sin) < 0.0001) {
-						pat.width = pat.height = d
-						pat.lines = [[0, 0.5, d, 0.5]]
-						pat.repeat = [[0, 0], [0, d]]
-					}
-					else if (Math.abs(cos) < 0.0001) {
-						pat.width = pat.height = d
-						pat.lines = [[0.5, 0, 0.5, d]]
-						pat.repeat = [[0, 0], [d, 0]]
-						if (options.pattern == 'cross') {
-							pat.lines.push([0, 0.5, d, 0.5])
-							pat.repeat.push([0, d])
-						}
-					}
-					else {
-						var w = pat.width = Math.round(Math.abs(d / sin)) || 1
-						var h = pat.height = Math.round(Math.abs(d / cos)) || 1
-						if (options.pattern == 'cross') {
-							pat.lines = [[-w, -h, 2 * w, 2 * h], [2 * w, -h, -w, 2 * h]]
-							pat.repeat = [[0, 0]]
-						}
-						else if (cos * sin > 0) {
-							pat.lines = [[-w, -h, 2 * w, 2 * h]]
-							pat.repeat = [[0, 0], [w, 0], [0, h]]
-						}
-						else {
-							pat.lines = [[2 * w, -h, -w, 2 * h]]
-							pat.repeat = [[0, 0], [-w, 0], [0, h]]
-						}
-					}
-					pat.stroke = options.size === 0 ? 0 : options.size || 4
-					break
-				}
-			default: {
-				break
-			}
-		}
-		return pat
-	}
+  constructor(options) {
+    super(options)
+    options = options || {}
+    var pattern, i;
+    var canvas = this.canvas_ = document.createElement('canvas')
+    var scale = Number(options.scale) > 0 ? Number(options.scale) : 1
+    var ratio = scale * ol.has.DEVICE_PIXEL_RATIO || ol.has.DEVICE_PIXEL_RATIO
+    var ctx = canvas.getContext('2d')
+    if (options.image) {
+      options.image.load()
+      var img = options.image.getImage()
+      if (img.width) {
+        canvas.width = Math.round(img.width * ratio)
+        canvas.height = Math.round(img.height * ratio)
+        ctx.globalAlpha = typeof (options.opacity) == 'number' ? options.opacity : 1
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height)
+        pattern = ctx.createPattern(canvas, 'repeat')
+      } else {
+        var self = this
+        pattern = [0, 0, 0, 0]
+        img.onload = function () {
+          canvas.width = Math.round(img.width * ratio)
+          canvas.height = Math.round(img.height * ratio)
+          ctx.globalAlpha = typeof (options.opacity) == 'number' ? options.opacity : 1
+          ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height)
+          pattern = ctx.createPattern(canvas, 'repeat')
+          self.setColor(pattern)
+        }
+      }
+    } else {
+      var pat = this.getPattern_(options)
+      canvas.width = Math.round(pat.width * ratio)
+      canvas.height = Math.round(pat.height * ratio)
+      ctx.beginPath()
+      if (options.fill) {
+        ctx.fillStyle = ol.color.asString(options.fill.getColor())
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+      }
+      ctx.scale(ratio, ratio)
+      ctx.lineCap = "round"
+      ctx.lineWidth = pat.stroke || 1
+      ctx.fillStyle = ol.color.asString(options.color || "#000")
+      ctx.strokeStyle = ol.color.asString(options.color || "#000")
+      if (pat.circles)
+        for (i = 0; i < pat.circles.length; i++) {
+          var ci = pat.circles[i]
+          ctx.beginPath()
+          ctx.arc(ci[0], ci[1], ci[2], 0, 2 * Math.PI)
+          if (pat.fill)
+            ctx.fill()
+          if (pat.stroke)
+            ctx.stroke()
+        }
+      if (!pat.repeat)
+        pat.repeat = [[0, 0]]
+      if (pat.char) {
+        ctx.font = pat.font || (pat.width) + "px Arial"
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        if (pat.angle) {
+          ctx.fillText(pat.char, pat.width / 4, pat.height / 4)
+          ctx.fillText(pat.char, 5 * pat.width / 4, 5 * pat.height / 4)
+          ctx.fillText(pat.char, pat.width / 4, 5 * pat.height / 4)
+          ctx.fillText(pat.char, 5 * pat.width / 4, pat.height / 4)
+          ctx.fillText(pat.char, 3 * pat.width / 4, 3 * pat.height / 4)
+          ctx.fillText(pat.char, -pat.width / 4, -pat.height / 4)
+          ctx.fillText(pat.char, 3 * pat.width / 4, -pat.height / 4)
+          ctx.fillText(pat.char, -pat.width / 4, 3 * pat.height / 4)
+        }
+        else
+          ctx.fillText(pat.char, pat.width / 2, pat.height / 2)
+      }
+      if (pat.lines)
+        for (i = 0; i < pat.lines.length; i++)
+          for (var r = 0; r < pat.repeat.length; r++) {
+            var li = pat.lines[i]
+            ctx.beginPath()
+            ctx.moveTo(li[0] + pat.repeat[r][0], li[1] + pat.repeat[r][1])
+            for (var k = 2; k < li.length; k += 2) {
+              ctx.lineTo(li[k] + pat.repeat[r][0], li[k + 1] + pat.repeat[r][1])
+            }
+            if (pat.fill)
+              ctx.fill()
+            if (pat.stroke)
+              ctx.stroke()
+            ctx.save()
+            ctx.strokeStyle = 'red'
+            ctx.strokeWidth = 0.1
+            //ctx.strokeRect(0,0,canvas.width,canvas.height);
+            ctx.restore()
+          }
+      pattern = ctx.createPattern(canvas, 'repeat')
+      if (options.offset) {
+        var offset = options.offset
+        if (typeof (offset) == "number")
+          offset = [offset, offset]
+        if (offset instanceof Array) {
+          var dx = Math.round((offset[0] * ratio))
+          var dy = Math.round((offset[1] * ratio))
+          // New pattern
+          ctx.scale(1 / ratio, 1 / ratio)
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+          ctx.translate(dx, dy)
+          ctx.fillStyle = pattern
+          ctx.fillRect(-dx, -dy, canvas.width, canvas.height)
+          pattern = ctx.createPattern(canvas, 'repeat')
+        }
+      }
+    }
+    this.setColor(pattern);
+  }
+  /**
+   * Clones the style.
+   * @return {ol.style.StrokePattern}
+   */
+  clone() {
+    var s = super.clone()
+    s.canvas_ = this.canvas_
+    return s
+  }
+  /** Get canvas used as pattern
+  *	@return {canvas}
+  */
+  getImage() {
+    return this.canvas_
+  }
+  /** Get pattern
+  *	@param {olx.style.FillPatternOption}
+  */
+  getPattern_(options) {
+    var pat = ol.style.FillPattern.patterns[options.pattern]
+      || ol.style.FillPattern.patterns.dot
+    var d = Math.round(options.spacing) || 10
+    var size
+    //	var d2 = Math.round(d/2)+0.5;
+    switch (options.pattern) {
+      case 'dot':
+      case 'circle':
+        {
+          size = options.size === 0 ? 0 : options.size / 2 || 2
+          if (!options.angle) {
+            pat.width = pat.height = d
+            pat.circles = [[d / 2, d / 2, size]]
+            if (options.pattern == 'circle') {
+              pat.circles = pat.circles.concat([
+                [d / 2 + d, d / 2, size],
+                [d / 2 - d, d / 2, size],
+                [d / 2, d / 2 + d, size],
+                [d / 2, d / 2 - d, size],
+                [d / 2 + d, d / 2 + d, size],
+                [d / 2 + d, d / 2 - d, size],
+                [d / 2 - d, d / 2 + d, size],
+                [d / 2 - d, d / 2 - d, size]
+              ])
+            }
+          }
+          else {
+            d = pat.width = pat.height = Math.round(d * 1.4)
+            pat.circles = [[d / 4, d / 4, size], [3 * d / 4, 3 * d / 4, size]]
+            if (options.pattern == 'circle') {
+              pat.circles = pat.circles.concat([
+                [d / 4 + d, d / 4, size],
+                [d / 4, d / 4 + d, size],
+                [3 * d / 4 - d, 3 * d / 4, size],
+                [3 * d / 4, 3 * d / 4 - d, size],
+                [d / 4 + d, d / 4 + d, size],
+                [3 * d / 4 - d, 3 * d / 4 - d, size]
+              ])
+            }
+          }
+          break
+        }
+      case 'tile':
+      case 'square':
+        {
+          size = options.size === 0 ? 0 : options.size / 2 || 2
+          if (!options.angle) {
+            pat.width = pat.height = d
+            pat.lines = [[d / 2 - size, d / 2 - size, d / 2 + size, d / 2 - size, d / 2 + size, d / 2 + size, d / 2 - size, d / 2 + size, d / 2 - size, d / 2 - size]]
+          }
+          else {
+            pat.width = pat.height = d
+            //size *= Math.sqrt(2);
+            pat.lines = [[d / 2 - size, d / 2, d / 2, d / 2 - size, d / 2 + size, d / 2, d / 2, d / 2 + size, d / 2 - size, d / 2]]
+          }
+          if (options.pattern == 'square')
+            pat.repeat = [[0, 0], [0, d], [d, 0], [0, -d], [-d, 0], [-d, -d], [d, d], [-d, d], [d, -d]]
+          break
+        }
+      case 'cross':
+        { // Limit angle to 0 | 45
+          if (options.angle)
+            options.angle = 45
+        }
+      // fallthrough
+      case 'hatch':
+        {
+          var a = Math.round(((options.angle || 0) - 90) % 360)
+          if (a > 180)
+            a -= 360
+          a *= Math.PI / 180
+          var cos = Math.cos(a)
+          var sin = Math.sin(a)
+          if (Math.abs(sin) < 0.0001) {
+            pat.width = pat.height = d
+            pat.lines = [[0, 0.5, d, 0.5]]
+            pat.repeat = [[0, 0], [0, d]]
+          }
+          else if (Math.abs(cos) < 0.0001) {
+            pat.width = pat.height = d
+            pat.lines = [[0.5, 0, 0.5, d]]
+            pat.repeat = [[0, 0], [d, 0]]
+            if (options.pattern == 'cross') {
+              pat.lines.push([0, 0.5, d, 0.5])
+              pat.repeat.push([0, d])
+            }
+          }
+          else {
+            var w = pat.width = Math.round(Math.abs(d / sin)) || 1
+            var h = pat.height = Math.round(Math.abs(d / cos)) || 1
+            if (options.pattern == 'cross') {
+              pat.lines = [[-w, -h, 2 * w, 2 * h], [2 * w, -h, -w, 2 * h]]
+              pat.repeat = [[0, 0]]
+            }
+            else if (cos * sin > 0) {
+              pat.lines = [[-w, -h, 2 * w, 2 * h]]
+              pat.repeat = [[0, 0], [w, 0], [0, h]]
+            }
+            else {
+              pat.lines = [[2 * w, -h, -w, 2 * h]]
+              pat.repeat = [[0, 0], [-w, 0], [0, h]]
+            }
+          }
+          pat.stroke = options.size === 0 ? 0 : options.size || 4
+          break
+        }
+      default: {
+        break
+      }
+    }
+    return pat
+  }
 }
 
 ol.style.Style.defaultStyle;
-(function() {
-// Style
-var white = [255, 255, 255, 1];
-var blue = [0, 153, 255, 1];
-var width = 3;
-var defaultEditStyle = [
-  new ol.style.Style({
-    stroke: new ol.style.Stroke({ color: white, width: width + 2 })
-  }),
-  new ol.style.Style({
-    image: new ol.style.Circle({
-      radius: width * 2,
-      fill: new ol.style.Fill({ color: blue }),
-      stroke: new ol.style.Stroke({ color: white, width: width / 2 })
+(function () {
+  // Style
+  var white = [255, 255, 255, 1];
+  var blue = [0, 153, 255, 1];
+  var width = 3;
+  var defaultEditStyle = [
+    new ol.style.Style({
+      stroke: new ol.style.Stroke({ color: white, width: width + 2 })
     }),
-    stroke: new ol.style.Stroke({ color: blue, width: width }),
-    fill: new ol.style.Fill({
-      color: [255, 255, 255, 0.5]
-    })
-  })
-];
-/**
- * Get the default style
- * @param {boolean|*} [edit] true to get editing style or a { color, fillColor } object, default get default blue style
- * @return {Array<ol.style.Style>}
- */
-ol.style.Style.defaultStyle = function(edit) {
-  if (edit===true) {
-    return defaultEditStyle;
-  } else {
-    edit = edit || {};
-    var fill = new ol.style.Fill({
-      color: edit.fillColor || 'rgba(255,255,255,0.4)'
-    });
-    var stroke = new ol.style.Stroke({
-      color: edit.color || '#3399CC',
-      width: 1.25
-    });
-    var style = new ol.style.Style({
+    new ol.style.Style({
       image: new ol.style.Circle({
-        fill: fill,
-        stroke: stroke,
-        radius: 5
+        radius: width * 2,
+        fill: new ol.style.Fill({ color: blue }),
+        stroke: new ol.style.Stroke({ color: white, width: width / 2 })
       }),
-      fill: fill,
-      stroke: stroke
-    });
-    return [ style ];
-  }
-};
+      stroke: new ol.style.Stroke({ color: blue, width: width }),
+      fill: new ol.style.Fill({
+        color: [255, 255, 255, 0.5]
+      })
+    })
+  ];
+  /**
+   * Get the default style
+   * @param {boolean|*} [edit] true to get editing style or a { color, fillColor } object, default get default blue style
+   * @return {Array<ol.style.Style>}
+   */
+  ol.style.Style.defaultStyle = function (edit) {
+    if (edit === true) {
+      return defaultEditStyle;
+    } else {
+      edit = edit || {};
+      var fill = new ol.style.Fill({
+        color: edit.fillColor || 'rgba(255,255,255,0.4)'
+      });
+      var stroke = new ol.style.Stroke({
+        color: edit.color || '#3399CC',
+        width: 1.25
+      });
+      var style = new ol.style.Style({
+        image: new ol.style.Circle({
+          fill: fill,
+          stroke: stroke,
+          radius: 5
+        }),
+        fill: fill,
+        stroke: stroke
+      });
+      return [style];
+    }
+  };
 })();
 
 /*
@@ -42303,315 +42300,315 @@ ol.style.Style.defaultStyle = function(edit) {
  * @return {Array<ol.style.Style>}
  */
 ol.style.geoportailStyle;
-(function(){
-var cache = {};
-var styleCount = 0;
-// Troncon de route
-function troncon_de_route(options) {
-  // Get color according to road properties
-  var getColor = function (feature) {
-    if (options.vert && feature.get('itineraire_vert')) {
-      if (feature.get('position_par_rapport_au_sol') < 0) return [0, 128, 0, .7];
-      else if (feature.get('position_par_rapport_au_sol') > 0) return [0, 100, 0, 1];
-      else return [0, 128, 0, 1];
-    }
-    if (!feature.get('importance')) return "magenta";
-    if (feature.get('nature') === 'Piste cyclable') {
-      return [27,177,27,.5]
-    }
-    if (feature.get('position_par_rapport_au_sol') != "0") {
-      var col;
-      switch(feature.get('importance')) {
-        case "1": col = [177, 27, 177, 1]; break;
-        case "2": col = [177, 27, 27, 1]; break;
-        case "3": col = [217, 119, 0, 1]; break;
-        case "4": col = [255, 225, 0, 1]; break;
-        case "5": col = [204, 204, 204, 1]; break;
-        default: col = [211, 211, 211, 1]; break;
+(function () {
+  var cache = {};
+  var styleCount = 0;
+  // Troncon de route
+  function troncon_de_route(options) {
+    // Get color according to road properties
+    var getColor = function (feature) {
+      if (options.vert && feature.get('itineraire_vert')) {
+        if (feature.get('position_par_rapport_au_sol') < 0) return [0, 128, 0, .7];
+        else if (feature.get('position_par_rapport_au_sol') > 0) return [0, 100, 0, 1];
+        else return [0, 128, 0, 1];
       }
-      if (feature.get('position_par_rapport_au_sol') < 0) col[3] = .7;
-      return col;
-    } else {
-      switch(feature.get('importance')) {
-        case "1": return [255,0,255,1]; 
-        case "2": return [255,0,0,1]; 
-        case "3": return [255, 165, 0, 1];
-        case "4": return [255,255,0,1]; 
-        case "5": return [255,255,255,1]; 
-        default: return [211, 211, 211, 1];
+      if (!feature.get('importance')) return "magenta";
+      if (feature.get('nature') === 'Piste cyclable') {
+        return [27, 177, 27, .5]
       }
-    }
-    // return "#808080";
-  }
-  // Get Width
-  var getWidth = function (feature) {
-    return Math.max ( feature.get('largeur_de_chaussee')||2 , 2 );
-  }
-  // Zindex
-  var getZindex = function (feature) {
-    if (!feature.get('position_par_rapport_au_sol')) return 100;
-    var pos = Number(feature.get('position_par_rapport_au_sol'));
-    if (pos>0) return 10 + pos*10 - (Number(feature.get('importance')) || 10);
-    else if (pos<0) return Math.max(4 + pos, 0);
-    else return 10 - (Number(feature.get('importance')) || 10);
-    // return 0;
-  }
-  // Get rotation on the center of the line
-  var lrot = function (geom) {
-    //if (sens != options.direct && sens != options.inverse) return 0;
-    var geo = geom.getCoordinates();
-    var x, y, dl=0, l = geom.getLength();
-    for (var i=0; i<geo.length-1; i++) {
-      x = geo[i+1][0]-geo[i][0];
-      y = geo[i+1][1]-geo[i][1];
-      dl += Math.sqrt(x*x+y*y);
-      if (dl>=l/2) break;
-    }
-    return -Math.atan2(y,x);
-  }
-  // Sens circulation
-  var getSens = function (feature) {
-    if (options.sens && !/double|sans/i.test(feature.get('sens_de_circulation'))) {
-      return new ol.style.Text({
-        text: (feature.get('sens_de_circulation') == 'Sens direct' ? '→' : '←'),
-        font: 'bold 12px sans-serif',
-        placement: 'point',
-        textAlign: 'center',
-        fill: new ol.style.Fill({ color: [0,0,0,.3] }),
-        stroke: new ol.style.Stroke({ color: [0,0,0,.3], width: 1.5 }),
-        rotateWithView: true
-      })
-    }
-    return null;
-  }
-  var getDash = function(feature) {
-    switch (feature.get('nature')) {
-      case 'Escalier': {
-        return [1,4]
-      }
-      case 'Sentier': {
-        return [8,10]
-      }
-    }
-  }
-  var styleId = 'ROUT-'+(styleCount++)+'-'
-  return function (feature, res) {
-    var useSens = (options.sens === true || res < options.sens);
-    var id = styleId
-      + feature.get('nature') + '-'
-      + feature.get('position_par_rapport_au_sol') + '-'
-      + (useSens ? feature.get('sens_de_circulation') : 'Sans objet') + '-'
-      + feature.get('position_par_rapport_au_sol') + '-'
-      + feature.get('importance') + '-'
-      + feature.get('largeur_de_chaussee') + '-'
-      + feature.get('itineraire_vert');
-    var style = cache[id];
-    if (!style) {
-      style = cache[id] = [	
-        new ol.style.Style ({
-          text: useSens ? getSens(feature) : null,
-          stroke: new ol.style.Stroke({
-            color: getColor(feature),
-            width: getWidth(feature),
-            lineDash: getDash(feature)
-          }),
-          zIndex: getZindex(feature)-100
-        })
-      ];
-    }
-    // Rotation
-    if (style[0].getText()) style[0].getText().setRotation(lrot(feature.getGeometry()));
-    return style;
-  };
-}
-/** Style for batiments */
-function batiment(options) {
-  var getBatiColor = function (feature) {
-    switch (feature.get('nature')) {
-      case "Industriel, agricole ou commercial": return [51, 102, 153,1];
-      case "Remarquable": return [0,192,0,1];
-      default: 
-        switch ( feature.get('usage_1') ) {
-          case 'Résidentiel':
-          case 'Indifférencié': 
-            return [128,128,128,1];
-          case 'Industriel':
-          case 'Commercial et services': 
-            return [51, 102, 153,1];
-          case "Sportif": 
-            return [51,153,102,1];
-          case "Religieux": 
-            return [153,102,51,1];
-          default: return [153,51,51,1];
+      if (feature.get('position_par_rapport_au_sol') != "0") {
+        var col;
+        switch (feature.get('importance')) {
+          case "1": col = [177, 27, 177, 1]; break;
+          case "2": col = [177, 27, 27, 1]; break;
+          case "3": col = [217, 119, 0, 1]; break;
+          case "4": col = [255, 225, 0, 1]; break;
+          case "5": col = [204, 204, 204, 1]; break;
+          default: col = [211, 211, 211, 1]; break;
         }
+        if (feature.get('position_par_rapport_au_sol') < 0) col[3] = .7;
+        return col;
+      } else {
+        switch (feature.get('importance')) {
+          case "1": return [255, 0, 255, 1];
+          case "2": return [255, 0, 0, 1];
+          case "3": return [255, 165, 0, 1];
+          case "4": return [255, 255, 0, 1];
+          case "5": return [255, 255, 255, 1];
+          default: return [211, 211, 211, 1];
+        }
+      }
+      // return "#808080";
     }
-  }
-  var getSymbol = function (feature) {
-    switch ( feature.get('usage_1') ) {
-      case "Commercial et services": return "\uf217";
-      case "Sportif": return "\uf1e3";
-      default: return null;
+    // Get Width
+    var getWidth = function (feature) {
+      return Math.max(feature.get('largeur_de_chaussee') || 2, 2);
     }
+    // Zindex
+    var getZindex = function (feature) {
+      if (!feature.get('position_par_rapport_au_sol')) return 100;
+      var pos = Number(feature.get('position_par_rapport_au_sol'));
+      if (pos > 0) return 10 + pos * 10 - (Number(feature.get('importance')) || 10);
+      else if (pos < 0) return Math.max(4 + pos, 0);
+      else return 10 - (Number(feature.get('importance')) || 10);
+      // return 0;
+    }
+    // Get rotation on the center of the line
+    var lrot = function (geom) {
+      //if (sens != options.direct && sens != options.inverse) return 0;
+      var geo = geom.getCoordinates();
+      var x, y, dl = 0, l = geom.getLength();
+      for (var i = 0; i < geo.length - 1; i++) {
+        x = geo[i + 1][0] - geo[i][0];
+        y = geo[i + 1][1] - geo[i][1];
+        dl += Math.sqrt(x * x + y * y);
+        if (dl >= l / 2) break;
+      }
+      return -Math.atan2(y, x);
+    }
+    // Sens circulation
+    var getSens = function (feature) {
+      if (options.sens && !/double|sans/i.test(feature.get('sens_de_circulation'))) {
+        return new ol.style.Text({
+          text: (feature.get('sens_de_circulation') == 'Sens direct' ? '→' : '←'),
+          font: 'bold 12px sans-serif',
+          placement: 'point',
+          textAlign: 'center',
+          fill: new ol.style.Fill({ color: [0, 0, 0, .3] }),
+          stroke: new ol.style.Stroke({ color: [0, 0, 0, .3], width: 1.5 }),
+          rotateWithView: true
+        })
+      }
+      return null;
+    }
+    var getDash = function (feature) {
+      switch (feature.get('nature')) {
+        case 'Escalier': {
+          return [1, 4]
+        }
+        case 'Sentier': {
+          return [8, 10]
+        }
+      }
+    }
+    var styleId = 'ROUT-' + (styleCount++) + '-'
+    return function (feature, res) {
+      var useSens = (options.sens === true || res < options.sens);
+      var id = styleId
+        + feature.get('nature') + '-'
+        + feature.get('position_par_rapport_au_sol') + '-'
+        + (useSens ? feature.get('sens_de_circulation') : 'Sans objet') + '-'
+        + feature.get('position_par_rapport_au_sol') + '-'
+        + feature.get('importance') + '-'
+        + feature.get('largeur_de_chaussee') + '-'
+        + feature.get('itineraire_vert');
+      var style = cache[id];
+      if (!style) {
+        style = cache[id] = [
+          new ol.style.Style({
+            text: useSens ? getSens(feature) : null,
+            stroke: new ol.style.Stroke({
+              color: getColor(feature),
+              width: getWidth(feature),
+              lineDash: getDash(feature)
+            }),
+            zIndex: getZindex(feature) - 100
+          })
+        ];
+      }
+      // Rotation
+      if (style[0].getText()) style[0].getText().setRotation(lrot(feature.getGeometry()));
+      return style;
+    };
   }
-  var styleId = 'BATI-'+(styleCount++)+'-'
-  return function (feature) {
-    if (feature.get('detruit')) return [];
-    var id = styleId 
-      + feature.get('usage_1') + '-'
-      + feature.get('nature') + '-'
-      + feature.get('etat_de_l_objet');
-    var style = cache[id];
-    if (!style) {
-      var col = getBatiColor(feature);
-      var colfill = [col[0], col[1], col[1], .5]
-      var projet = !/en service/i.test(feature.get('etat_de_l_objet'));
-      if (projet) colfill[3] = .1;
-      var symbol = (options.symbol ? getSymbol(feature): null);
-      return [
-        new ol.style.Style({
-          text: symbol ? new ol.style.Text({
-            text: symbol,
-            font: '12px FontAwesome',
+  /** Style for batiments */
+  function batiment(options) {
+    var getBatiColor = function (feature) {
+      switch (feature.get('nature')) {
+        case "Industriel, agricole ou commercial": return [51, 102, 153, 1];
+        case "Remarquable": return [0, 192, 0, 1];
+        default:
+          switch (feature.get('usage_1')) {
+            case 'Résidentiel':
+            case 'Indifférencié':
+              return [128, 128, 128, 1];
+            case 'Industriel':
+            case 'Commercial et services':
+              return [51, 102, 153, 1];
+            case "Sportif":
+              return [51, 153, 102, 1];
+            case "Religieux":
+              return [153, 102, 51, 1];
+            default: return [153, 51, 51, 1];
+          }
+      }
+    }
+    var getSymbol = function (feature) {
+      switch (feature.get('usage_1')) {
+        case "Commercial et services": return "\uf217";
+        case "Sportif": return "\uf1e3";
+        default: return null;
+      }
+    }
+    var styleId = 'BATI-' + (styleCount++) + '-'
+    return function (feature) {
+      if (feature.get('detruit')) return [];
+      var id = styleId
+        + feature.get('usage_1') + '-'
+        + feature.get('nature') + '-'
+        + feature.get('etat_de_l_objet');
+      var style = cache[id];
+      if (!style) {
+        var col = getBatiColor(feature);
+        var colfill = [col[0], col[1], col[1], .5]
+        var projet = !/en service/i.test(feature.get('etat_de_l_objet'));
+        if (projet) colfill[3] = .1;
+        var symbol = (options.symbol ? getSymbol(feature) : null);
+        return [
+          new ol.style.Style({
+            text: symbol ? new ol.style.Text({
+              text: symbol,
+              font: '12px FontAwesome',
+              fill: new ol.style.Fill({
+                color: [0, 0, 0, .6] //col
+              })
+            }) : null,
             fill: new ol.style.Fill({
-              color: [0,0,0, .6] //col
+              color: colfill
+            }),
+            stroke: new ol.style.Stroke({
+              color: col,
+              width: 1.5,
+              lineDash: projet ? [5, 5] : null
             })
-          }) : null,
+          })
+        ]
+      }
+      return style
+    }
+  }
+  // Parcelle / cadastre
+  function parcelle(options) {
+    var style = new ol.style.Style({
+      text: new ol.style.Text({
+        text: '0000',
+        font: 'bold 12px sans-serif',
+        fill: new ol.style.Fill({
+          color: [100, 0, 255, 1]
+        }),
+        stroke: new ol.style.Stroke({
+          color: [255, 255, 255, .8],
+          width: 3
+        })
+      }),
+      stroke: new ol.style.Stroke({
+        color: [255, 165, 0, 1],
+        width: 1.5
+      }),
+      fill: new ol.style.Fill({
+        color: [100, 0, 255, .1]
+      })
+    })
+    return function (feature, resolution) {
+      if (resolution < .8) style.getText().setFont('bold 12px sans-serif');
+      else style.getText().setFont('bold 10px sans-serif');
+      if (options.section) {
+        style.getText().setText(feature.get('section') + '-' + (feature.get('numero') || '').replace(/^0*/, ''));
+      } else {
+        style.getText().setText((feature.get('numero') || '').replace(/^0*/, ''));
+      }
+      return style;
+    }
+  }
+  // Corine Land Cover Style
+  var clcColors = {
+    111: { color: [230, 0, 77, 255], title: 'Continuous urban fabric' },
+    112: { color: [255, 0, 0, 255], title: 'Discontinuous urban fabric' },
+    121: { color: [204, 77, 242, 255], title: 'Industrial or commercial units' },
+    122: { color: [204, 0, 0, 255], title: 'Road and rail networks and associated land' },
+    123: { color: [230, 204, 204, 255], title: 'Port areas' },
+    124: { color: [230, 204, 230, 255], title: 'Airports' },
+    131: { color: [166, 0, 204, 255], title: 'Mineral extraction sites' },
+    132: { color: [166, 77, 0, 255], title: 'Dump sites' },
+    133: { color: [255, 77, 255, 255], title: 'Construction sites' },
+    141: { color: [255, 166, 255, 255], title: 'Green urban areas' },
+    142: { color: [255, 230, 255, 255], title: 'Sport and leisure facilities' },
+    211: { color: [255, 255, 168, 255], title: 'Non-irrigated arable land' },
+    212: { color: [255, 255, 0, 255], title: 'Permanently irrigated land' },
+    213: { color: [230, 230, 0, 255], title: 'Rice fields' },
+    221: { color: [230, 128, 0, 255], title: 'Vineyards' },
+    222: { color: [242, 166, 77, 255], title: 'Fruit trees and berry plantations' },
+    223: { color: [230, 166, 0, 255], title: 'Olive groves' },
+    231: { color: [230, 230, 77, 255], title: 'Pastures' },
+    241: { color: [255, 230, 166, 255], title: 'Annual crops associated with permanent crops' },
+    242: { color: [255, 230, 77, 255], title: 'Complex cultivation patterns' },
+    243: { color: [230, 204, 77, 255], title: 'Land principally occupied by agriculture with significant areas of natural vegetation' },
+    244: { color: [242, 204, 166, 255], title: 'Agro-forestry areas' },
+    311: { color: [128, 255, 0, 255], title: 'Broad-leaved forest' },
+    312: { color: [0, 166, 0, 255], title: 'Coniferous forest' },
+    313: { color: [77, 255, 0, 255], title: 'Mixed forest' },
+    321: { color: [204, 242, 77, 255], title: 'Natural grasslands' },
+    322: { color: [166, 255, 128, 255], title: 'Moors and heathland' },
+    323: { color: [166, 230, 77, 255], title: 'Sclerophyllous vegetation' },
+    324: { color: [166, 242, 0, 255], title: 'Transitional woodland-shrub' },
+    331: { color: [230, 230, 230, 255], title: 'Beaches dunes sands' },
+    332: { color: [204, 204, 204, 255], title: 'Bare rocks' },
+    333: { color: [204, 255, 204, 255], title: 'Sparsely vegetated areas' },
+    334: { color: [0, 0, 0, 255], title: 'Burnt areas' },
+    335: { color: [166, 230, 204, 255], title: 'Glaciers and perpetual snow' },
+    411: { color: [166, 166, 255, 255], title: 'Inland marshes' },
+    412: { color: [77, 77, 255, 255], title: 'Peat bogs' },
+    421: { color: [204, 204, 255, 255], title: 'Salt marshes' },
+    422: { color: [230, 230, 255, 255], title: 'Salines' },
+    423: { color: [166, 166, 230, 255], title: 'Intertidal flats' },
+    511: { color: [0, 204, 242, 255], title: 'Water courses' },
+    512: { color: [128, 242, 230, 255], title: 'Water bodies' },
+    521: { color: [0, 255, 166, 255], title: 'Coastal lagoons' },
+    522: { color: [166, 255, 230, 255], title: 'Estuaries' },
+    523: { color: [230, 242, 255, 255], title: 'Sea and ocean' },
+  };
+  function corineLandCover(options) {
+    return function (feature) {
+      var code = feature.get('code_' + options.date);
+      var style = cache['CLC-' + code];
+      if (!style) {
+        var color = clcColors[code].color.slice();
+        color[3] = options.opacity || 1;
+        style = cache['CLC-' + code] = new ol.style.Style({
           fill: new ol.style.Fill({
-            color: colfill
-          }),
-          stroke: new ol.style.Stroke ({
-            color: col,
-            width: 1.5,
-            lineDash: projet ? [5,5] : null
+            color: color || [255, 255, 255, .5]
           })
         })
-      ]
+      }
+      return style;
     }
-    return style
   }
-}
-// Parcelle / cadastre
-function parcelle(options) {
-  var style = new ol.style.Style({
-    text: new ol.style.Text({
-      text: '0000',
-      font: 'bold 12px sans-serif',
-      fill: new ol.style.Fill({
-        color: [100, 0, 255, 1]
-      }),
-      stroke: new ol.style.Stroke ({
-        color: [255,255,255, .8],
-        width: 3
-      })
-    }),
-    stroke: new ol.style.Stroke ({
-      color: [255, 165, 0, 1],
-      width: 1.5
-    }),
-    fill: new ol.style.Fill({
-      color: [100, 0, 255, .1]
-    })
-  })
-  return function(feature, resolution) {
-    if (resolution < .8) style.getText().setFont('bold 12px sans-serif');
-    else style.getText().setFont('bold 10px sans-serif');
-    if (options.section) {
-      style.getText().setText(feature.get('section') +'-'+ (feature.get('numero')||'').replace(/^0*/,''));
-    } else {
-      style.getText().setText((feature.get('numero')||'').replace(/^0*/,''));
-    }
-    return style;
-  }
-}
-// Corine Land Cover Style
-var clcColors = {
-  111: { color: [230,0,77,255], title: 'Continuous urban fabric'},
-  112: { color: [255,0,0,255], title: 'Discontinuous urban fabric'},
-  121: { color: [204,77,242,255], title: 'Industrial or commercial units'},
-  122: { color: [204,0,0,255], title: 'Road and rail networks and associated land'},
-  123: { color: [230,204,204,255], title: 'Port areas'},
-  124: { color: [230,204,230,255], title: 'Airports'},
-  131: { color: [166,0,204,255], title: 'Mineral extraction sites'},
-  132: { color: [166,77,0,255], title: 'Dump sites'},
-  133: { color: [255,77,255,255], title: 'Construction sites'},
-  141: { color: [255,166,255,255], title: 'Green urban areas'},
-  142: { color: [255,230,255,255], title: 'Sport and leisure facilities'},
-  211: { color: [255,255,168,255], title: 'Non-irrigated arable land'},
-  212: { color: [255,255,0,255], title: 'Permanently irrigated land'},
-  213: { color: [230,230,0,255], title: 'Rice fields'},
-  221: { color: [230,128,0,255], title: 'Vineyards'},
-  222: { color: [242,166,77,255], title: 'Fruit trees and berry plantations'},
-  223: { color: [230,166,0,255], title: 'Olive groves'},
-  231: { color: [230,230,77,255], title: 'Pastures'},
-  241: { color: [255,230,166,255], title: 'Annual crops associated with permanent crops'},
-  242: { color: [255,230,77,255], title: 'Complex cultivation patterns'},
-  243: { color: [230,204,77,255], title: 'Land principally occupied by agriculture with significant areas of natural vegetation'},
-  244: { color: [242,204,166,255], title: 'Agro-forestry areas'},
-  311: { color: [128,255,0,255], title: 'Broad-leaved forest'},
-  312: { color: [0,166,0,255], title: 'Coniferous forest'},
-  313: { color: [77,255,0,255], title: 'Mixed forest'},
-  321: { color: [204,242,77,255], title: 'Natural grasslands'},
-  322: { color: [166,255,128,255], title: 'Moors and heathland'},
-  323: { color: [166,230,77,255], title: 'Sclerophyllous vegetation'},
-  324: { color: [166,242,0,255], title: 'Transitional woodland-shrub'},
-  331: { color: [230,230,230,255], title: 'Beaches dunes sands'},
-  332: { color: [204,204,204,255], title: 'Bare rocks'},
-  333: { color: [204,255,204,255], title: 'Sparsely vegetated areas'},
-  334: { color: [0,0,0,255], title: 'Burnt areas'},
-  335: { color: [166,230,204,255], title: 'Glaciers and perpetual snow'},
-  411: { color: [166,166,255,255], title: 'Inland marshes'},
-  412: { color: [77,77,255,255], title: 'Peat bogs'},
-  421: { color: [204,204,255,255], title: 'Salt marshes'},
-  422: { color: [230,230,255,255], title: 'Salines'},
-  423: { color: [166,166,230,255], title: 'Intertidal flats'},
-  511: { color: [0,204,242,255], title: 'Water courses'},
-  512: { color: [128,242,230,255], title: 'Water bodies'},
-  521: { color: [0,255,166,255], title: 'Coastal lagoons'},
-  522: { color: [166,255,230,255], title: 'Estuaries'},
-  523: { color: [230,242,255,255], title: 'Sea and ocean'},
-};
-function corineLandCover (options) {
-  return function(feature) {
-    var code = feature.get('code_'+options.date);
-    var style = cache['CLC-'+code];
-    if (!style) {
-      var color = clcColors[code].color.slice();
-      color[3] = options.opacity || 1;
-      style = cache['CLC-'+code] = new ol.style.Style({
-        fill: new ol.style.Fill({
-          color: color || [255,255,255,.5]
-        })
-      })
-    }
-    return style;
-  }
-}
-/** Get ol style for an IGN WFS layer
- * @param {string} typeName
- * @param {Object} options
- */
-ol.style.geoportailStyle = function(typeName, options) {
-  options = options || {};
-  switch (typeName) {
-    // Troncons de route
-    case 'BDTOPO_V3:troncon_de_route': return troncon_de_route(options);
-    // Bati
-    case 'BDTOPO_V3:batiment': return batiment(options);
-    // Parcelles
-    case 'CADASTRALPARCELS.PARCELLAIRE_EXPRESS:parcelle': return parcelle(options);
-    default: {
-      // CLC
-      if (/LANDCOVER/.test(typeName)) {
-        options.date = typeName.replace(/[^\d]*(\d*).*/,'$1');
-        return (corineLandCover(options));
-      } else {
-        // Default style
-        console.warn('[ol/style/geoportailStyle] no style defined for type: ' + typeName)
-        return ol.style.Style.defaultStyle(); 
+  /** Get ol style for an IGN WFS layer
+   * @param {string} typeName
+   * @param {Object} options
+   */
+  ol.style.geoportailStyle = function (typeName, options) {
+    options = options || {};
+    switch (typeName) {
+      // Troncons de route
+      case 'BDTOPO_V3:troncon_de_route': return troncon_de_route(options);
+      // Bati
+      case 'BDTOPO_V3:batiment': return batiment(options);
+      // Parcelles
+      case 'CADASTRALPARCELS.PARCELLAIRE_EXPRESS:parcelle': return parcelle(options);
+      default: {
+        // CLC
+        if (/LANDCOVER/.test(typeName)) {
+          options.date = typeName.replace(/[^\d]*(\d*).*/, '$1');
+          return (corineLandCover(options));
+        } else {
+          // Default style
+          console.warn('[ol/style/geoportailStyle] no style defined for type: ' + typeName)
+          return ol.style.Style.defaultStyle();
+        }
       }
     }
-  }
-};
-/** List of clc colors */
-ol.style.geoportailStyle.clcColors = JSON.parse(JSON.stringify(clcColors));
+  };
+  /** List of clc colors */
+  ol.style.geoportailStyle.clcColors = JSON.parse(JSON.stringify(clcColors));
 })();
