@@ -14,17 +14,24 @@ $(".multi-select").select2({
   allowClear: true,
 });
 
-// Add change event to activity drop-down and log its values.
-// $("#select-activity").on("change", function (e) {
-//   // Access to full data
-//   // console.log($(this).select2('data'));
-//   // Access to value
-//   let activityCode = $(this).val();
-//   console.log(activityCode);
-// });
+// Global Variables
+var activityCode;
+var districtCode;
 
-function getNrmActivity(activityCode) {
+// Calling loadNrmActivity funtion initially to load activity names into dropdown menu
+loadNrmActivity();
+// Add change event to activity drop-down and log its values.
+function loadNrmActivity() {
   // console.log(activityCode);
+  var ele = document.getElementById("select-activity")
+  $.ajax({
+    url: "http://gis.mahapocra.gov.in/weatherservices/meta/getNrmActivities",
+    success: function (result) {
+      for (var i = 0; i < result.nrm_activity.length; i++) {
+        ele.innerHTML += `<option value= ${result.nrm_activity[i]["activity_code"]}>${result.nrm_activity[i]["activity_name"]}</option>`;
+      }
+    }
+  })
 }
 
 // Calling getDistrict funtion initially to load district names into dropdown menu
@@ -32,7 +39,6 @@ getDistrict();
 // District Name to Drop Down
 function getDistrict() {
   var ele = document.getElementById("select-district");
-  ele.innerHTML = `<option value='-1'>--Select Alll District--</option>`;
   // Marathi District Name 
   // ele.innerHTML = "<option value='-1'>--जिल्हा निवडा--</option>";
   $.ajax({
@@ -49,6 +55,8 @@ function getDistrict() {
 
 // Taluka Name Drop Down
 function getTaluka(dtncode) {
+
+
   var ele = document.getElementById("select-taluka");
   ele.innerHTML = "<option value='-1'>--Select All Taluka--</option>";
   // Marathi Taluka Name
@@ -98,6 +106,83 @@ function getVillage(thncode) {
   // addMapTolayer("Taluka", "thncode='" + thncode + "'");
   // addMapTolayer("Village", "thncode='" + thncode + "'");
   // alert("kh")  
+}
+
+
+function getNrmActivity(getActivityCode) {
+  // activityCode = getActivityCode;
+  console.log(getActivityCode)
+
+}
+
+getData();
+async function getData() {
+  const response = await fetch(
+    'http://gis.mahapocra.gov.in/weatherservices/meta/getStatActivities');
+  // console.log(response);
+  const data = await response.json();
+  // console.log(data);
+  length = data.data.length;
+  // console.log(length);
+  const chartTitle = 'Natural Resource Management Activities'
+
+  labels = [];
+  values = [];
+  for (i = 0; i < length; i++) {
+    labels.push(data.data[i].structure_type);
+    values.push(data.data[i].payment_done);
+  }
+
+  new Chart(document.getElementById("bar-chart"), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Payment Done (Count)",
+          backgroundColor: "rgba(2,117,216,1)",
+          borderColor: "rgba(2,117,216,1)",
+          data: values
+        }
+      ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: chartTitle,
+        color: '#FF0000'
+      },
+      scales: {
+        xAxes: [{
+          display: true,
+        }],
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Count',
+          },
+          type: 'logarithmic',
+          position: 'left',
+          ticks: {
+            min: 0, //minimum tick
+            // max: 1000, //maximum tick
+            callback: function (value, index, values) {
+              return Number(value.toString());//pass tick values as a string into Number function
+            }
+          },
+          afterBuildTicks: (chartObj) => {
+            const ticks = [1, 10, 100, 1000, 10000, 100000, 1000000];
+            chartObj.ticks.splice(0, chartObj.ticks.length);
+            chartObj.ticks.push(...ticks);
+          }
+
+        }]
+      }
+
+    }
+  });
+
 }
 
 

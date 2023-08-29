@@ -343,30 +343,27 @@
               <!-- Activity Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select multi-select"
+                  class="form-select"
                   aria-label="Select Activity "
                   id="select-activity"
                   data-placeholder="--- Select Activity ---"
                   onchange="getNrmActivity(this.value);"
                 >
-                  <option class="" value="-1">
-                    --- Select All Activity ---
-                  </option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  <option value="-1">--- Select All Activity ---</option>
                 </select>
               </div>
               <!--  -->
               <!-- District Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select multi-select"
+                  class="form-select"
                   aria-label="Select District"
                   id="select-district"
                   data-placeholder="--- Select District ---"
                   onchange="getTaluka(this.value);"
-                ></select>
+                >
+                  <option value="-1">--Select Alll District--</option>
+                </select>
               </div>
               <!-- Taluka Dropdown -->
               <div class="col-xl-3 col-md-6">
@@ -408,6 +405,38 @@
               <div id="pocra-dbt-nrm-map" class="dbt-nrm-map"></div>
             </div>
           </div>
+          <div class="container-fluid px-4">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <i class="fas fa-chart-bar me-1"></i>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="bar-chart" width="100%" height="50"></canvas>
+                  </div>
+                  <div class="card-footer small text-muted">
+                    Updated yesterday at 11:59 PM
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <i class="fas fa-chart-pie me-1"></i>
+                    Pie Chart Example
+                  </div>
+                  <div class="card-body">
+                    <canvas id="myPieChart" width="100%" height="50"></canvas>
+                  </div>
+                  <div class="card-footer small text-muted">
+                    Updated yesterday at 11:59 PM
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Modal -->
           <div
             class="modal fade"
@@ -470,15 +499,16 @@
     </div>
 
     <!-- external JS files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <!-- Open Layer js Files -->
     <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
     <!-- Open Layer Extention -->
     <script src="../../libs/dist/ol-ext.min.js"></script>
     <!-- Internal JS file -->
+    <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script>
     <script src="../../js/dbt-service-js/pocra-dbt-nrm-map.js"></script>
     <!-- Active js -->
     <script src="../../js/scripts.js"></script>
     <!-- <script src="../../js/custom.js"></script> -->
-    <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script>
   </body>
 </html>

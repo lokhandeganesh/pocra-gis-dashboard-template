@@ -1,6 +1,9 @@
 window.onload = init;
 
 function init() {
+  // Accessing global variable
+  // console.log(districtCode);
+
   // Adding control to layer switcher
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
@@ -127,7 +130,48 @@ function init() {
     ]
   });
 
-  // A group layer for Administrative layers
+  const activityLayersVector = new ol.layer.Group({
+    title: 'Activity Layers',
+    openInLayerSwitcher: true,
+    layers: [
+      new ol.layer.Vector({
+        source: new ol.source.Vector({
+          url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
+          projection: 'EPSG:4326',
+          format: new ol.format.GeoJSON(),
+          style: (function (feature, resolution) {
+
+            var style = new ol.style.Style({
+              // image: new ol.style.Icon({
+              //   scale: 0.04,
+              //   src: '../../assets/img/com.svg',
+              // }),
+              text: new ol.style.Text({
+                text: 'Vector Label',
+                scale: 1.3,
+                fill: new ol.style.Fill({
+                  color: '#FF0000'
+                }),
+                stroke: new ol.style.Stroke({
+                  color: '#FFFF99',
+                  width: 3.5
+                })
+              })
+            });
+            var styles = [style];
+            return function (feature, resolution) {
+              style.getText().setText(feature.get("structure_type"));
+              return styles;
+            };
+          })()
+        }),
+        visible: true,
+        baseLayer: false,
+        title: "NRM Structures",
+      }),
+    ]
+  })
+  // A group layer for Administrative layers (WMS)
   const activityLayers = new ol.layer.Group({
     title: 'Activity Layers',
     openInLayerSwitcher: true,
@@ -239,19 +283,44 @@ function init() {
     url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
     projection: 'EPSG:4326',
     format: new ol.format.GeoJSON(),
-
   })
   // Adding Layer to Map
   map.addLayer(new ol.layer.Vector({
     name: 'NRM Project Locations',
     source: nrmProjectVectorSource,
     style: (function () {
+
+      var stdStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: [0.5, 0.5],   // Default value is the icon center.
+          scale: 0.04,          // resize imge          
+          src: '../../assets/img/subscription-svgrepo-com.svg'
+        })
+      });
+
+      var freeStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: [0.5, 0.5],   // Default value is the icon center.
+          scale: 0.04,          // resize imge
+          color: '#49fc82',    // green
+          crossOrigin: 'anonymous',
+          src: '../../assets/img/com.svg'
+        })
+      });
+
       var style = new ol.style.Style({
         // image: new ol.style.Icon({
-        //   scale: 0.04,
-        //   src: '../../assets/img/com.svg',
+        //   anchor: [0.5, 0.5],   // Default value is the icon center.
+        //   scale: 0.04,          // resize imge
+        //   // color: '#49fc82',    // green
+        //   crossOrigin: 'anonymous',
+        //   src: '../../assets/img/subscription-svgrepo-com.svg'
         // }),
         text: new ol.style.Text({
+          textAlign: 'top',
+          textBaseline: 'bottom',
+          offsetX: 0,
+          offsetY: 0,
           text: 'Vector Label',
           scale: 1.3,
           fill: new ol.style.Fill({
@@ -265,6 +334,9 @@ function init() {
       });
       var styles = [style];
       return function (feature, resolution) {
+        // var activity_code = feature.get("activity_code")
+        // activity_code === 'A3.2.3' ? stdStyle : freeStyle
+        // console.log(feature.get("activity_code"))
         style.getText().setText(feature.get("structure_type"));
         return styles;
       };
@@ -341,7 +413,7 @@ function init() {
     `
     popup.show(feature.getGeometry().getFirstCoordinate(), content);
     // Setting parameters to Image Modal
-    $('#activityImageModalLabel').text(`Application Number : ${feature.get('application_number')}`);
+    $('#activityImageModalLabel').text(`Activity Name : ${feature.get('activity_name')}`);
     $('#modalImage').attr('src', feature.get('img_url'));
     // 
   });
@@ -431,5 +503,6 @@ function init() {
   });
   map.addControl(legendCtrl);
 
-}
 
+
+}
