@@ -56,15 +56,14 @@ function init() {
       }),
       new ol.layer.Tile({
         title: "PoCRA Districts",
-
         source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
+          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
           crossOrigin: 'Anonymous',
           serverType: 'geoserver',
           visible: true,
           baseLayer: false,
           params: {
-            'LAYERS': 'PoCRA:MahaDist',
+            'LAYERS': 'PoCRA_Dashboard_V2:mh_district',
             'TILED': true,
           }
         })

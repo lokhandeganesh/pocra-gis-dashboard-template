@@ -115,7 +115,7 @@ function getNrmActivity(getActivityCode) {
 
 }
 
-getData();
+// getData();
 async function getData() {
   const response = await fetch(
     'http://gis.mahapocra.gov.in/weatherservices/meta/getStatActivities');
@@ -132,7 +132,7 @@ async function getData() {
     labels.push(data.data[i].structure_type);
     values.push(data.data[i].payment_done);
   }
-
+  // Bar Chart
   new Chart(document.getElementById("bar-chart"), {
     type: 'bar',
     data: {
@@ -148,11 +148,11 @@ async function getData() {
     },
     options: {
       legend: { display: false },
-      title: {
-        display: true,
-        text: chartTitle,
-        color: '#FF0000'
-      },
+      // title: {
+      //   display: true,
+      //   text: chartTitle,
+      //   color: '#FF0000'
+      // },
       scales: {
         xAxes: [{
           display: true,
@@ -183,6 +183,36 @@ async function getData() {
     }
   });
 
+  // Pie Chart
+  new Chart(document.getElementById("pie-chart"), {
+    type: 'pie',
+    data: {
+      labels: labels,
+
+      datasets: [
+        {
+          label: "Payment Done (Count)",
+          backgroundColor: ['rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(82, 215, 38)',
+            'rgb(255, 236, 0)',
+            'rgb(255, 0, 0)',
+            'rgb(124, 120, 215)',
+            'rgb(0, 126, 214)',
+            'rgb(124, 221, 221)'],
+
+          data: values,
+          hoverOffset: 4
+        }
+      ],
+
+    },
+    options: {
+      legend: { display: false },
+    }
+
+  });
 }
 
 
@@ -190,3 +220,169 @@ async function getData() {
 function getVincode(vincode) {
   console.log(vincode);
 }
+
+getHighChartData();
+async function getHighChartData() {
+  const response = await fetch(
+    'http://gis.mahapocra.gov.in/weatherservices/meta/getStatActivities')
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      // console.log(data)
+      // 
+      let activityCode = [], total_no_of_paid = [], activityGroupName = []
+      // 
+      data.data.map((activity) => {
+        activityCode.push(activity.structure_type);
+        activityGroupName.push(activity.activity_name);
+        total_no_of_paid.push(activity.payment_done);
+      })
+      // console.log(activityCode)
+
+      Highcharts.chart('highchart-pie-chart', {
+        chart: {
+          type: 'column',
+          backgroundColor: '',
+        },
+        title: {
+          text: 'Natural Resource Management Activities'
+        },
+        credits: {
+          enabled: false
+        },
+        legend: {
+          enabled: true
+        },
+        xAxis: {
+          categories: activityGroupName,
+        },
+        yAxis: {
+          type: 'logarithmic',
+          // min: 0,
+          title: {
+            text: 'Count (Num.)'
+          }
+        },
+        tooltip: {
+          headerFormat: '<span style="color: red"><b>{point.key}</b></span><table>',
+          pointFormat: `<tr>
+                          <td>Count: </td>
+                          <td><b>{point.y}</b></td>
+                        </tr>`,
+          footerFormat: '</table>',
+          shared: true,
+          useHTML: true
+
+        },
+        // series: {
+        //   pointWidth: 20
+        // },    
+        series: [{
+          name: 'Activities',
+          data: total_no_of_paid
+        },
+          // {
+          //   name: 'GB',
+          //   data: [total_no_of_paid[1]]
+          // },
+          // {
+          //   name: activityCode[2],
+          //   data: [total_no_of_paid[2]]
+          // },
+          // {
+          //   name: activityGroupName[3],
+          //   data: [total_no_of_paid[3]]
+          // },
+          // {
+          //   name: activityGroupName[4],
+          //   data: [total_no_of_paid[4]]
+          // },
+          // {
+          //   name: activityGroupName[5],
+          //   data: [total_no_of_paid[5]]
+          // },
+          // {
+          //   name: activityGroupName[6],
+          //   data: [total_no_of_paid[6]]
+          // },
+          // {
+          //   name: activityGroupName[7],
+          //   data: [total_no_of_paid[7]]
+          // },
+          // {
+          //   name: activityGroupName[8],
+          //   data: [total_no_of_paid[8]]
+          // },
+        ]
+      })
+
+    });
+
+
+
+
+}
+
+function getData() {//  w  w  w  . j av a 2 s.c  o m
+  return new Promise((resolve, reject) => {
+    $.getJSON('xhttp://gis.mahapocra.gov.in/weatherservices/meta/getStatActivities', function (recData) {
+      console.log(recData)
+      resolve(recData);
+    });
+  });
+}
+(async () => {
+  Highcharts.chart('xhighchart-pie-chart', {
+    chart: {
+      events: {
+        load: function () {
+          var series = this.series[0];
+          setInterval(async function () {
+            var data = await getData();
+            series.setData(data);
+          }, 2000);
+        }
+      }
+    },
+    series: [{
+      data: await getData()
+    }]
+  });
+});
+
+$('#xhighchart-pie-chart').highcharts({
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Stacked bar chart'
+  },
+  xAxis: {
+    categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+  },
+  yAxis: {
+    min: 0,
+    title: {
+      text: 'Total fruit consumption'
+    }
+  },
+  legend: {
+    reversed: true
+  },
+  plotOptions: {
+    series: {
+      stacking: 'normal'
+    }
+  },
+  series: [{
+    name: 'John',
+    data: [5, 3, 4, 7, 2]
+  }, {
+    name: 'Jane',
+    data: [2, 2, 3, 2, 1]
+  }, {
+    name: 'Joe',
+    data: [3, 4, 4, 2, 5]
+  }]
+});
