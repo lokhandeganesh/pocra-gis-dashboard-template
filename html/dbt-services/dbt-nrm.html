@@ -348,109 +348,136 @@
         <main>
           <div class="container-fluid px-4">
             <h5 class="mt-4">DBT- NRM Dashboard</h5>
-            <!-- Dropdown Div -->
-            <div class="row mb-4">
-              <p class="">Selection Menu</p>
-              <!-- Activity Dropdown -->
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select cursor-pointer"
-                  aria-label="Select Activity "
-                  id="select-activity"
-                  data-placeholder="--- Select Activity ---"
-                  onchange="getNrmActivity(this.value);"
-                >
-                  <option value="-1">--- Select All Activity ---</option>
-                </select>
-              </div>
-              <!--  -->
-              <!-- District Dropdown -->
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select cursor-pointer"
-                  aria-label="Select District"
-                  id="select-district"
-                  data-placeholder="--- Select District ---"
-                  onchange="getTaluka(this.value);"
-                >
-                  <option value="-1">--Select Alll District--</option>
-                </select>
-              </div>
-              <!-- Taluka Dropdown -->
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select cursor-pointer"
-                  aria-label="Select Taluka"
-                  id="select-taluka"
-                  onchange="getVillage(this.value);"
-                >
-                  <!-- <option selected value="-1">--Select Taluka--</option> -->
-                </select>
-              </div>
-              <!-- Village Dropdown -->
-              <script>
-                $("#select-district").change(function () {
-                  $("#select-village option:first").prop(
-                    "selected",
-                    "selected"
-                  );
-                });
-              </script>
-              <div class="col-xl-3 col-md-6">
-                <select
-                  class="form-select cursor-pointer"
-                  aria-label="Select Village"
-                  id="select-village"
-                  onchange="getVincode(this.value);"
-                >
-                  <!-- <option selected value="-1">--Select Village--</option> -->
-                </select>
-              </div>
+            <!-- Selection Menu -->
+            <div class="accordion mb-4" id="accordionSelectionMenu">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSelectionMenu">
+                  <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSelectionMenu" aria-expanded="true" aria-controls="collapseOne">
+                    Selection Menu
+                  </button>
+                </h2>
+                <div id="collapseSelectionMenu" class="accordion-collapse collapse show" aria-labelledby="headingSelectionMenu" data-bs-parent="#accordionSelectionMenu">
+                  <div class="accordion-body">
+                    <!-- Dropdown Div -->
+                    <div class="row ">                      
+                      <!-- Activity Dropdown -->
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer"
+                          aria-label="Select Activity "
+                          id="select-activity"
+                          data-placeholder="--- Select Activity ---"
+                          onchange="getNrmActivity(this.value);"
+                        >
+                          <option value="-1">--- Select All Activity ---</option>
+                        </select>
+                      </div>
+                      <!--  -->
+                      <!-- District Dropdown -->
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer"
+                          aria-label="Select District"
+                          id="select-district"
+                          data-placeholder="--- Select District ---"
+                          onchange="getTaluka(this.value);"
+                        >
+                          <option value="-1">--Select Alll District--</option>
+                        </select>
+                      </div>
+                      <!-- Taluka Dropdown -->
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer"
+                          aria-label="Select Taluka"
+                          id="select-taluka"
+                          onchange="getVillage(this.value);"
+                        >
+                          <!-- <option selected value="-1">--Select Taluka--</option> -->
+                        </select>
+                      </div>
+                      <!-- Village Dropdown -->
+                      <script>
+                        $("#select-district").change(function () {
+                          $("#select-village option:first").prop(
+                            "selected",
+                            "selected"
+                          );
+                        });
+                      </script>
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer"
+                          aria-label="Select Village"
+                          id="select-village"
+                          onchange="getVincode(this.value);"
+                        >
+                          <!-- <option selected value="-1">--Select Village--</option> -->
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>              
             </div>
+                       
             <!-- Application Status Checkbox -->
-            <div class="row mb-4">
-              <div class="btn-group btn-sm">
-                <div class="cat checkbox-checked col-xl-2 col-md-2">
-                  <label class="cursor-pointer">
-                    <input type="checkbox" value="1" /><span
-                      >Community Application</span
-                    >
-                  </label>
+            <div class="accordion mb-4 " id="accordionSelectionMenu">
+              <div class="accordion-item">
+                <h2 class="accordion-header"  id="headingSelectionMenu">
+                  <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSelectionMenu" aria-expanded="true" aria-controls="collapseOne">
+                    Application Status
+                  </button>
+                </h2>
+                <div id="collapseSelectionMenu" class="accordion-collapse collapse show" aria-labelledby="headingSelectionMenu" data-bs-parent="#accordionSelectionMenu">
+                  <div class="accordion-body">
+                    <!-- Dropdown Div -->
+                    <div class="row">
+                      <div class="btn-group btn-sm application-checkbox">
+                        <div class="cat checkbox-checked col-xl-2 col-md-2">
+                          <label class="cursor-pointer">
+                            <input type="checkbox" id="commApplCheck" value="commAppl" name="applicationStatus" for="applicationStatus"/><span
+                              >Community Application</span
+                            >
+                          </label>
+                        </div>
+                        <div class="cat checkbox-checked col-xl-2 col-md-2">
+                          <label class="cursor-pointer">
+                            <input type="checkbox" id="techSancCheck" value="techSanc" name="applicationStatus" for="applicationStatus"/><span
+                              >Technical Sanction</span
+                            >
+                          </label>
+                        </div>
+                        <div class="cat checkbox-checked col-xl-2 col-md-2">
+                          <label class="cursor-pointer">
+                            <input type="checkbox" id="eTenderCheck" value="eTender" name="applicationStatus" for="applicationStatus"/><span>E-Tendering</span>
+                          </label>
+                        </div>
+                        <div class="cat checkbox-checked col-xl-2 col-md-2">
+                          <label class="cursor-pointer">
+                            <input type="checkbox" id="workOrderCheck" value="workOrder" name="applicationStatus" for="applicationStatus"/><span
+                              >Work Order Issued</span
+                            >
+                          </label>
+                        </div>
+                        <div class="cat checkbox-checked col-xl-2 col-md-2">
+                          <label class="cursor-pointer">
+                            <input type="checkbox" id="workComplCheck" value="workCompl" name="applicationStatus" for="applicationStatus"/><span
+                              >Work Completed</span
+                            >
+                          </label>
+                        </div>
+                        <div class="cat checkbox-checked col-xl-2 col-md-2">
+                          <label class="cursor-pointer">
+                            <input type="checkbox" id="disBursCheck" value="disBurs" name="applicationStatus" for="applicationStatus"/><span>Disbursement</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="cat checkbox-checked col-xl-2 col-md-2">
-                  <label class="cursor-pointer">
-                    <input type="checkbox" value="1" /><span
-                      >Technical Sanction</span
-                    >
-                  </label>
-                </div>
-                <div class="cat checkbox-checked col-xl-2 col-md-2">
-                  <label class="cursor-pointer">
-                    <input type="checkbox" value="1" /><span>E-Tendering</span>
-                  </label>
-                </div>
-                <div class="cat checkbox-checked col-xl-2 col-md-2">
-                  <label class="cursor-pointer">
-                    <input type="checkbox" value="1" /><span
-                      >Work Order Issued</span
-                    >
-                  </label>
-                </div>
-
-                <div class="cat checkbox-checked col-xl-2 col-md-2">
-                  <label class="cursor-pointer">
-                    <input type="checkbox" value="1" /><span
-                      >Work Completed</span
-                    >
-                  </label>
-                </div>
-                <div class="cat checkbox-checked col-xl-2 col-md-2">
-                  <label class="cursor-pointer">
-                    <input type="checkbox" value="1" /><span>Disbursement</span>
-                  </label>
-                </div>
-              </div>
-            </div>
+              </div>              
+            </div>            
             <!-- Map Div -->
             <div class="card mb-4">
               <div class="card-header" id="card-title">
