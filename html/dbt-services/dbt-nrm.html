@@ -354,7 +354,7 @@
               <!-- Activity Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select"
+                  class="form-select cursor-pointer"
                   aria-label="Select Activity "
                   id="select-activity"
                   data-placeholder="--- Select Activity ---"
@@ -367,7 +367,7 @@
               <!-- District Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select"
+                  class="form-select cursor-pointer"
                   aria-label="Select District"
                   id="select-district"
                   data-placeholder="--- Select District ---"
@@ -379,7 +379,7 @@
               <!-- Taluka Dropdown -->
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select"
+                  class="form-select cursor-pointer"
                   aria-label="Select Taluka"
                   id="select-taluka"
                   onchange="getVillage(this.value);"
@@ -398,13 +398,57 @@
               </script>
               <div class="col-xl-3 col-md-6">
                 <select
-                  class="form-select"
+                  class="form-select cursor-pointer"
                   aria-label="Select Village"
                   id="select-village"
                   onchange="getVincode(this.value);"
                 >
                   <!-- <option selected value="-1">--Select Village--</option> -->
                 </select>
+              </div>
+            </div>
+            <!-- Application Status Checkbox -->
+            <div class="row mb-4">
+              <div class="btn-group btn-sm">
+                <div class="cat checkbox-checked col-xl-2 col-md-2">
+                  <label class="cursor-pointer">
+                    <input type="checkbox" value="1" /><span
+                      >Community Application</span
+                    >
+                  </label>
+                </div>
+                <div class="cat checkbox-checked col-xl-2 col-md-2">
+                  <label class="cursor-pointer">
+                    <input type="checkbox" value="1" /><span
+                      >Technical Sanction</span
+                    >
+                  </label>
+                </div>
+                <div class="cat checkbox-checked col-xl-2 col-md-2">
+                  <label class="cursor-pointer">
+                    <input type="checkbox" value="1" /><span>E-Tendering</span>
+                  </label>
+                </div>
+                <div class="cat checkbox-checked col-xl-2 col-md-2">
+                  <label class="cursor-pointer">
+                    <input type="checkbox" value="1" /><span
+                      >Work Order Issued</span
+                    >
+                  </label>
+                </div>
+
+                <div class="cat checkbox-checked col-xl-2 col-md-2">
+                  <label class="cursor-pointer">
+                    <input type="checkbox" value="1" /><span
+                      >Work Completed</span
+                    >
+                  </label>
+                </div>
+                <div class="cat checkbox-checked col-xl-2 col-md-2">
+                  <label class="cursor-pointer">
+                    <input type="checkbox" value="1" /><span>Disbursement</span>
+                  </label>
+                </div>
               </div>
             </div>
             <!-- Map Div -->

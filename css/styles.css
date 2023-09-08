@@ -8816,6 +8816,10 @@ fieldset:disabled .btn {
   pointer-events: auto !important;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .rounded {
   border-radius: var(--bs-border-radius) !important;
 }
@@ -11983,4 +11987,51 @@ body {
 }
 .tabs .nav-link.active {
   font-weight: bold;
+}
+
+/* Check box for status selection */
+
+.cat {
+  background-color: #104068;
+  border-radius: 1em;
+  border: 1px solid #fff;
+  overflow: hidden;
+  float: left;
+}
+
+.cat label {
+  float: left;
+  line-height: 3em;
+  width: 100%;
+  height: 3em;
+}
+
+.cat label span {
+  text-align: center;
+  padding: 3px 0;
+  display: block;
+}
+
+.cat label input {
+  position: absolute;
+  display: none;
+  color: #fff !important;
+}
+/* selects all of the text within the input element and changes the color of the text */
+.cat label input + span {
+  color: #fff;
+}
+
+/* This will declare how a selected input will look giving generic properties */
+.cat input:checked + span {
+  color: #ffffff;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+/*
+This following statements selects each category individually that contains an input element that is a checkbox and is checked (or selected) and chabges the background color of the span element.
+*/
+
+.checkbox-checked input:checked + span {
+  background-color: #82d44e;
 }
