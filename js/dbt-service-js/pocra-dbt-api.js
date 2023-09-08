@@ -23,30 +23,13 @@ var applicationStatusSelected;
 $('input').on('click', function(){
   applicationStatusSelected = [];
   
-  // $('.application-checkbox input:checked').each(function() {
-  //      applicationStatusSelected.push($(this).val());
-  // });
-  
-  
-  //Or
-  
-  var checkboxes = document.getElementsByName('applicationStatus');  
-    for (var i=0; i<checkboxes.length; i++) {
-       if (checkboxes[i].checked) {
-        applicationStatusSelected.push(checkboxes[i].value);
-       }
-    }
-  
-    alert(applicationStatusSelected);
+  $('.application-checkbox input:checked').each(function() {
+       applicationStatusSelected.push($(this).val());
   });
+  
+  alert(applicationStatusSelected);
+});
 
-//   var checkBoxes = document.querySelectorAll(`input[name="applicationStatus"]:checked`);
-//   var selected = [];
-//  Array.prototype.forEach.call(checkBoxes, function(ele){
-//   values.push(ele.value)
-//  });
-//  console.log(values);
- 
 
 // Calling loadNrmActivity funtion initially to load activity names into dropdown menu
 loadNrmActivity();
