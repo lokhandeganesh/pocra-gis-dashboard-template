@@ -1,352 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <!--
-      Copyright (c) 2015-2020 Jean-Marc VIGLINO,
-      released under CeCILL-B (french BSD like) licence: http://www.cecill.info/
-    -->
-    <title>ol-ext: Animated canvas Overlay</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-    <meta name="description" content="Animated canvas Overlay for Openlayers" />
-    <meta
-      name="keywords"
-      content="openlayers, overlay, animation, cloud, rain, snow"
-    />
-
-    <!-- jQuery -->
-    <script
-      type="text/javascript"
-      src="https://code.jquery.com/jquery-1.11.0.min.js"
-    ></script>
-    <!-- FontAwesome -->
+    <title>WFS</title>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.css"
     />
-
-    <!-- Openlayers -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
     />
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"
-    ></script>
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL,Object.assign"></script>
-
-    <!-- ol-ext -->
-    <link rel="stylesheet" href="../../libs/dist/ol-ext.min.css" />
-    <script src="../../libs/dist/ol-ext.min.js"></script>
-    <!-- Pointer events polyfill for old browsers, see https://caniuse.com/#feat=pointer -->
-    <script src="https://unpkg.com/elm-pep"></script>
-
-    <link rel="stylesheet" href="../style.css" />
-    <style></style>
+    <style>
+      html,
+      body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        background-color: white;
+      }
+      .map {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.js"></script>
   </head>
   <body>
-    <a href="https://github.com/Viglino/ol-ext" class="icss-github-corner"
-      ><i></i
-    ></a>
+    <div id="map" class="map"><div id="popup"></div></div>
+    <script>
+      var vectorSource = new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        url: function (extent) {
+          return (
+            "https://ahocevar.com/geoserver/wfs?service=WFS&" +
+            "version=1.1.0&request=GetFeature&typename=osm:water_areas&" +
+            "outputFormat=application/json&srsname=EPSG:3857&" +
+            "bbox=" +
+            extent.join(",") +
+            ",EPSG:3857"
+          );
+        },
+        strategy: ol.loadingstrategy.bbox,
+      });
 
-    <a href="../../index.html">
-      <h1>ol-ext: Animated canvas Overlay</h1>
-    </a>
+      var styleFunction = function (feature, resolution) {
+        var zoom = map.getView().getZoomForResolution(resolution);
+        var color = zoom > 13 ? "rgba(255, 0, 0, 1.0)" : "rgba(0, 0, 255, 1.0)";
+        var style = new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: color,
+            width: 2,
+          }),
+        });
+        return style;
+      };
 
-    <div class="info">
-      <p>
-        <i>ol/Overlay/AnimateddCanvas</i> is an overlay to play animations on
-        top of the map.
-      </p>
-    </div>
+      var vector = new ol.layer.Vector({
+        source: vectorSource,
+        style: styleFunction,
+      });
 
-    <!-- DIV pour la carte -->
-    <div id="map" style="width: 600px; height: 400px">
-      <div
-        class="ol-viewport"
-        style="position: relative; overflow: hidden; width: 100%; height: 100%"
-      >
-        <div
-          class="ol-unselectable ol-layers"
-          style="position: absolute; width: 100%; height: 100%; z-index: 0"
-        >
-          <div
-            class="ol-layer"
-            style="position: absolute; width: 100%; height: 100%"
-          >
-            <canvas
-              width="600"
-              height="400"
-              style="
-                position: absolute;
-                left: 0px;
-                transform-origin: left top;
-                transform: matrix(1, 0, 0, 1, 0, 0);
-              "
-            ></canvas>
-          </div>
-        </div>
-        <div
-          class="ol-overlaycontainer"
-          style="
-            position: absolute;
-            z-index: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-          "
-        >
-          <div
-            class="ol-overlay-container ol-selectable"
-            style="position: absolute; pointer-events: auto; display: none"
-          >
-            <canvas
-              class="ol-animated-overlay"
-              width="600"
-              height="400"
-            ></canvas>
-          </div>
-          <div
-            class="ol-overlay-container ol-selectable"
-            style="position: absolute; pointer-events: auto; display: none"
-          >
-            <canvas
-              class="ol-animated-overlay"
-              width="600"
-              height="400"
-            ></canvas>
-          </div>
-          <div
-            class="ol-overlay-container ol-selectable"
-            style="position: absolute; pointer-events: auto; display: block"
-          >
-            <canvas
-              class="ol-animated-overlay"
-              width="600"
-              height="400"
-            ></canvas>
-          </div>
-          <div
-            class="ol-overlay-container ol-selectable"
-            style="position: absolute; pointer-events: auto; display: none"
-          >
-            <canvas
-              class="ol-animated-overlay"
-              width="600"
-              height="400"
-            ></canvas>
-          </div>
-          <div
-            class="ol-overlay-container ol-selectable"
-            style="position: absolute; pointer-events: auto; display: block"
-          >
-            <canvas
-              class="ol-animated-overlay"
-              width="600"
-              height="400"
-            ></canvas>
-          </div>
-          <div
-            class="ol-overlay-container ol-selectable"
-            style="position: absolute; pointer-events: auto; display: none"
-          >
-            <canvas
-              class="ol-animated-overlay"
-              width="600"
-              height="400"
-            ></canvas>
-          </div>
-        </div>
-        <div
-          class="ol-overlaycontainer-stopevent"
-          style="
-            position: absolute;
-            z-index: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-          "
-        >
-          <div
-            class="ol-zoom ol-unselectable ol-control"
-            style="pointer-events: auto"
-          >
-            <button class="ol-zoom-in" type="button" title="Zoom in">+</button
-            ><button class="ol-zoom-out" type="button" title="Zoom out">
-              –
-            </button>
-          </div>
-          <div
-            class="ol-rotate ol-unselectable ol-control ol-hidden"
-            style="pointer-events: auto"
-          >
-            <button
-              class="ol-rotate-reset"
-              type="button"
-              title="Reset rotation"
-            >
-              <span class="ol-compass" style="transform: rotate(0rad)">⇧</span>
-            </button>
-          </div>
-          <div
-            class="ol-attribution ol-unselectable ol-control ol-collapsed"
-            style="pointer-events: auto"
-          >
-            <button type="button" aria-expanded="false" title="Attributions">
-              <span class="ol-attribution-expand">i</span>
-            </button>
-            <ul>
-              <li>
-                Map tiles by
-                <a href="https://stamen.com/" target="_blank">Stamen Design</a>,
-                under
-                <a
-                  href="https://creativecommons.org/licenses/by/3.0/"
-                  target="_blank"
-                  >CC BY 3.0</a
-                >.
-              </li>
-              <li>
-                ©
-                <a
-                  href="https://www.openstreetmap.org/copyright"
-                  target="_blank"
-                  >OpenStreetMap</a
-                >
-                contributors.
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+      vector.getSource().on("featuresloadstart", function (evt) {
+        console.log("start");
+      });
+      vector.getSource().on("featuresloadend", function (evt) {
+        console.log("end");
+      });
 
-    <div class="options">
-      <ul>
-        <li>
-          <label>
-            <input type="checkbox" onchange="cloud.setVisible(this.checked)" />
-            Clouds
-          </label>
-        </li>
-        <li>
-          <label>
-            <input type="checkbox" onchange="cloud2.setVisible(this.checked)" />
-            Clouds 2
-          </label>
-        </li>
-        <li>
-          <label>
-            <input
-              type="checkbox"
-              checked="checked"
-              onchange="rain.setVisible(this.checked)"
-            />
-            Rain
-          </label>
-        </li>
-        <li>
-          <label>
-            <input
-              type="checkbox"
-              onchange="raindrop.setVisible(this.checked)"
-            />
-            Rain drops
-          </label>
-        </li>
-        <li>
-          <label>
-            <input type="checkbox" onchange="snow.setVisible(this.checked)" />
-            Snow
-          </label>
-        </li>
-        <li>
-          <label>
-            <input type="checkbox" onchange="birds.setVisible(this.checked)" />
-            Birds
-          </label>
-        </li>
-      </ul>
-    </div>
+      var raster = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+      });
 
-    <script type="text/javascript">
-      // Layers
-      var layers = [
-        new ol.layer.Tile({
-          title: "terrain-background",
-          source: new ol.source.Stamen({ layer: "terrain" }),
-        }),
-      ];
+      var view = new ol.View({
+        center: [-8908887.277395891, 5381918.072437216],
+        maxZoom: 19,
+        zoom: 12,
+      });
 
-      // The map
       var map = new ol.Map({
-        target: "map",
-        view: new ol.View({
-          zoom: 5,
-          center: [166326, 5992663],
-        }),
-        layers: layers,
+        layers: [raster, vector],
+        target: document.getElementById("map"),
+        view: view,
       });
-
-      // Birds
-      var birds = new ol.Overlay.AnimatedCanvas({
-        particule: ol.particule.Bird,
-        density: 0.2,
-        angle: Math.PI / 3,
-        speed: 2,
-      });
-      birds.setVisible(false);
-      map.addOverlay(birds);
-
-      // Rain
-      var rain = new ol.Overlay.AnimatedCanvas({
-        particule: ol.particule.Rain,
-        density: 1,
-        angle: (2.5 * Math.PI) / 5,
-        speed: 0.5,
-      });
-
-      map.addOverlay(rain);
-
-      // Snow
-      var snow = new ol.Overlay.AnimatedCanvas({
-        particule: ol.particule.Snow,
-        density: 5,
-        angle: Math.PI / 2,
-        speed: 0.5,
-      });
-      snow.setVisible(false);
-      map.addOverlay(snow);
-
-      // Clouds
-      var cloud = new ol.Overlay.AnimatedCanvas({
-        particule: ol.particule.Cloud,
-        density: 2,
-        angle: Math.PI / 3,
-        speed: 2,
-      });
-      snow.setVisible(false);
-      map.addOverlay(cloud);
-
-      // Clouds
-      var cloud2 = new ol.Overlay.AnimatedCanvas({
-        particule: ol.particule.Cloud,
-        density: 1.5,
-        angle: Math.PI / 4,
-        speed: 2,
-      });
-      cloud2.setVisible(false);
-      map.addOverlay(cloud2);
-
-      // Raindrop
-      var raindrop = new ol.Overlay.AnimatedCanvas({
-        particule: ol.particule.RainDrop,
-        density: 1,
-        speed: 5,
-      });
-      raindrop.setVisible(false);
-      map.addOverlay(raindrop);
     </script>
   </body>
 </html>

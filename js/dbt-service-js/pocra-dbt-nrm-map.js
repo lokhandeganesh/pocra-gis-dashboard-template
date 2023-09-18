@@ -2,7 +2,17 @@ window.onload = init;
 
 function init() {
   // Accessing global variable
-  // console.log(districtCode);
+
+  var districtVector
+  var selectDistrict = document.getElementById('select-district');
+  selectDistrict.addEventListener("change", function () {
+    passValue(this.value);
+  });
+
+  function passValue(districtCode) {
+    alert(districtCode);
+  }
+  // 
 
   // Adding control to layer switcher
   const baseLayerGroup = new ol.layer.Group({
@@ -48,10 +58,10 @@ function init() {
             'TILED': true,
           }
         }),
-        visible: true,
+        visible: false,
         baseLayer: false,
         title: "PoCRA Districts",
-        // extent: [-653182.6969582437, 5037463.842847037, 1233297.5065495989, 6646432.677299531],
+        extent: [72.64, 5.60, 80.89, 22.02],
 
       }),
     ]
@@ -130,6 +140,102 @@ function init() {
     ]
   });
 
+  // Project Administrative Layer in vector format
+  function fillFunc(hexCode, Opacity) {
+
+    return new ol.style.Fill({
+      color: `${hexCode}`,
+      opacity: Opacity,
+    })
+  };
+
+  function strokeFunc(hexCode, Width, Opacity) {
+    return new ol.style.Stroke({
+      color: `${hexCode}`,
+      opacity: Opacity,
+      width: Width
+    })
+  };
+
+  function textFunc() {
+    return new ol.style.Text({
+      font: 'Arial',
+      text: 'Test Text',
+      scale: 1.3,
+      fill: new ol.style.Fill({
+        color: '#000000'
+      }),
+      stroke: new ol.style.Stroke({
+        color: '#FFFFFF',
+        width: 3.5
+      }),
+    })
+  }
+
+  const districtStyle = new ol.style.Style({
+    fill: fillFunc('#DCCAFC', 0.1),
+    stroke: strokeFunc('#000000', 0.4, 1),
+    text: textFunc(),
+  });
+
+  const adminLayersVector = new ol.layer.Group({
+    title: 'Project Region',
+    openInLayerSwitcher: true,
+    layers: [
+      // District Vector
+      districtVector = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Amh_district&outputFormat=application%2Fjson",
+          projection: 'EPSG:4326',
+          format: new ol.format.GeoJSON(),
+        }),
+        style: function (feature, resolution) {
+          // console.log(feature.get('dtncode'))
+          const dtncode = feature.get('dtncode');
+          return districtStyle
+          // return dtncode == '497' ? new ol.style.Style({
+          //   fill: new ol.style.Fill({
+          //     color: 'green',
+          //   }),
+          //   stroke: new ol.style.Stroke({
+          //     color: 'black',
+          //   }),
+          // }) : new ol.style.Style({
+          //   fill: new ol.style.Fill({
+          //     color: 'red',
+          //   }),
+          //   stroke: new ol.style.Stroke({
+          //     color: 'black',
+          //   }),
+          // }); // assuming these are created elsewhere
+        },
+
+        // style: new ol.style.Style({
+        //   // fill: new ol.style.Fill({
+        //   //   color: 'red',
+        //   // }),
+        //   stroke: new ol.style.Stroke({
+        //     color: 'black',
+        //   }),
+        // }),
+        visible: true,
+        baseLayer: false,
+        openInLayerSwitcher: true,
+        name: 'Project Districts'
+      }),
+
+    ]
+  })
+
+  // Loader for display
+  districtVector.getSource().on("featuresloadstart", function (evt) {
+    document.getElementById("layer-loader").classList.add("loader");
+  });
+
+  districtVector.getSource().on("featuresloadend", function (evt) {
+    document.getElementById("layer-loader").classList.remove("loader");
+  });
+
   const activityLayersVector = new ol.layer.Group({
     title: 'Activity Layers',
     openInLayerSwitcher: true,
@@ -140,7 +246,6 @@ function init() {
           projection: 'EPSG:4326',
           format: new ol.format.GeoJSON(),
           style: (function (feature, resolution) {
-
             var style = new ol.style.Style({
               // image: new ol.style.Icon({
               //   scale: 0.04,
@@ -223,14 +328,17 @@ function init() {
   });
 
   // The Map
-  const map = new ol.Map({
-    view: new ol.View({
-      center: [77.5, 18.95],
-      zoom: 7.2,
-      projection: 'EPSG:4326'
-    }),
+  const view = new ol.View({
+    center: [77.5, 18.95],
+    zoom: 7.2,
+    projection: 'EPSG:4326'
+  })
+
+  // Initiating Map 
+  const Map = new ol.Map({
+    view: view,
     target: 'pocra-dbt-nrm-map',
-    layers: [baseLayerGroup, adminLayers, activityLayers],
+    layers: [baseLayerGroup, adminLayers, activityLayers, adminLayersVector],
     overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,
@@ -238,24 +346,44 @@ function init() {
   })
 
   // Changing mouse cursor style to Pinter
-  map.on('pointermove', function (e) {
-    var pixel = map.getEventPixel(e.originalEvent);
-    var hit = map.hasFeatureAtPixel(pixel);
-    map.getViewport().style.cursor = hit ? 'pointer' : '';
+  Map.on('pointermove', function (e) {
+    var pixel = Map.getEventPixel(e.originalEvent);
+    var hit = Map.hasFeatureAtPixel(pixel);
+    Map.getViewport().style.cursor = hit ? 'pointer' : '';
   });
-  // 
-  map.addControl(new ol.control.CanvasAttribution({ canvas: true }));
+
+  // Extent of Map to use for zoomToExtent button(control)
+  var zoomToExtentControl = new ol.control.ZoomToExtent({
+    extent: [
+      73.19613063800134,
+      15.124338344890079,
+      81.80386936199866,
+      22.77566165510992]
+  });
+  // Add a ZoomToExtent control
+  Map.addControl(zoomToExtentControl);
+  // console.log(Map.getView().calculateExtent())
+
+  // Print map canvas
+  Map.addControl(new ol.control.CanvasAttribution({ canvas: true }));
+
   // Add a title control
-  map.addControl(new ol.control.CanvasTitle({
+  Map.addControl(new ol.control.CanvasTitle({
     title: '',
     visible: false,
     style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif' }) })
   }));
+
+  // Add a ZoomToExtent control
+  Map.addControl(zoomToExtentControl);
+  // console.log(Map.getView().calculateExtent())
+
+
   // Vector source map of taluka
   // loadMap1();
   function loadMap1() {
     if (geojson) {
-      map.removeLayer(geojson);
+      Map.removeLayer(geojson);
     }
 
     var url =
@@ -269,13 +397,13 @@ function init() {
     });
     geojson.getSource().on("addfeature", function () {
       //alert(geojson.getSource().getExtent());
-      map.getView().fit(geojson.getSource().getExtent(), {
+      Map.getView().fit(geojson.getSource().getExtent(), {
         duration: 1590,
-        size: map.getSize() - 100,
+        size: Map.getSize() - 100,
       });
     });
 
-    map.addLayer(geojson);
+    Map.addLayer(geojson);
   }
 
   // GeoJson Layer of NRM Project(PoCRA) Points
@@ -284,10 +412,14 @@ function init() {
     projection: 'EPSG:4326',
     format: new ol.format.GeoJSON(),
   })
+
+
   // Adding Layer to Map
-  map.addLayer(new ol.layer.Vector({
+  Map.addLayer(new ol.layer.Vector({
     name: 'NRM Project Locations',
     source: nrmProjectVectorSource,
+    visible: false,
+    openInLayerSwitcher: true,
     style: (function () {
 
       var stdStyle = new ol.style.Style({
@@ -344,89 +476,144 @@ function init() {
   }))
 
   // Control Select
-  const select = new ol.interaction.Select({});
-  map.addInteraction(select);
+  const selectClick = new ol.interaction.Select({});
+  Map.addInteraction(selectClick);
 
-  // On Selected => show/hide popup
-  select.getFeatures().on(['add'], function (evt) {
-    var feature = evt.element;
-    // console.log(feature);
-    var content = "";
-    content +=
-      `
-    <div class="container">
-      <div class="row">
-        <div class="">
-          <table class="table table-striped ">
-            <thead>
-              <tr>
-                <th>Attibutes</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th colspan="2" style="font-weight: normal;">Activity Name</th>
-              </tr>
-              <tr>
-                <th colspan="2">${feature.get('activity_name')}</th>
-              </tr>
-              <tr>
-                <td>Activity Code</td>
-                <td>${feature.get('activity_code')}</td>
-              </tr>
-              <tr>
-                <td>District</td>
-                <td>${feature.get('district')}</td>
-              </tr>
-              <tr>
-                <td>Taluka</td>
-                <td>${feature.get('taluka')}</td>
-              </tr>
-              <tr>
-                <td>Village</td>
-                <td>${feature.get('village')} (${feature.get('vincode')})</td>
-              </tr>
-              <tr>
-                <td>Application Number</td>
-                <td>${feature.get('application_number')}</td>
-              </tr>
-              <tr>
-                <th colspan="2">Activity Image</th>
-              </tr>
-              <tr>
-                <th colspan="2">
-                  <img
-                    class="rounded float-start"
-                    style="width:100%; height: 200px;
-                    border-radius: 5px;  cursor: pointer;  transition: 0.3s;"
-                    src="${feature.get('img_url')}" data-bs-toggle="modal"
-                    data-bs-target="#enlargeImageModal"
-                  />
-                </th>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    `
-    popup.show(feature.getGeometry().getFirstCoordinate(), content);
-    // Setting parameters to Image Modal
-    $('#activityImageModalLabel').text(`Activity Name : ${feature.get('activity_name')}`);
-    $('#modalImage').attr('src', feature.get('img_url'));
-    // 
+
+  // Fly to location function
+  function flyTo(location, done) {
+    const duration = 2000;
+    const zoom = view.getZoom();
+    let parts = 2;
+    let called = false;
+    function callback(complete) {
+      --parts;
+      if (called) {
+        return;
+      }
+      if (parts === 0 || !complete) {
+        called = true;
+        done(complete);
+      }
+    }
+    view.animate(
+      {
+        center: location,
+        duration: duration,
+      },
+      callback
+    );
+    view.animate(
+      {
+        zoom: zoom - 1,
+        duration: duration / 2,
+      },
+      {
+        zoom: zoom,
+        duration: duration / 2,
+      },
+      callback
+    );
+  }
+
+  selectClick.on('select', function (evt) {
+    if (evt.selected.length > 0) {
+      evt.selected.forEach(function (feature) {
+        // feature.getLayer(Map) imported from openLayerCustom.js
+        var layer = feature.getLayer(Map);
+        // console.info(layer);
+        // console.info(layer.get('name'));
+
+        console.log(feature.getGeometry().getExtent())
+
+
+        // Fly to location on Map click event
+        if (layer.get('name') == 'Project Districts') {
+          var selectedFeatureExtent = feature.getGeometry().getExtent();
+          var selectedFeatureCenter = ol.extent.getCenter(selectedFeatureExtent); //ol.proj.transform(Map.getView().getCenter(), 'EPSG:4326', 'EPSG:3857')
+          // console.log("The center is :  " + selectedFeatureCenter); // voila!!!!
+          Map.getView().fit(selectedFeatureExtent, { duration: 2000 });
+
+          // flyTo(selectedFeatureCenter, function () { });
+
+        }
+
+        // Custom content for pop-up on click event of nrm project location        
+        if (layer.get('name') == 'NRM Project Locations') {
+          var content = "";
+          content +=
+            `
+            <div class="container">
+              <div class="row">
+                <div class="">
+                  <table class="table table-striped ">
+                    <thead>
+                      <tr>
+                        <th>Attibutes</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th colspan="2" style="font-weight: normal;">Activity Name</th>
+                      </tr>
+                      <tr>
+                        <th colspan="2">${feature.get('activity_name')}</th>
+                      </tr>
+                      <tr>
+                        <td>Activity Code</td>
+                        <td>${feature.get('activity_code')}</td>
+                      </tr>
+                      <tr>
+                        <td>District</td>
+                        <td>${feature.get('district')}</td>
+                      </tr>
+                      <tr>
+                        <td>Taluka</td>
+                        <td>${feature.get('taluka')}</td>
+                      </tr>
+                      <tr>
+                        <td>Village</td>
+                        <td>${feature.get('village')} (${feature.get('vincode')})</td>
+                      </tr>
+                      <tr>
+                        <td>Application Number</td>
+                        <td>${feature.get('application_number')}</td>
+                      </tr>
+                      <tr>
+                        <th colspan="2">Activity Image</th>
+                      </tr>
+                      <tr>
+                        <th colspan="2">
+                          <img
+                            class="rounded float-start"
+                            style="width:100%; height: 200px;
+                            border-radius: 5px;  cursor: pointer;  transition: 0.3s;"
+                            src="${feature.get('img_url')}" data-bs-toggle="modal"
+                            data-bs-target="#enlargeImageModal"
+                          />
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `
+          // PopUp calling with content
+          popup.show(feature.getGeometry().getFirstCoordinate(), content);
+          // Setting parameters to Image Modal
+          $('#activityImageModalLabel').text(`Activity Name : ${feature.get('activity_name')}`);
+          $('#modalImage').attr('src', feature.get('img_url'));
+        }
+      });
+    }
   });
-  select.getFeatures().on(['remove'], function (evt) {
+
+  selectClick.getFeatures().on(['remove'], function (evt) {
     popup.hide();
   });
 
-  // map.on('click', function (e) {
-  //   console.log(e.coordinate);
-  // })
-
-  // Adding Base Layer to Map
-  // map.addLayer(baseLayerGroup);
 
   // Layer Switcher Extention
   const layerSwitcher = new ol.control.LayerSwitcher({
@@ -435,35 +622,35 @@ function init() {
     // extent: true
 
   });
-  map.addControl(layerSwitcher);
+  Map.addControl(layerSwitcher);
 
   // Add control
   var geoloc = new ol.control.GeolocationButton({
     title: 'Where am I?',
     delay: 10000 // 10s
   });
-  map.addControl(geoloc);
+  Map.addControl(geoloc);
   // Show position
   var here = new ol.Overlay.Popup({ positioning: 'bottom-center' });
-  map.addOverlay(here);
+  Map.addOverlay(here);
   geoloc.on('position', function (e) {
     if (e.coordinate) here.show(e.coordinate, "You are<br/>here!");
     else here.hide();
   });
 
   // Add a ScaleLine control 
-  map.addControl(new ol.control.CanvasScaleLine());
+  Map.addControl(new ol.control.CanvasScaleLine());
 
   // Print control
   var printControl = new ol.control.PrintDialog({
     // target: document.querySelector('.info'),
-    // targetDialog: map.getTargetElement() 
+    // targetDialog: Map.getTargetElement() 
     // save: false,
     // copy: false,
     // pdf: false
   });
   printControl.setSize('A4');
-  map.addControl(printControl);
+  Map.addControl(printControl);
 
   /* On print > save image file */
   printControl.on(['print', 'error'], function (e) {
@@ -501,8 +688,5 @@ function init() {
     legend: legend,
     collapsed: false
   });
-  map.addControl(legendCtrl);
-
-
-
+  Map.addControl(legendCtrl);
 }

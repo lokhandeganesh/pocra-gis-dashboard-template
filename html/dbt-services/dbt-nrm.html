@@ -352,14 +352,26 @@
             <div class="accordion mb-4" id="accordionSelectionMenu">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="headingSelectionMenu">
-                  <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSelectionMenu" aria-expanded="true" aria-controls="collapseOne">
+                  <button
+                    class="accordion-button fw-bold"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseSelectionMenu"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
                     Selection Menu
                   </button>
                 </h2>
-                <div id="collapseSelectionMenu" class="accordion-collapse collapse show" aria-labelledby="headingSelectionMenu" data-bs-parent="#accordionSelectionMenu">
+                <div
+                  id="collapseSelectionMenu"
+                  class="accordion-collapse collapse show"
+                  aria-labelledby="headingSelectionMenu"
+                  data-bs-parent="#accordionSelectionMenu"
+                >
                   <div class="accordion-body">
                     <!-- Dropdown Div -->
-                    <div class="row ">                      
+                    <div class="row">
                       <!-- Activity Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
@@ -369,7 +381,9 @@
                           data-placeholder="--- Select Activity ---"
                           onchange="getNrmActivity(this.value);"
                         >
-                          <option value="-1">--- Select All Activity ---</option>
+                          <option value="-1">
+                            --- Select All Activity ---
+                          </option>
                         </select>
                       </div>
                       <!--  -->
@@ -418,66 +432,106 @@
                     </div>
                   </div>
                 </div>
-              </div>              
+              </div>
             </div>
-                       
+
             <!-- Application Status Checkbox -->
-            <div class="accordion mb-4 " id="accordionSelectionMenu">
+            <div class="accordion mb-4" id="accordionSelectionMenu">
               <div class="accordion-item">
-                <h2 class="accordion-header"  id="headingSelectionMenu">
-                  <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSelectionMenu" aria-expanded="true" aria-controls="collapseOne">
+                <h2 class="accordion-header" id="headingSelectionMenu">
+                  <button
+                    class="accordion-button fw-bold"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseSelectionMenu"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
                     Application Status
                   </button>
                 </h2>
-                <div id="collapseSelectionMenu" class="accordion-collapse collapse show" aria-labelledby="headingSelectionMenu" data-bs-parent="#accordionSelectionMenu">
+                <div
+                  id="collapseSelectionMenu"
+                  class="accordion-collapse collapse show"
+                  aria-labelledby="headingSelectionMenu"
+                  data-bs-parent="#accordionSelectionMenu"
+                >
                   <div class="accordion-body">
                     <!-- Dropdown Div -->
                     <div class="row">
                       <div class="btn-group btn-sm application-checkbox">
                         <div class="cat checkbox-checked col-xl-2 col-md-2">
-                          <label class="cursor-pointer">
-                            <input type="checkbox" id="commApplCheck" value="commAppl" name="applicationStatus" for="applicationStatus"/><span
-                              >Community Application</span
-                            >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="checkbox"
+                              id="commApplCheck"
+                              value="commAppl"
+                              name="applicationStatus"
+                              for="applicationStatus"
+                            /><span>Community Application</span>
                           </label>
                         </div>
                         <div class="cat checkbox-checked col-xl-2 col-md-2">
-                          <label class="cursor-pointer">
-                            <input type="checkbox" id="techSancCheck" value="techSanc" name="applicationStatus" for="applicationStatus"/><span
-                              >Technical Sanction</span
-                            >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="checkbox"
+                              id="techSancCheck"
+                              value="techSanc"
+                              name="applicationStatus"
+                              for="applicationStatus"
+                            /><span>Technical Sanction</span>
                           </label>
                         </div>
                         <div class="cat checkbox-checked col-xl-2 col-md-2">
-                          <label class="cursor-pointer">
-                            <input type="checkbox" id="eTenderCheck" value="eTender" name="applicationStatus" for="applicationStatus"/><span>E-Tendering</span>
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="checkbox"
+                              id="eTenderCheck"
+                              value="eTender"
+                              name="applicationStatus"
+                              for="applicationStatus"
+                            /><span>E-Tendering</span>
                           </label>
                         </div>
                         <div class="cat checkbox-checked col-xl-2 col-md-2">
-                          <label class="cursor-pointer">
-                            <input type="checkbox" id="workOrderCheck" value="workOrder" name="applicationStatus" for="applicationStatus"/><span
-                              >Work Order Issued</span
-                            >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="checkbox"
+                              id="workOrderCheck"
+                              value="workOrder"
+                              name="applicationStatus"
+                              for="applicationStatus"
+                            /><span>Work Order Issued</span>
                           </label>
                         </div>
                         <div class="cat checkbox-checked col-xl-2 col-md-2">
-                          <label class="cursor-pointer">
-                            <input type="checkbox" id="workComplCheck" value="workCompl" name="applicationStatus" for="applicationStatus"/><span
-                              >Work Completed</span
-                            >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="checkbox"
+                              id="workComplCheck"
+                              value="workCompl"
+                              name="applicationStatus"
+                              for="applicationStatus"
+                            /><span>Work Completed</span>
                           </label>
                         </div>
                         <div class="cat checkbox-checked col-xl-2 col-md-2">
-                          <label class="cursor-pointer">
-                            <input type="checkbox" id="disBursCheck" value="disBurs" name="applicationStatus" for="applicationStatus"/><span>Disbursement</span>
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="checkbox"
+                              id="disBursCheck"
+                              value="disBurs"
+                              name="applicationStatus"
+                              for="applicationStatus"
+                            /><span>Disbursement</span>
                           </label>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>              
-            </div>            
+              </div>
+            </div>
             <!-- Map Div -->
             <div class="card mb-4">
               <div class="card-header" id="card-title">
@@ -564,6 +618,8 @@
               </div>
             </div>
           </div>
+          <!-- Loader Animation -->
+          <div id="layer-loader"></div>
         </main>
         <!-- Footer -->
         <footer class="py-4 bg-light mt-auto">
@@ -603,6 +659,6 @@
     <script src="../../js/dbt-service-js/pocra-dbt-nrm-map.js"></script>
     <!-- Active js -->
     <script src="../../js/scripts.js"></script>
-    <!-- <script src="../../js/custom.js"></script> -->
+    <script src="../../js/openLayerCustom.js"></script>
   </body>
 </html>

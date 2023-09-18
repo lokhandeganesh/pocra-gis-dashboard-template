@@ -20,13 +20,11 @@ var districtCode;
 var applicationStatusSelected;
 
 // Get check box value of application status
-$('input').on('click', function(){
+$('input').on('click', function () {
   applicationStatusSelected = [];
-  
-  $('.application-checkbox input:checked').each(function() {
-       applicationStatusSelected.push($(this).val());
+  $('.application-checkbox input:checked').each(function () {
+    applicationStatusSelected.push($(this).val());
   });
-  
   alert(applicationStatusSelected);
 });
 
@@ -68,8 +66,7 @@ function getDistrict() {
 
 // Taluka Name Drop Down
 function getTaluka(dtncode) {
-
-
+  // 
   var ele = document.getElementById("select-taluka");
   ele.innerHTML = "<option value='-1'>--Select All Taluka--</option>";
   // Marathi Taluka Name
@@ -337,7 +334,7 @@ async function getHighChartData() {
 
 }
 
-function getData() {//  w  w  w  . j av a 2 s.c  o m
+function getData() {
   return new Promise((resolve, reject) => {
     $.getJSON('xhttp://gis.mahapocra.gov.in/weatherservices/meta/getStatActivities', function (recData) {
       console.log(recData)
@@ -399,3 +396,5 @@ $('#xhighchart-pie-chart').highcharts({
     data: [3, 4, 4, 2, 5]
   }]
 });
+
+

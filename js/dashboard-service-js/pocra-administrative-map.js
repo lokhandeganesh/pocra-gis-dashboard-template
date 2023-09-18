@@ -2,7 +2,7 @@ window.onload = init;
 
 function init() {
 
-  const map = new ol.Map({
+  const Map = new ol.Map({
     view: new ol.View({
       center: [77.5, 18.95],
       zoom: 7.2,
@@ -17,7 +17,7 @@ function init() {
   })
 
 
-  // map.on('click', function (e) {
+  // Map.on('click', function (e) {
   //   console.log(e.coordinate);
   // })
 
@@ -73,14 +73,14 @@ function init() {
 
 
   // Adding Base Layer to Map
-  map.addLayer(baseLayerGroup);
+  Map.addLayer(baseLayerGroup);
 
   // Layer Switcher Extention
   const layerSwitcher = new ol.control.LayerSwitcher({
     collapsed: true,
     // mouseover: true
   });
-  map.addControl(layerSwitcher);
+  Map.addControl(layerSwitcher);
 
   // Legend Control Extention
   // Define a new legend
@@ -93,7 +93,7 @@ function init() {
     legend: legend,
     collapsed: false
   });
-  map.addControl(legendCtrl);
+  Map.addControl(legendCtrl);
 
 }
 
