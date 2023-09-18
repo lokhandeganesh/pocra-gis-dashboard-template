@@ -352,33 +352,6 @@ function init() {
     Map.getViewport().style.cursor = hit ? 'pointer' : '';
   });
 
-  // Extent of Map to use for zoomToExtent button(control)
-  var zoomToExtentControl = new ol.control.ZoomToExtent({
-    extent: [
-      73.19613063800134,
-      15.124338344890079,
-      81.80386936199866,
-      22.77566165510992]
-  });
-  // Add a ZoomToExtent control
-  Map.addControl(zoomToExtentControl);
-  // console.log(Map.getView().calculateExtent())
-
-  // Print map canvas
-  Map.addControl(new ol.control.CanvasAttribution({ canvas: true }));
-
-  // Add a title control
-  Map.addControl(new ol.control.CanvasTitle({
-    title: '',
-    visible: false,
-    style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif' }) })
-  }));
-
-  // Add a ZoomToExtent control
-  Map.addControl(zoomToExtentControl);
-  // console.log(Map.getView().calculateExtent())
-
-
   // Vector source map of taluka
   // loadMap1();
   function loadMap1() {
@@ -479,62 +452,17 @@ function init() {
   const selectClick = new ol.interaction.Select({});
   Map.addInteraction(selectClick);
 
-
-  // Fly to location function
-  function flyTo(location, done) {
-    const duration = 2000;
-    const zoom = view.getZoom();
-    let parts = 2;
-    let called = false;
-    function callback(complete) {
-      --parts;
-      if (called) {
-        return;
-      }
-      if (parts === 0 || !complete) {
-        called = true;
-        done(complete);
-      }
-    }
-    view.animate(
-      {
-        center: location,
-        duration: duration,
-      },
-      callback
-    );
-    view.animate(
-      {
-        zoom: zoom - 1,
-        duration: duration / 2,
-      },
-      {
-        zoom: zoom,
-        duration: duration / 2,
-      },
-      callback
-    );
-  }
-
+  // Select interaction on map
   selectClick.on('select', function (evt) {
     if (evt.selected.length > 0) {
       evt.selected.forEach(function (feature) {
         // feature.getLayer(Map) imported from openLayerCustom.js
         var layer = feature.getLayer(Map);
-        // console.info(layer);
-        // console.info(layer.get('name'));
-
-        console.log(feature.getGeometry().getExtent())
-
 
         // Fly to location on Map click event
         if (layer.get('name') == 'Project Districts') {
           var selectedFeatureExtent = feature.getGeometry().getExtent();
-          var selectedFeatureCenter = ol.extent.getCenter(selectedFeatureExtent); //ol.proj.transform(Map.getView().getCenter(), 'EPSG:4326', 'EPSG:3857')
-          // console.log("The center is :  " + selectedFeatureCenter); // voila!!!!
           Map.getView().fit(selectedFeatureExtent, { duration: 2000 });
-
-          // flyTo(selectedFeatureCenter, function () { });
 
         }
 
@@ -609,11 +537,32 @@ function init() {
       });
     }
   });
-
+  // hiding pop-up if pointer selection does not contain any feature
   selectClick.getFeatures().on(['remove'], function (evt) {
     popup.hide();
   });
 
+
+  // Controls on Map
+  // Extent of Map to use for zoomToExtent button(control)
+  // Add a ZoomToExtent control
+  Map.addControl(new ol.control.ZoomToExtent({
+    extent: [
+      73.19613063800134, 15.124338344890079,
+      81.80386936199866, 22.77566165510992
+    ]
+  })
+  );
+
+  // Print map canvas
+  Map.addControl(new ol.control.CanvasAttribution({ canvas: true }));
+
+  // Add a title control
+  Map.addControl(new ol.control.CanvasTitle({
+    title: '',
+    visible: false,
+    style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif' }) })
+  }));
 
   // Layer Switcher Extention
   const layerSwitcher = new ol.control.LayerSwitcher({
