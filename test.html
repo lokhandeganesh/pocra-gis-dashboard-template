@@ -1,91 +1,84 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <title>WFS</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.css"
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-    />
+    <title>MapImageLayer - create dynamic map layers - 4.5</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css" />
+    <script src="https://js.arcgis.com/4.5/"></script>
+
     <style>
       html,
-      body {
-        height: 100%;
+      body,
+      #viewDiv {
         padding: 0;
         margin: 0;
-        background-color: white;
-      }
-      .map {
         height: 100%;
         width: 100%;
       }
+
+      #info-div {
+        background-color: white;
+        border-radius: 8px;
+        padding: 8px;
+        opacity: 0.92;
+      }
     </style>
-    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
-    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@main/dist/en/v7.0.0/legacy/ol.js"></script>
-  </head>
-  <body>
-    <div id="map" class="map"><div id="popup"></div></div>
+
     <script>
-      var vectorSource = new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
-        url: function (extent) {
-          return (
-            "https://ahocevar.com/geoserver/wfs?service=WFS&" +
-            "version=1.1.0&request=GetFeature&typename=osm:water_areas&" +
-            "outputFormat=application/json&srsname=EPSG:3857&" +
-            "bbox=" +
-            extent.join(",") +
-            ",EPSG:3857"
-          );
-        },
-        strategy: ol.loadingstrategy.bbox,
+      require(["esri/config"], function (esriConfig) {
+        esriConfig.request.corsEnabledServers.push("localhost:8080");
       });
-
-      var styleFunction = function (feature, resolution) {
-        var zoom = map.getView().getZoomForResolution(resolution);
-        var color = zoom > 13 ? "rgba(255, 0, 0, 1.0)" : "rgba(0, 0, 255, 1.0)";
-        var style = new ol.style.Style({
-          stroke: new ol.style.Stroke({
-            color: color,
-            width: 2,
-          }),
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/MapImageLayer",
+        "esri/widgets/Legend",
+        "dojo/domReady!",
+      ], function (Map, MapView, MapImageLayer, Legend) {
+        var layer = new MapImageLayer({
+          url: "https://test-gis.mahapocra.gov.in//geoserver/gsr/services/tiger/MapServer",
+          title: "Census Demographics",
         });
-        return style;
-      };
 
-      var vector = new ol.layer.Vector({
-        source: vectorSource,
-        style: styleFunction,
-      });
+        /*****************************************************************
+         * Add the layer to a map
+         *****************************************************************/
 
-      vector.getSource().on("featuresloadstart", function (evt) {
-        console.log("start");
-      });
-      vector.getSource().on("featuresloadend", function (evt) {
-        console.log("end");
-      });
+        var map = new Map({
+          layers: [layer],
+        });
 
-      var raster = new ol.layer.Tile({
-        source: new ol.source.OSM(),
-      });
-
-      var view = new ol.View({
-        center: [-8908887.277395891, 5381918.072437216],
-        maxZoom: 19,
-        zoom: 12,
-      });
-
-      var map = new ol.Map({
-        layers: [raster, vector],
-        target: document.getElementById("map"),
-        view: view,
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          extent: {
+            // autocasts as new Extent()
+            xmin: -74.0118315772888,
+            ymin: 40.70754683896324,
+            xmax: -74.00153046439813,
+            ymax: 40.719885123828675,
+            spatialReference: 4326,
+          },
+        });
       });
     </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="info-div">
+      Select a demographic variable<br /><br />
+      <select id="layer-select">
+        <option value="0">Population density</option>
+        <option value="1" selected>Renter occupied units</option>
+        <option value="2">Median age</option>
+      </select>
+    </div>
   </body>
 </html>
+
+<!-- Esri®, ArcGIS® and ArcGIS Online®  are trademarks, registered trademarks, or service marks of Esri in the United States, the European Community, or certain other jurisdictions. Other companies and products mentioned may be trademarks of their respective owners.-->

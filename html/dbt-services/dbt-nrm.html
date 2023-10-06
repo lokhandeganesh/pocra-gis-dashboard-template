@@ -12,60 +12,68 @@
     <title>PoCRA GIS Dashboard</title>
     <!--  -->
     <!-- <base href="" /> -->
-    <!--  -->
-    <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
-    <link href="../../css/styles.css" rel="stylesheet" />
+    <!-- Favicon for page -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../assets/logo/favicon_.ico"
+    />
     <!-- JQuery and Bootstrap -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Font-Awesome -->
     <script
-      src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
-      crossorigin="anonymous"
+      type="text/javascript"
+      src="../../libs/jquery/code.jquery.com_jquery-3.7.1.min.js"
     ></script>
+    <script src="../../libs/bootstrap-5.0.2-dist/js/bootstrap.js"></script>
+    <!-- font awesome -->
+    <link rel="stylesheet" href="../../css/all_font-awesome.min.css" />
     <!-- Open Layer CSS Library -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css"
-    />
+    <link rel="stylesheet" href="../../libs/ol/ol.css" />
     <!-- Open Layer Extention CSS -->
-    <link rel="stylesheet" href="../../libs/dist/ol-ext.min.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../../libs/ol-ext/ol-ext.css" />
     <!-- Multi-Select Libraries -->
-    <link
+    <!-- <link
       href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
       rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <link
+    /> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+    <!-- <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
-    />
+    /> -->
     <!-- Highchart -->
     <script
       language="javascript"
       type="text/javascript"
-      src="https://code.highcharts.com/highcharts.js"
+      src="../../libs/highcharts/highcharts.js"
     ></script>
     <script
       language="javascript"
       type="text/javascript"
-      src="https://code.highcharts.com/modules/exporting.js"
+      src="../../libs/highcharts/exporting.js"
     ></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="../../libs/highcharts/accessibility.js"></script>
     <!--  -->
+    <script
+      src="../../libs/plotly/plotly-2.26.0.min.js"
+      charset="utf-8"
+    ></script>
+    <!-- Custom CSS file -->
+    <link href="../../css/customBootstrap.css" rel="stylesheet" />
+    <link href="../../css/styles.css" rel="stylesheet" />
+    <!-- All functions of bootstrap are declared in custom styles.css, so no need to call additonal bootstrap.css -->
+    <!-- Bootstrap 5 Style -->
+    <!-- 
+      <link
+      rel="stylesheet"
+      href="./libs/bootstrap-5.0.2-dist/css/bootstrap.css"
+    /> 
+    -->
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
       <!-- Navbar Brand-->
       <a class="navbar-brand ps-3" href="../../index.html"
-        ><img
-          class="title-logo pocra-logo"
-          src="../../assets/logo/pocra-logo.png"
+        ><img class="pocra-logo" src="../../assets/logo/pocra-logo_.png"
       /></a>
       <!-- Sidebar Toggle-->
       <button
@@ -563,7 +571,7 @@
                     <!-- Pie Chart Example -->
                   </div>
                   <div class="card-body">
-                    <canvas id="pie-chart" width="100%" height="50"></canvas>
+                    <div class="responsive-plot" id="plotly-chart"></div>
                   </div>
                   <div class="card-footer small text-muted">
                     Updated yesterday at 11:59 PM
@@ -576,7 +584,7 @@
                     <i class="fas fa-chart-pie me-1"></i>
                     <!-- Pie Chart Example -->
                   </div>
-                  <div class="card-body" id="highchart-pie-chart"></div>
+                  <div class="card-body" id="highchart-bar-chart"></div>
                   <div class="card-footer small text-muted">
                     Updated yesterday at 11:59 PM
                   </div>
@@ -620,6 +628,27 @@
           </div>
           <!-- Loader Animation -->
           <div id="layer-loader"></div>
+          <div id="test"></div>
+          <script>
+            var trace1 = {
+              x: ["giraffes", "orangutans", "monkeys"],
+              y: [20, 14, 23],
+              name: "SF Zoo",
+              type: "bar",
+            };
+
+            var trace2 = {
+              x: ["giraffes", "orangutans", "monkeys"],
+              y: [12, 18, 29],
+              name: "LA Zoo",
+              type: "bar",
+            };
+
+            var data = [trace1, trace2];
+            var layout = { barmode: "group" };
+
+            Plotly.newPlot("plotly-chart", data);
+          </script>
         </main>
         <!-- Footer -->
         <footer class="py-4 bg-light mt-auto">
@@ -650,15 +679,17 @@
 
     <!-- external JS files -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <!-- Open Layer js Files -->
-    <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
-    <!-- Open Layer Extention -->
-    <script src="../../libs/dist/ol-ext.min.js"></script>
     <!-- Internal JS file -->
+    <!-- Adding OpenLayer library -->
+    <script src="../../libs/ol/dist/ol.js"></script>
+    <!-- Adding OpenLayer Extention -->
+    <script src="../../libs/ol-ext/ol-ext.js"></script>
+    <!-- Internal JS file -->
+    <script src="../../js/api-services-js/pocra-gis-api.js"></script>
     <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script>
     <script src="../../js/dbt-service-js/pocra-dbt-nrm-map.js"></script>
     <!-- Active js -->
-    <script src="../../js/scripts.js"></script>
+    <script src="../../js/sidebarToggle.js"></script>
     <script src="../../js/openLayerCustom.js"></script>
   </body>
 </html>

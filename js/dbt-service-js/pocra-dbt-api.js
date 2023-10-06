@@ -1,18 +1,18 @@
 // Set up a Select2 control
-$('.multi-select').select2();
+// $('.multi-select').select2();
 
 //Select2 initialize parameters
-$(".multi-select").select2({
-  theme: "bootstrap-5",
-  width: $(this).data("width")
-    ? $(this).data("width")
-    : $(this).hasClass("w-100")
-      ? "100%"
-      : "style",
-  placeholder: $(this).data("placeholder"),
-  closeOnSelect: false,
-  allowClear: true,
-});
+// $(".multi-select").select2({
+//   theme: "bootstrap-5",
+//   width: $(this).data("width")
+//     ? $(this).data("width")
+//     : $(this).hasClass("w-100")
+//       ? "100%"
+//       : "style",
+//   placeholder: $(this).data("placeholder"),
+//   closeOnSelect: false,
+//   allowClear: true,
+// });
 
 // Global Variables
 var activityCode;
@@ -46,23 +46,39 @@ function loadNrmActivity() {
 }
 
 // Calling getDistrict funtion initially to load district names into dropdown menu
-getDistrict();
-// District Name to Drop Down
-function getDistrict() {
+// getDistrict();
+// // District Name to Drop Down
+// function getDistrict() {
+//   var ele = document.getElementById("select-district");
+//   // Marathi District Name 
+//   // ele.innerHTML = "<option value='-1'>--जिल्हा निवडा--</option>";
+//   $.ajax({
+//     url: "http://gis.mahapocra.gov.in/weatherservices/meta/districts",
+//     success: function (result) {
+//       for (var i = 0; i < result.district.length; i++) {
+//         ele.innerHTML += `<option value= ${result.district[i]["dtncode"]}>${result.district[i]["dtename"]}</option>`;
+//         // Marathi District Name 
+//         // ele.innerHTML += `<option value=${result.district[i]["dtncode"]}>${result.district[i]["dtnname"]}</option>`;
+//       }
+//     }
+//   });
+// }
+
+const renderDistricts = async () => {
+  // (getDistrict) called from common api service JS file
+  const districts = await getDistrict;
+
+  // dropdown for District Selection
   var ele = document.getElementById("select-district");
   // Marathi District Name 
   // ele.innerHTML = "<option value='-1'>--जिल्हा निवडा--</option>";
-  $.ajax({
-    url: "http://gis.mahapocra.gov.in/weatherservices/meta/districts",
-    success: function (result) {
-      for (var i = 0; i < result.district.length; i++) {
-        ele.innerHTML += `<option value= ${result.district[i]["dtncode"]}>${result.district[i]["dtename"]}</option>`;
-        // Marathi District Name 
-        // ele.innerHTML += `<option value=${result.district[i]["dtncode"]}>${result.district[i]["dtnname"]}</option>`;
-      }
-    }
+  districts.forEach(result => {
+    ele.innerHTML += `<option value= ${result["dtncode"]}>${result["dtename"]}</option>`;
+    // Marathi District Name 
+    // ele.innerHTML += `<option value=${result["dtncode"]}>${result["dtnname"]}</option>`;
   });
 }
+renderDistricts();
 
 // Taluka Name Drop Down
 function getTaluka(dtncode) {
@@ -250,7 +266,7 @@ async function getHighChartData() {
       })
       // console.log(activityCode)
 
-      Highcharts.chart('highchart-pie-chart', {
+      Highcharts.chart('highchart-bar-chart', {
         chart: {
           type: 'column',
           backgroundColor: '',

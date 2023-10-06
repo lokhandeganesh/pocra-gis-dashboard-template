@@ -17,7 +17,7 @@ function init() {
   // Adding control to layer switcher
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
-    openInLayerSwitcher: true,
+    openInLayerSwitcher: false,
     layers: [
       new ol.layer.Tile({
         source: new ol.source.XYZ({
@@ -66,10 +66,11 @@ function init() {
       }),
     ]
   })
+  // baseLayerGroup.set('openInLayerSwitcher', false);
 
   const adminLayers = new ol.layer.Group({
     title: 'Administrative Layers',
-    openInLayerSwitcher: true,
+    openInLayerSwitcher: false,
     layers: [
       new ol.layer.Tile({
         // extent: extentforLayer,    
