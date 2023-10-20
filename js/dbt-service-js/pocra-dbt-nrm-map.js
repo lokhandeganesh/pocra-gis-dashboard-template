@@ -1,6 +1,7 @@
-window.onload = init;
+// window.onload = init;
+// function init() {}
 
-function init() {
+window.addEventListener('DOMContentLoaded', event => {
   // Accessing global variable
 
   var districtVector
@@ -639,4 +640,4 @@ function init() {
     collapsed: false
   });
   Map.addControl(legendCtrl);
-}
+});

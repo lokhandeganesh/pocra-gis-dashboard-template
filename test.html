@@ -7,78 +7,144 @@
     />
     <title>MapImageLayer - create dynamic map layers - 4.5</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css" />
-    <script src="https://js.arcgis.com/4.5/"></script>
-
-    <style>
-      html,
-      body,
-      #viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-      }
-
-      #info-div {
-        background-color: white;
-        border-radius: 8px;
-        padding: 8px;
-        opacity: 0.92;
-      }
-    </style>
-
-    <script>
-      require(["esri/config"], function (esriConfig) {
-        esriConfig.request.corsEnabledServers.push("localhost:8080");
-      });
-      require([
-        "esri/Map",
-        "esri/views/MapView",
-        "esri/layers/MapImageLayer",
-        "esri/widgets/Legend",
-        "dojo/domReady!",
-      ], function (Map, MapView, MapImageLayer, Legend) {
-        var layer = new MapImageLayer({
-          url: "https://test-gis.mahapocra.gov.in//geoserver/gsr/services/tiger/MapServer",
-          title: "Census Demographics",
-        });
-
-        /*****************************************************************
-         * Add the layer to a map
-         *****************************************************************/
-
-        var map = new Map({
-          layers: [layer],
-        });
-
-        var view = new MapView({
-          container: "viewDiv",
-          map: map,
-          extent: {
-            // autocasts as new Extent()
-            xmin: -74.0118315772888,
-            ymin: 40.70754683896324,
-            xmax: -74.00153046439813,
-            ymax: 40.719885123828675,
-            spatialReference: 4326,
-          },
-        });
-      });
-    </script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css"
+    />
   </head>
 
   <body>
-    <div id="viewDiv"></div>
     <div id="info-div">
-      Select a demographic variable<br /><br />
-      <select id="layer-select">
-        <option value="0">Population density</option>
-        <option value="1" selected>Renter occupied units</option>
-        <option value="2">Median age</option>
-      </select>
+      <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Salary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tiger</td>
+            <td>Nixon</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>$320,800</td>
+          </tr>
+          <tr>
+            <td>Garrett</td>
+            <td>Winters</td>
+            <td>Accountant</td>
+            <td>Tokyo</td>
+            <td>$170,750</td>
+          </tr>
+          <tr>
+            <td>Ashton</td>
+            <td>Cox</td>
+            <td>Junior Technical Author</td>
+            <td>San Francisco</td>
+            <td>$86,000</td>
+          </tr>
+          <tr>
+            <td>Cedric</td>
+            <td>Kelly</td>
+            <td>Senior Javascript Developer</td>
+            <td>Edinburgh</td>
+            <td>$433,060</td>
+          </tr>
+          <tr>
+            <td>Airi</td>
+            <td>Satou</td>
+            <td>Accountant</td>
+            <td>Tokyo</td>
+            <td>$162,700</td>
+          </tr>
+          <tr>
+            <td>Brielle</td>
+            <td>Williamson</td>
+            <td>Integration Specialist</td>
+            <td>New York</td>
+            <td>$372,000</td>
+          </tr>
+          <tr>
+            <td>Herrod</td>
+            <td>Chandler</td>
+            <td>Sales Assistant</td>
+            <td>San Francisco</td>
+            <td>$137,500</td>
+          </tr>
+          <tr>
+            <td>Rhona</td>
+            <td>Davidson</td>
+            <td>Integration Specialist</td>
+            <td>Tokyo</td>
+            <td>$327,900</td>
+          </tr>
+          <tr>
+            <td>Colleen</td>
+            <td>Hurst</td>
+            <td>Javascript Developer</td>
+            <td>San Francisco</td>
+            <td>$205,500</td>
+          </tr>
+          <tr>
+            <td>Sonya</td>
+            <td>Frost</td>
+            <td>Software Engineer</td>
+            <td>Edinburgh</td>
+            <td>$103,600</td>
+          </tr>
+          <tr>
+            <td>Jena</td>
+            <td>Gaines</td>
+            <td>Office Manager</td>
+            <td>London</td>
+            <td>$90,560</td>
+          </tr>
+          <tr>
+            <td>Quinn</td>
+            <td>Flynn</td>
+            <td>Support Lead</td>
+            <td>Edinburgh</td>
+            <td>$342,000</td>
+          </tr>
+          <tr>
+            <td>Charde</td>
+            <td>Marshall</td>
+            <td>Regional Director</td>
+            <td>San Francisco</td>
+            <td>$470,600</td>
+          </tr>
+          <tr>
+            <td>Haley</td>
+            <td>Kennedy</td>
+            <td>Senior Marketing Designer</td>
+            <td>London</td>
+            <td>$313,500</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </body>
-</html>
 
-<!-- Esri®, ArcGIS® and ArcGIS Online®  are trademarks, registered trademarks, or service marks of Esri in the United States, the European Community, or certain other jurisdictions. Other companies and products mentioned may be trademarks of their respective owners.-->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+  <script src=""></script>
+  <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/pdfmake.min.js"></script>
+  <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/vfs_fonts.js"></script>
+
+  <script src="./test.js"></script>
+</html>
