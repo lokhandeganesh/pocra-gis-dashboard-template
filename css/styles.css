@@ -227,6 +227,9 @@
   background: #063970;
 }
 
+.row-eq-height {
+  min-height: 31em;
+}
 /* .pocra-taluka {
   float: left;
 } */
@@ -234,26 +237,6 @@
 /* footer updating date */
 #updatedOn {
   color: red;
-}
-
-/* Dashboard Map */
-.administrative-map {
-  width: 100%;
-  height: 50rem;
-}
-/* dbt pages */
-.dbt-farmer-map {
-  width: 100%;
-  height: 50rem;
-}
-.dbt-nrm-map {
-  width: 100%;
-  height: 50rem;
-}
-/* weather pages */
-.weather-forecast-map {
-  width: 100%;
-  height: 50rem;
 }
 
 @media (max-width: 991px) {
@@ -390,4 +373,30 @@ This following statements selects each category individually that contains an in
   }
 }
 
-/*  */
+/* Custom Map Styling */
+/* Dashboard Map */
+.administrative-map,
+/* weather pages */
+.weather-forecast-map,
+/* dbt pages */
+.dbt-farmer-map,
+.dbt-nrm-map {
+  width: 100%;
+  height: 50rem;
+}
+
+/* Custom Control Styling */
+.ol-control button {
+  /* background-color: #5a7fc9; */
+  /* font-size: 1.14em; */
+  font-weight: 700;
+  /* color: #fff; */
+}
+
+.ol-control.ol-select {
+  left: 6em;
+}
+
+.ol-control.ol-legend {
+  bottom: 2.5em;
+}
