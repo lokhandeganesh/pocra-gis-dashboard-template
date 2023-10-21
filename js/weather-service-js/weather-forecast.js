@@ -146,16 +146,21 @@ window.addEventListener('DOMContentLoaded', event => {
   // Define a new legend  
   const legendControl = legendControlConst
   // Layer Switcher Extention
-  const layerSwitcher = layerSwitcherConst
+  const layerSwitcherControl = layerSwitcherConst
   // Attribution on Map
   const attributionControl = attributionControlConst
   // Scale Line control
   const scaleLineControl = scaleLineControlConst
   // ZoomToExtent control
-  const zoomToExtent = zoomToExtConst;
+  const zoomToExtentControl = zoomToExtConst;
+  // Full Screen Control
+  const fullScreenControl = fullScreenConst;
 
   // All Controls
-  const mapControls = [layerSwitcher, legendControl, attributionControl, scaleLineControl, zoomToExtent];
+  const mapControls = [
+    layerSwitcherControl, legendControl, attributionControl, 
+    scaleLineControl, zoomToExtentControl,fullScreenControl
+  ];
 
   // View for Mh
   const view = viewCosnt

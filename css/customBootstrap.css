@@ -200,7 +200,7 @@ h2,
 @media (min-width: 1200px) {
   h2,
   .h2 {
-    font-size: 2rem;
+    font-size: 1.325rem;
   }
 }
 
@@ -229,6 +229,12 @@ h4,
 h5,
 .h5 {
   font-size: 1.25rem;
+}
+@media (min-width: 1200px) {
+  h5,
+  .h5 {
+    font-size: 0.9rem;
+  }
 }
 
 h6,
@@ -4663,6 +4669,11 @@ fieldset:disabled .btn {
 @media (prefers-reduced-motion: reduce) {
   .accordion-button {
     transition: none;
+  }
+}
+@media (min-width: 1200px) {
+  .accordion-button {
+    font-size: 0.9rem;
   }
 }
 .accordion-button:not(.collapsed) {

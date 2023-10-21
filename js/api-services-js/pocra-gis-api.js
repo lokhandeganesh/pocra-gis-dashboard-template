@@ -107,6 +107,8 @@ const zoomToExtConst = new ol.control.ZoomToExtent({
     81.80386936199866, 22.77566165510992
   ]
 });
+// Full Screen Control
+const fullScreenConst = new ol.control.FullScreen({});
 // View of Maharashtra
 const viewCosnt = new ol.View({
   center: [77.5, 18.95],

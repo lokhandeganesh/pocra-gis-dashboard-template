@@ -226,7 +226,9 @@
 .card-footer-pocra-count-bg-blue {
   background: #063970;
 }
-
+.card-title {  
+  color: black;
+}
 .row-eq-height {
   min-height: 31em;
 }
@@ -239,7 +241,36 @@
   color: red;
 }
 
-@media (max-width: 991px) {
+
+/* For 640 Resolution */  
+@media only screen   
+and (min-device-width : 360px)   
+and (max-device-width : 640px)  
+{
+   /* STYLES GO HERE */  
+  .sb-topnav .navbar-brand {
+    width: auto;
+    margin: 0;
+  }
+  .logo-div {
+    display: none;
+  }
+  .brand-title {
+    font-size: small;
+  }
+  .title-grid #title {
+    font-size: 0.8rem;
+  }
+  .title-grid #sub-title {
+    font-size: 0.5rem;
+  }
+}
+
+/* For 1024 Resolution */  
+@media only screen   
+and (min-device-width : 768px)   
+and (max-device-width : 1024px)  
+{ /* STYLES GO HERE */
   .sb-topnav .navbar-brand {
     width: auto;
     margin: 0;
@@ -254,27 +285,53 @@
     height: 40px;
     width: 40px;
   }
+
 }
 
-@media (max-width: 576px) {
+/* For 1366 Resolution */  
+@media only screen   
+and (min-width: 1030px)   
+and (max-width: 1366px)  
+{ /* STYLES GO HERE */
   .sb-topnav .navbar-brand {
     width: auto;
     margin: 0;
   }
-
-  .logo-div {
-    display: none;
-  }
-  .brand-title {
-    font-size: small;
-  }
   .title-grid #title {
-    font-size: 0.8rem;
+    font-size: 1.2rem;
   }
   .title-grid #sub-title {
-    font-size: 0.5rem;
+    font-size: 0.7rem;
   }
-}
+  .title-logo {
+    height: 40px;
+    width: 40px;
+  }
+  .pocra-logo {
+    width: 4rem;
+    height: auto;
+  }
+  h5, .h5 {
+    font-size: 0.9rem;
+  }
+  
+  .accordion-button{
+    font-size: small;
+  }
+  .row-eq-height {
+    min-height: 31em;
+  }
+  .card-title{  
+  font-size: 0.9rem;
+  font-weight: 700;
+  }
+  .card-description{
+    font-size: 0.8rem;
+  }
+  #forecast-data-table{
+    font-size: 0.9rem;
+  }
+} 
 
 /* iframe */
 #bannerContainer {
@@ -311,7 +368,7 @@
 
 .cat label span {
   text-align: center;
-  padding: 3px 0;
+  /* padding: 3px 0; */
   display: block;
 }
 
@@ -386,11 +443,12 @@ This following statements selects each category individually that contains an in
 }
 
 /* Custom Control Styling */
-.ol-control button {
-  /* background-color: #5a7fc9; */
-  /* font-size: 1.14em; */
+/* Select all p tags that doesn't have the class "highlighted" */
+.ol-control button:not(.ol-layerswitcher button) {
+  background-color: #5a7fc9;
+  font-size: 1.2em;
   font-weight: 700;
-  /* color: #fff; */
+  color: #fff;
 }
 
 .ol-control.ol-select {
@@ -400,3 +458,6 @@ This following statements selects each category individually that contains an in
 .ol-control.ol-legend {
   bottom: 2.5em;
 }
+
+
+
