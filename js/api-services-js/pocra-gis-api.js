@@ -1,4 +1,3 @@
-
 // getDistrict()
 const getDistrict = fetch('http://gis.mahapocra.gov.in/weatherservices/meta/districts')
   .then((response) => response.json())
@@ -22,6 +21,9 @@ const getDistrict = fetch('http://gis.mahapocra.gov.in/weatherservices/meta/dist
 // renderDistricts()
 
 // Map Service Constants
+// PoCRA Geoserver
+const pocra_geoserver = "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2"
+const wfs_server = `${pocra_geoserver}/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson`
 // Adding control to layer switcher
 const baseLayerGroupConst = new ol.layer.Group({
   title: 'Base Layers',
@@ -57,7 +59,7 @@ const baseLayerGroupConst = new ol.layer.Group({
     }),
     new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
+        url: `${pocra_geoserver}/wms`,
         crossOrigin: 'Anonymous',
         serverType: 'geoserver',
 

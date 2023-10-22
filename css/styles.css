@@ -132,6 +132,9 @@
   }
 }
 
+.close-icon {
+  cursor: pointer;
+}
 /* Custom styles */
 /* Hide element on extra small devices */
 .title-bar {
