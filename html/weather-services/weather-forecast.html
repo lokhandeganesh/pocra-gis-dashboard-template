@@ -22,10 +22,9 @@
     <!-- Open Layer Extention CSS -->
     <link rel="stylesheet" href="../../libs/ol-ext/ol-ext.css" />
     <!-- Custom CSS file -->
-    
+
     <link href="../../css/customBootstrap.css" rel="stylesheet" />
     <link href="../../css/styles.css" rel="stylesheet" />
-    
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
@@ -335,8 +334,10 @@
                   <div class="accordion-body">
                     <!-- Radio Button Div -->
                     <div class="row">
-                      <div class="btn-group btn-sm application-checkbox">
-                        <div class="cat checkbox-checked col-xl-4 col-md-4">
+                      <div class="col-xl-6 col-lg-6">
+                        <div
+                          class="cat checkbox-checked col-xl-4 col-lg-4 col-md-4"
+                        >
                           <label class="cursor-pointer fw-bold">
                             <input
                               type="radio"
@@ -347,7 +348,9 @@
                             /><span>Rainfall</span>
                           </label>
                         </div>
-                        <div class="cat checkbox-checked col-xl-4 col-md-4">
+                        <div
+                          class="cat checkbox-checked col-xl-4 col-lg-4 col-md-4"
+                        >
                           <label class="cursor-pointer fw-bold">
                             <input
                               type="radio"
@@ -358,7 +361,9 @@
                             /><span>Max Temperature</span>
                           </label>
                         </div>
-                        <div class="cat checkbox-checked col-xl-4 col-md-4">
+                        <div
+                          class="cat checkbox-checked col-xl-4 col-lg-4 col-md-4"
+                        >
                           <label class="cursor-pointer fw-bold">
                             <input
                               type="radio"
@@ -367,6 +372,73 @@
                               name="weather-forecast"
                               for="forecast-min-temp"
                             /><span>Min Temperature</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-xl-6 col-lg-6">
+                        <div
+                          class="cat checkbox-checked col-xl-2 col-md-2 col-sm-4"
+                        >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="radio"
+                              id="day1"
+                              value="all-taluka-rainfall"
+                              name="weather-forecast-day"
+                              for="forecast-day1"
+                            /><span>Day 1</span>
+                          </label>
+                        </div>
+                        <div
+                          class="cat checkbox-checked col-xl-2 col-md-2 col-sm-4"
+                        >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="radio"
+                              id="day2"
+                              value="all-taluka-max-temp"
+                              name="weather-forecast-day"
+                              for="forecast-day2"
+                            /><span>Day 2</span>
+                          </label>
+                        </div>
+                        <div
+                          class="cat checkbox-checked col-xl-2 col-md-2 col-sm-4"
+                        >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="radio"
+                              id="day3"
+                              value="all-taluka-min-temp"
+                              name="weather-forecast-day"
+                              for="forecast-day3"
+                            /><span>Day 3</span>
+                          </label>
+                        </div>
+                        <div
+                          class="cat checkbox-checked col-xl-2 col-md-2 col-sm-4"
+                        >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="radio"
+                              id="day4"
+                              value="all-taluka-min-temp"
+                              name="weather-forecast-day"
+                              for="forecast-day4"
+                            /><span>Day 4</span>
+                          </label>
+                        </div>
+                        <div
+                          class="cat checkbox-checked col-xl-2 col-md-2 col-sm-4"
+                        >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="radio"
+                              id="day5"
+                              value="all-taluka-min-temp"
+                              name="weather-forecast-day"
+                              for="forecast-day5"
+                            /><span>Day 5</span>
                           </label>
                         </div>
                       </div>
@@ -388,26 +460,30 @@
             </div>
           </div>
           <!-- Table for 5 days weather forecast data -->
-          <div class="container-fluid px-4 mb-4" id="forecat-info-div">
+          <div class="container-fluid px-4 mb-4" id="forecast-info-div">
             <div class="card">
               <div class="card-header">
-                <span class="pull-right clickable close-icon float-end" data-effect="fadeOut"><i class="fa fa-times"></i></span>
+                <span
+                  class="pull-right clickable close-icon float-end"
+                  data-effect="fadeOut"
+                  ><i class="fa fa-times"></i
+                ></span>
               </div>
-              <div class="row">              
+              <div class="row">
+                <!-- Combine Table -->
                 <div class="col-lg-6">
                   <div class="card row-eq-height">
                     <div class="card-header">
-                      <i class="fa fa-table me-1"></i>                    
+                      <i class="fa fa-table me-1"></i>
                     </div>
-                    <div class="card-body" id="forecast-table">                  
-                    </div>
+                    <div class="card-body" id="forecast-table"></div>
                   </div>
                 </div>
                 <!-- Combine Graph -->
                 <div class="col-lg-6">
                   <div class="card row-eq-height">
                     <div class="card-header">
-                      <i class="fas fa-chart-bar me-1"></i>     
+                      <i class="fas fa-chart-bar me-1"></i>
                     </div>
                     <div class="card-body">
                       <figure class="highcharts-figure overflow-auto">
@@ -421,7 +497,7 @@
           </div>
           <!-- Popover info of map feature -->
           <div class="popover-information">
-            <p id="popover-text"></p>            
+            <p id="popover-text"></p>
           </div>
 
           <!-- Loader Animation -->

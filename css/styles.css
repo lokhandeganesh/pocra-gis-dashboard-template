@@ -229,7 +229,7 @@
 .card-footer-pocra-count-bg-blue {
   background: #063970;
 }
-.card-title {  
+.card-title {
   color: black;
 }
 .row-eq-height {
@@ -244,13 +244,9 @@
   color: red;
 }
 
-
-/* For 640 Resolution */  
-@media only screen   
-and (min-device-width : 360px)   
-and (max-device-width : 640px)  
-{
-   /* STYLES GO HERE */  
+/* For 640 Resolution */
+@media only screen and (min-device-width: 360px) and (max-device-width: 640px) {
+  /* STYLES GO HERE */
   .sb-topnav .navbar-brand {
     width: auto;
     margin: 0;
@@ -267,13 +263,15 @@ and (max-device-width : 640px)
   .title-grid #sub-title {
     font-size: 0.5rem;
   }
+  .cat {
+    display: block;
+    width: 100%;
+  }
 }
 
-/* For 1024 Resolution */  
-@media only screen   
-and (min-device-width : 768px)   
-and (max-device-width : 1024px)  
-{ /* STYLES GO HERE */
+/* For 1024 Resolution */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* STYLES GO HERE */
   .sb-topnav .navbar-brand {
     width: auto;
     margin: 0;
@@ -288,14 +286,11 @@ and (max-device-width : 1024px)
     height: 40px;
     width: 40px;
   }
-
 }
 
-/* For 1366 Resolution */  
-@media only screen   
-and (min-width: 1030px)   
-and (max-width: 1366px)  
-{ /* STYLES GO HERE */
+/* For 1366 Resolution */
+@media only screen and (min-width: 1030px) and (max-width: 1366px) {
+  /* STYLES GO HERE */
   .sb-topnav .navbar-brand {
     width: auto;
     margin: 0;
@@ -314,27 +309,28 @@ and (max-width: 1366px)
     width: 4rem;
     height: auto;
   }
-  h5, .h5 {
+  h5,
+  .h5 {
     font-size: 0.9rem;
   }
-  
-  .accordion-button{
+
+  .accordion-button {
     font-size: small;
   }
   .row-eq-height {
     min-height: 31em;
   }
-  .card-title{  
-  font-size: 0.9rem;
-  font-weight: 700;
+  .card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
   }
-  .card-description{
+  .card-description {
     font-size: 0.8rem;
   }
-  #forecast-data-table{
+  #forecast-data-table {
     font-size: 0.9rem;
   }
-} 
+}
 
 /* iframe */
 #bannerContainer {
@@ -461,6 +457,3 @@ This following statements selects each category individually that contains an in
 .ol-control.ol-legend {
   bottom: 2.5em;
 }
-
-
-
