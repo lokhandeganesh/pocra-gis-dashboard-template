@@ -395,6 +395,19 @@ This following statements selects each category individually that contains an in
   background-color: #82d44e;
 }
 
+.btn-grad {
+  text-align: center;
+  background: linear-gradient(to right, #1a2980 0%, #26d0ce 100%);
+  transition: 0.5s;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -o-transition: 0.5s;
+}
+
+.btn-grad:hover {
+  background: linear-gradient(to left, #1a2980 0%, #26d0ce 100%);
+}
+
 /* Loader animation gif */
 .loader {
   content: "";

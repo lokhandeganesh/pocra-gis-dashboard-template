@@ -35,15 +35,15 @@ window.addEventListener('DOMContentLoaded', event => {
   // Taluka Vector
   const talukaVectorLayer = new ol.layer.Vector({
     source: talukaVectorLayerSource,
-    visible: true,
+    visible: false,
     baseLayer: false,
     openInLayerSwitcher: true,
     name: 'Weather Forecast'
   });
 
   const weatherLayersVector = new ol.layer.Group({
-    title: 'Weather Layers',
-    openInLayerSwitcher: true,
+    title: 'Weather',
+    openInLayerSwitcher: false,
     layers: [
       // Taluka Vector
       talukaVectorLayer,
@@ -60,13 +60,45 @@ window.addEventListener('DOMContentLoaded', event => {
     document.getElementById("layer-loader").classList.remove("loader");
   });
 
+  const CQL_FILTER = '2023-10-26'
+  const wmsSource = new ol.source.Vector({
+    url: `${wfs_server}&typeName=PoCRA_Dashboard_V2:imd_forecast&CQL_FILTER="forecast_date"='${CQL_FILTER}'`,
+    projection: 'EPSG:4326',
+    format: new ol.format.GeoJSON(),
+  });
+
+  const weatherLayers = new ol.layer.Group({
+    title: 'Weather Layers',
+    openInLayerSwitcher: true,
+    layers: [
+      new ol.layer.Vector({
+        source: wmsSource,
+        visible: true,
+        baseLayer: false,
+        openInLayerSwitcher: true,
+        title: "Weather Forecast",
+      }),
+    ]
+  });
+
+
+  // Loader for display
+  // Start loader
+  wmsSource.on("featuresloadstart", (evt) => {
+    document.getElementById("layer-loader").classList.add("loader");
+  });
+  // Stop loader
+  wmsSource.on("featuresloadend", (evt) => {
+    document.getElementById("layer-loader").classList.remove("loader");
+  });
+
   // View for Mh
   const view = viewCosnt
   // Map instance
   const Map = new ol.Map({
     view: view,
     target: 'pocra-weather-forecast-map',
-    layers: [baseLayerGroup, weatherLayersVector,],
+    layers: [baseLayerGroup, weatherLayersVector, weatherLayers],
     // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,
@@ -76,6 +108,9 @@ window.addEventListener('DOMContentLoaded', event => {
       // Adding new external controls on map
       .extend(mapControls),
   });
+
+
+
 
   // View Zoom Animation
   // talukaVectorLayer.getSource().on("addfeature", function () {
@@ -99,6 +134,20 @@ window.addEventListener('DOMContentLoaded', event => {
   Map.on('singleclick', (evt) => {
     // Checking if feature is present then get information of it
     let isFeatureAtPixel = Map.hasFeatureAtPixel(evt.pixel);
+    // const viewResolution = (view.getResolution());
+
+    // const url = wmsSource.getFeatureInfoUrl(
+    //   evt.coordinate,
+    //   viewResolution,
+    //   { 'INFO_FORMAT': 'application/json' }
+    // );
+    // if (url) {
+    //   fetch(url)
+    //     .then((response) => console.log(response.text()))
+    //     .then((html) => {
+    //       document.getElementById('info').innerHTML = html;
+    //     });
+    // }
 
     if (isFeatureAtPixel) {
       Map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
