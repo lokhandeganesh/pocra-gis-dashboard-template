@@ -305,7 +305,6 @@
           </div>
         </nav>
       </div>
-
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
@@ -342,10 +341,9 @@
                             <input
                               type="radio"
                               id="forecast-rainfall"
-                              value="all-taluka-rainfall"
+                              value="forecast_rainfall"
                               name="weather-forecast"
                               for="forecast-rainfall"
-                              checked
                             /><span>Rainfall</span>
                           </label>
                         </div>
@@ -356,7 +354,7 @@
                             <input
                               type="radio"
                               id="forecast-max-temp"
-                              value="all-taluka-max-temp"
+                              value="forecast_temperature_max"
                               name="weather-forecast"
                               for="forecast-max-temp"
                             /><span>Max Temperature</span>
@@ -369,7 +367,7 @@
                             <input
                               type="radio"
                               id="forecast-min-temp"
-                              value="all-taluka-min-temp"
+                              value="forecast_temperature_min"
                               name="weather-forecast"
                               for="forecast-min-temp"
                             /><span>Min Temperature</span>
@@ -384,11 +382,11 @@
                             <input
                               type="radio"
                               id="day1"
-                              value="all-taluka-rainfall"
+                              value="day1"
                               name="weather-forecast-day"
                               for="forecast-day1"
                               checked
-                            /><span>Day 1</span>
+                            /><span>Day <i class="fa-solid fa-1"></i></span>
                           </label>
                         </div>
                         <div
@@ -398,10 +396,10 @@
                             <input
                               type="radio"
                               id="day2"
-                              value="all-taluka-max-temp"
+                              value="day2"
                               name="weather-forecast-day"
                               for="forecast-day2"
-                            /><span>Day 2</span>
+                            /><span>Day <i class="fa-solid fa-2"></i></span>
                           </label>
                         </div>
                         <div
@@ -411,10 +409,10 @@
                             <input
                               type="radio"
                               id="day3"
-                              value="all-taluka-min-temp"
+                              value="day3"
                               name="weather-forecast-day"
                               for="forecast-day3"
-                            /><span>Day 3</span>
+                            /><span>Day <i class="fa-solid fa-3"></i></span>
                           </label>
                         </div>
                         <div
@@ -424,10 +422,10 @@
                             <input
                               type="radio"
                               id="day4"
-                              value="all-taluka-min-temp"
+                              value="day4"
                               name="weather-forecast-day"
                               for="forecast-day4"
-                            /><span>Day 4</span>
+                            /><span>Day <i class="fa-solid fa-4"></i></span>
                           </label>
                         </div>
                         <div
@@ -437,13 +435,27 @@
                             <input
                               type="radio"
                               id="day5"
-                              value="all-taluka-min-temp"
+                              value="day5"
                               name="weather-forecast-day"
                               for="forecast-day5"
-                            /><span>Day 5</span>
+                            /><span>Day <i class="fa-solid fa-5"></i></span>
                           </label>
                         </div>
-                        <div class="box"></div>
+                        <div
+                          class="btn-grad cat checkbox-checked col-xl-2 col-md-2 col-sm-4"
+                        >
+                          <label class="cursor-pointer fw-bold">
+                            <input
+                              type="radio"
+                              id="play"
+                              value="play"
+                              name="weather-forecast-day"
+                              for="play"
+                            /><span
+                              ><i id="playIcon" class="fa-solid fa-play"></i
+                            ></span>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
