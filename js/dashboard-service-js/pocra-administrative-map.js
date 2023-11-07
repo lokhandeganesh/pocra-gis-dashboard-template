@@ -2,98 +2,68 @@ window.onload = init;
 
 function init() {
 
-  const Map = new ol.Map({
-    view: new ol.View({
-      center: [77.5, 18.95],
-      zoom: 7.2,
-      projection: 'EPSG:4326'
-    }),
-    // layers: [
-    //   new ol.layer.Tile({
-    //     source: new ol.source.OSM()
-    //   })
-    // ],
-    target: 'pocra-administrative-map'
-  })
 
-
-  // Map.on('click', function (e) {
-  //   console.log(e.coordinate);
-  // })
-
-  // Adding control to layer switcher
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
-    openInLayerSwitcher: true,
-    layers: [
-      new ol.layer.Tile({
-        source: new ol.source.XYZ({
-          url: 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
-        }),
-        visible: false,
-        baseLayer: false,
-        title: 'Satellite Map'
-      }),
-      new ol.layer.Tile({
-        source: new ol.source.OSM(),
-        visible: false,
-        baseLayer: false,
-        title: 'Standard Map'
-      }),
-      new ol.layer.Tile({
-        source: new ol.source.XYZ({
-          attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
-            'rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
-          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-            'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-          crossOrigin: 'Anonymous',
-        }),
-        visible: true,
-        baseLayer: false,
-        title: 'World Topo Map',
-        type: 'base',
-
-      }),
-      new ol.layer.Tile({
-        title: "PoCRA Districts",
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-          visible: true,
-          baseLayer: false,
-          params: {
-            'LAYERS': 'PoCRA_Dashboard_V2:mh_district',
-            'TILED': true,
-          }
-        })
-      }),
+    openInLayerSwitcher: false,
+    layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
     ]
-  })
+  });
 
+  const adminLayerGroup = new ol.layer.Group({
+    title: 'Admin Layers',
+    openInLayerSwitcher: false,
+    layers: [POCRA_DISTRICTS
+    ]
+  });
 
-  // Adding Base Layer to Map
-  Map.addLayer(baseLayerGroup);
-
+  // Adding LayerGroup control to layer switcher
+  // Define a new legend  
+  const legendControl = legendControlConst
   // Layer Switcher Extention
-  const layerSwitcher = new ol.control.LayerSwitcher({
-    collapsed: true,
-    // mouseover: true
-  });
-  Map.addControl(layerSwitcher);
+  const layerSwitcherControl = layerSwitcherConst
+  // Attribution on Map
+  const attributionControl = attributionControlConst
+  // Scale Line control
+  const scaleLineControl = scaleLineControlConst
+  // ZoomToExtent control
+  const zoomToExtentControl = zoomToExtConst;
+  // Full Screen Control
+  const fullScreenControl = fullScreenConst;
 
-  // Legend Control Extention
-  // Define a new legend
-  var legend = new ol.legend.Legend({
-    title: 'Legend',
-    margin: 5,
-    maxWidth: 300
-  });
-  var legendCtrl = new ol.control.Legend({
-    legend: legend,
-    collapsed: false
-  });
-  Map.addControl(legendCtrl);
+  // All Controls
+  const mapControls = [
+    layerSwitcherControl, legendControl, attributionControl,
+    scaleLineControl, zoomToExtentControl, fullScreenControl
+  ];
 
+  // View for Mh
+  const view = viewCosnt
+  // Map instance
+  const Map = new ol.Map({
+    view: view,
+    target: 'pocra-administrative-map',
+    layers: [baseLayerGroup, adminLayerGroup],
+    // overlays: [popup],
+    loadTilesWhileAnimating: true,
+    loadTilesWhileInteracting: true,
+    // change of expression in V7
+    controls: ol.control.defaults.defaults({
+    })
+      // Adding new external controls on map
+      .extend(mapControls),
+  });
+
+  view.animate({ center: [77, 18.95] }, { zoom: 7 });
+
+  // New legend associated with a POCRA_DISTRICTS layer    
+  const POCRA_DISTRICTS_Legend = new ol.legend.Legend({ layer: POCRA_DISTRICTS });
+  POCRA_DISTRICTS_Legend.addItem(new ol.legend.Image({
+    title: 'Districts',
+    // src: 'http://gis.mahapocra.gov.in/geoserver/wms?service=WMS&request=GetLegendGraphic&layer=PoCRA_Dashboard_V2:mh_district&FORMAT=image/png&legend_options=dpi:120'
+    src: `${POCRA_DISTRICTS.getSource().getLegendUrl()}&legend_options=dpi:120`,
+    // src: updateLegend(resolution, POCRA_DISTRICTS),
+  }));
+  LEGEND.addItem(POCRA_DISTRICTS_Legend);
 }
 

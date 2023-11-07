@@ -391,6 +391,11 @@
 This following statements selects each category individually that contains an input element that is a checkbox and is checked (or selected) and chabges the background color of the span element.
 */
 
+.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .checkbox-checked input:checked + span {
   background-color: #82d44e;
 }

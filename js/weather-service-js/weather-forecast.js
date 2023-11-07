@@ -2,12 +2,29 @@ window.addEventListener('DOMContentLoaded', event => {
   loadMap()
 
   function loadMap() {
+
+    $("#day-params *").prop("disabled", true).off('click').addClass("disabled");
+
     // The Map
 
     // Initiating Map 
     // const variables are imported from proca-gis-api.js
+
+    const baseLayerGroup = new ol.layer.Group({
+      title: 'Base Layers',
+      openInLayerSwitcher: false,
+      layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
+      ]
+    });
+
+    const adminLayerGroup = new ol.layer.Group({
+      title: 'Admin Layers',
+      openInLayerSwitcher: false,
+      layers: [POCRA_DISTRICTS
+      ]
+    });
+
     // Adding LayerGroup control to layer switcher
-    const baseLayerGroup = baseLayerGroupConst;
     // Define a new legend  
     const legendControl = legendControlConst
     // Layer Switcher Extention
@@ -33,7 +50,7 @@ window.addEventListener('DOMContentLoaded', event => {
     const Map = new ol.Map({
       view: view,
       target: 'pocra-weather-forecast-map',
-      layers: [baseLayerGroup],
+      layers: [baseLayerGroup, adminLayerGroup],
       // overlays: [popup],
       loadTilesWhileAnimating: true,
       loadTilesWhileInteracting: true,
@@ -49,6 +66,7 @@ window.addEventListener('DOMContentLoaded', event => {
     $('input[name="weather-forecast"]').change(() => {
       const $forecastRadioChecked = $('input[name="weather-forecast"]:checked').val();
 
+      console.log($forecastRadioChecked);
 
       // value of radio button is same as forecast style layer name in geoserver
       $forecastStyle = $forecastRadioChecked;
@@ -575,6 +593,44 @@ window.addEventListener('DOMContentLoaded', event => {
           `
           );
     };
+
+    /*
+        // As a legend can be responsive to the scale it is updated on every change of the resolution.
+        const updateLegend = function (resolution, layer) {
+          const graphicUrl = layer.getSource().getLegendUrl(resolution);
+          return graphicUrl;
+        };
+        // Initial legend
+        const resolution = Map.getView().getResolution();
+        updateLegend(resolution, layer = POCRA_DISTRICTS);
+    
+        // Update the legend when the resolution changes
+        Map.getView().on('change:resolution', function (event) {
+          const resolution = event.target.getResolution();
+          updateLegend(resolution, layer = POCRA_DISTRICTS);
+        });
+     */
+
+    // New legend associated with a POCRA_DISTRICTS layer    
+    const POCRA_DISTRICTS_Legend = new ol.legend.Legend({ layer: POCRA_DISTRICTS });
+    POCRA_DISTRICTS_Legend.addItem(new ol.legend.Image({
+      title: 'Districts',
+      // src: 'http://gis.mahapocra.gov.in/geoserver/wms?service=WMS&request=GetLegendGraphic&layer=PoCRA_Dashboard_V2:mh_district&FORMAT=image/png&legend_options=dpi:120'
+      src: `${POCRA_DISTRICTS.getSource().getLegendUrl()}&legend_options=dpi:120`,
+      // src: updateLegend(resolution, POCRA_DISTRICTS),
+    }));
+    LEGEND.addItem(POCRA_DISTRICTS_Legend);
+
+    // time = 0;
+    // for (var i = 0; i < 5; i++) {
+    //   time += 5000;
+    //   setTimeout(function (j) {
+    //     return function () {
+    //       console.log("var is now", j);
+    //     }
+    //   }(i), time);
+    // }
+
 
 
     // End loadMap()
