@@ -3,7 +3,381 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>PoCRA GIS Dashboard</title>
+    <!--  -->
+    <!-- Favicon for page -->
+    <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
+    <!-- JQuery and Bootstrap -->
+    <script
+      type="text/javascript"
+      src="../../libs/jquery/code.jquery.com_jquery-3.7.1.min.js"
+    ></script>
+    <script src="../../libs/bootstrap-5.0.2-dist/js/bootstrap.js"></script>
+    <!-- font awesome -->
+    <link rel="stylesheet" href="../../css/all_font-awesome.min.css" />
+    <!-- Open Layer CSS Library -->
+    <link rel="stylesheet" href="../../libs/ol/ol.css" />
+    <!-- Open Layer Extention CSS -->
+    <link rel="stylesheet" href="../../libs/ol-ext/ol-ext.css" />
+    <!-- Custom CSS file -->
+
+    <link href="../../css/customBootstrap.css" rel="stylesheet" />
+    <link href="../../css/styles.css" rel="stylesheet" />
   </head>
-  <body></body>
+  <body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
+      <!-- Navbar Brand-->
+      <a class="navbar-brand ps-3" href="../../index.html"
+        ><img class="pocra-logo" src="../../assets/logo/pocra-logo_.png"
+      /></a>
+      <!-- Sidebar Toggle-->
+      <button
+        class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+        id="sidebarToggle"
+        href="#!"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <!-- Navbar Title-->
+      <div class="row title-bar">
+        <div
+          class="col-lg-10 col-md-10 col-sm-9 col-xs-8 title-grid"
+          id="title-grid"
+        >
+          <h2 class="fw-bolder" id="title">
+            नानाजी देशमुख कृषि संजीवनी प्रकल्प
+            <h6 class="fw-bolder" id="sub-title">
+              कृषी विभाग, महाराष्ट्र शासन
+            </h6>
+          </h2>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 logo-div">
+          <ul class="navbar-nav">
+            <li class="">
+              <img
+                class="title-logo emblum-logo"
+                src="../../assets/logo/emblum-logo.png"
+              />
+            </li>
+            <li>
+              <img
+                class="title-logo agri-logo"
+                src="../../assets/logo/agri-logo.png"
+              />
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                id="navbarDropdown"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                ><i class="fas fa-user fa-fw"></i
+              ></a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="#!">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Navbar-->
+    </nav>
+    <div id="layoutSidenav">
+      <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+          <div class="sb-sidenav-menu">
+            <div class="nav">
+              <div class="sb-sidenav-menu-heading">Core</div>
+              <a class="nav-link" href="../../index.html">
+                <div class="sb-nav-link-icon">
+                  <i class="fas fa-tachometer-alt"></i>
+                </div>
+                Dashboard
+              </a>
+              <!-- DBT Pages -->
+              <div class="dbt-pages">
+                <div class="sb-sidenav-menu-heading">DBT</div>
+                <a
+                  class="nav-link collapsed"
+                  href="#"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseLayouts-DBT"
+                  aria-expanded="false"
+                  aria-controls="collapseLayouts"
+                >
+                  <div class="sb-nav-link-icon">
+                    <i class="fa-solid fa-building-columns"></i>
+                  </div>
+                  DBT Services
+                  <div class="sb-sidenav-collapse-arrow">
+                    <i class="fas fa-angle-down"></i>
+                  </div>
+                </a>
+                <div
+                  class="collapse"
+                  id="collapseLayouts-DBT"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#sidenavAccordion"
+                >
+                  <nav class="sb-sidenav-menu-nested nav">
+                    <a class="nav-link" href="./dbt-farmer.html">
+                      <div class="sb-nav-link-icon">
+                        <i class="fa-solid fa-tractor"></i>
+                      </div>
+                      Farmer Category
+                    </a>
+                    <a class="nav-link" href="./dbt-nrm.html">
+                      <div class="sb-nav-link-icon">
+                        <i class="fa-solid fa-people-group"></i>
+                      </div>
+                      NRM Category
+                    </a>
+                    <a class="nav-link" href="./dbt-fpc-fpo.html">
+                      <div class="sb-nav-link-icon">
+                        <i class="fa-solid fa-industry"></i>
+                      </div>
+                      FPC/FPO Category</a
+                    >
+                  </nav>
+                </div>
+              </div>
+              <!-- Weather Pages -->
+              <div class="weather-pages">
+                <div class="sb-sidenav-menu-heading">Weather</div>
+                <a
+                  class="nav-link collapsed"
+                  href="#"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseLayouts-weather"
+                  aria-expanded="false"
+                  aria-controls="collapseLayouts"
+                >
+                  <div class="sb-nav-link-icon">
+                    <i class="fa-solid fa-cloud-bolt"></i>
+                  </div>
+                  Weather Services
+                  <div class="sb-sidenav-collapse-arrow">
+                    <i class="fas fa-angle-down"></i>
+                  </div>
+                </a>
+                <div
+                  class="collapse"
+                  id="collapseLayouts-weather"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#sidenavAccordion"
+                >
+                  <nav class="sb-sidenav-menu-nested nav">
+                    <a
+                      class="nav-link"
+                      href="../weather-services/weather-forecast.html"
+                    >
+                      <div class="sb-nav-link-icon">
+                        <i class="fa-solid fa-cloud-sun-rain"></i>
+                      </div>
+                      Weather Forecast</a
+                    >
+                    <a
+                      class="nav-link"
+                      href="../weather-services/weather-realtime.html"
+                    >
+                      <div class="sb-nav-link-icon">
+                        <i class="fa-solid fa-cloud-showers-water"></i>
+                      </div>
+                      Realtime Weather</a
+                    >
+                  </nav>
+                </div>
+              </div>
+              <!-- Soil Pages -->
+              <div class="soil-pages">
+                <div class="sb-sidenav-menu-heading">Soil</div>
+                <a
+                  class="nav-link collapsed"
+                  href="#"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseLayouts-soil"
+                  aria-expanded="false"
+                  aria-controls="collapseLayouts"
+                >
+                  <div class="sb-nav-link-icon">
+                    <i class="fa-solid fa-flask-vial"></i>
+                  </div>
+                  Soil Services
+                  <div class="sb-sidenav-collapse-arrow">
+                    <i class="fas fa-angle-down"></i>
+                  </div>
+                </a>
+                <div
+                  class="collapse"
+                  id="collapseLayouts-soil"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#sidenavAccordion"
+                >
+                  <nav class="sb-sidenav-menu-nested nav">
+                    <a
+                      class="nav-link"
+                      href="../soil-services/soil-soil-health-card.html"
+                    >
+                      <div class="sb-nav-link-icon">
+                        <i class="fa-solid fa-file-invoice"></i>
+                      </div>
+                      Soil Health Card
+                    </a>
+                  </nav>
+                </div>
+              </div>
+              <!-- Make My Map Pages -->
+              <div class="make-my-map-pages">
+                <div class="sb-sidenav-menu-heading">Make My Map</div>
+                <a
+                  class="nav-link collapsed"
+                  href="#"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseLayouts-make-map"
+                  aria-expanded="false"
+                  aria-controls="collapseLayouts"
+                >
+                  <div class="sb-nav-link-icon">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                  </div>
+                  Map Services
+                  <div class="sb-sidenav-collapse-arrow">
+                    <i class="fas fa-angle-down"></i>
+                  </div>
+                </a>
+                <div
+                  class="collapse"
+                  id="collapseLayouts-make-map"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#sidenavAccordion"
+                >
+                  <nav class="sb-sidenav-menu-nested nav">
+                    <a
+                      class="nav-link"
+                      href="../map-services/map-export-map.html"
+                    >
+                      <div class="sb-nav-link-icon">
+                        <i class="fa-solid fa-file-export"></i>
+                      </div>
+                      Export Map
+                    </a>
+                  </nav>
+                </div>
+              </div>
+              <!-- Project Report Pages -->
+              <div class="report-pages">
+                <div class="sb-sidenav-menu-heading">Other Reports</div>
+                <a class="nav-link" href="project-reports.html">
+                  <div class="sb-nav-link-icon">
+                    <!-- <i class="fas fa-chart-area"></i> -->
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                  </div>
+                  Project Reports
+                </a>
+                <a class="nav-link" href="charts.html">
+                  <div class="sb-nav-link-icon">
+                    <i class="fas fa-chart-area"></i>
+                  </div>
+                  Charts
+                </a>
+                <a class="nav-link" href="tables.html">
+                  <div class="sb-nav-link-icon">
+                    <i class="fas fa-table"></i>
+                  </div>
+                  Tables
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="sb-sidenav-footer">
+            <div class="small">Logged in as:</div>
+            PoCRA Admin
+          </div>
+        </nav>
+      </div>
+      <div id="layoutSidenav_content">
+        <main>
+          <div class="container-fluid px-4">
+            <h5 class="mt-4">Export Map</h5>
+            <!-- Map Div -->
+            <div class="card mb-4">
+              <div class="card-header" id="card-title">
+                <i class="fa-regular fa-map"></i>
+                Map Print Services
+              </div>
+              <div
+                id="pocra-weather-forecast-map"
+                class="weather-forecast-map"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Loader Animation -->
+          <div id="layer-loader"></div>
+        </main>
+        <!-- Footer -->
+        <footer class="py-4 bg-light mt-auto">
+          <div class="container-fluid px-4">
+            <div
+              class="d-flex align-items-center justify-content-between small"
+            >
+              <div class="text-muted">
+                Copyright &copy;
+                <a href="https://mahapocra.gov.in/">mahapocra.gov.in</a> 2023
+              </div>
+              <div>
+                <a
+                  >Last Updated on:
+                  <span class="fw-bolder" id="updatedOn">28/07/2023</span></a
+                >
+              </div>
+              <div>
+                <a href="#">Privacy Policy</a>
+                &middot;
+                <a href="#">Terms &amp; Conditions</a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </body>
+  <!-- Internal JS file -->
+  <!-- Adding OpenLayer library -->
+  <script src="../../libs/ol/dist/ol.js"></script>
+  <!-- Adding OpenLayer Extention -->
+  <script src="../../libs/ol-ext/ol-ext.js"></script>
+  <!-- Active js -->
+  <script src="../../js/sidebarToggle.js"></script>
+  <script src="../../js/openLayerCustom.js"></script>
+  <!-- Highchart -->
+  <script
+    language="javascript"
+    type="text/javascript"
+    src="../../libs/highcharts/highcharts.js"
+  ></script>
+  <script
+    language="javascript"
+    type="text/javascript"
+    src="../../libs/highcharts/modules/exporting.js"
+  ></script>
+  <script src="../../libs/highcharts/modules/export-data.js"></script>
+  <script src="../../libs/highcharts/modules/accessibility.js"></script>
+  <!--  -->
+
+  <!-- constant services -->
+  <script src="../../js/api-services-js/pocra-gis-api.js"></script>
+  <!-- Forecast JS file -->
+  <script src="../../js/weather-service-js/weather-forecast.js"></script>
+  <script src="../../js/map-service-js/map-service.js"></script>
 </html>

@@ -2,72 +2,83 @@
 // function init() {}
 
 window.addEventListener('DOMContentLoaded', event => {
-  // Accessing global variable
 
-  var districtVector
-  var selectDistrict = document.getElementById('select-district');
-  selectDistrict.addEventListener("change", function () {
-    passValue(this.value);
-  });
+  // The Map
 
-  function passValue(districtCode) {
-    alert(districtCode);
-  }
-  // 
+  // Initiating Map 
+  // const variables are imported from proca-gis-api.js
 
-  // Adding control to layer switcher
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
     openInLayerSwitcher: false,
-    layers: [
-      new ol.layer.Tile({
-        source: new ol.source.XYZ({
-          url: 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
-        }),
-        visible: false,
-        baseLayer: false,
-        title: 'Satellite Map'
-      }),
-      new ol.layer.Tile({
-        source: new ol.source.OSM(),
-        visible: false,
-        baseLayer: false,
-        title: 'Standard Map'
-      }),
-      new ol.layer.Tile({
-        source: new ol.source.XYZ({
-          attributions: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
-            'rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
-          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-            'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-          crossOrigin: 'Anonymous',
-        }),
-        visible: true,
-        baseLayer: false,
-        title: 'World Topo Map',
-        type: 'base',
-
-      }),
-      new ol.layer.Tile({
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-
-          params: {
-            'LAYERS': 'PoCRA_Dashboard_V2:mh_district',
-            'TILED': true,
-          }
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "PoCRA Districts",
-        extent: [72.64, 5.60, 80.89, 22.02],
-
-      }),
-    ]
-  })
+    layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP]
+  });
   // baseLayerGroup.set('openInLayerSwitcher', false);
+
+  const projectRegionLayerGroup = new ol.layer.Group({
+    title: 'Project Region',
+    openInLayerSwitcher: false,
+    layers: [POCRA_DISTRICTS]
+  });
+
+  // Adding LayerGroup control to layer switcher
+  // Define a new legend  
+  const legendControl = legendControlConst
+  // Layer Switcher Extention
+  const layerSwitcherControl = layerSwitcherConst
+  // Attribution on Map
+  const attributionControl = attributionControlConst
+  // Scale Line control
+  const scaleLineControl = scaleLineControlConst
+  // ZoomToExtent control
+  const zoomToExtentControl = zoomToExtConst;
+  // Full Screen Control
+  const fullScreenControl = fullScreenConst;
+  // Print control
+  const printControl = printControlConst
+  printControl.setSize('A4');
+  /* On print > save image file */
+  printControl.on(['print', 'error'], function (e) {
+    // Print success
+    if (e.image) {
+      if (e.pdf) {
+        // Export pdf using the print info
+        var pdf = new jsPDF({
+          orientation: e.print.orientation,
+          unit: e.print.unit,
+          format: e.print.size
+        });
+        pdf.addImage(e.image, 'JPEG', e.print.position[0], e.print.position[0], e.print.imageWidth, e.print.imageHeight);
+        pdf.save(e.print.legend ? 'legend.pdf' : 'map.pdf');
+      } else {
+        // Save image as file
+        e.canvas.toBlob(function (blob) {
+          var name = (e.print.legend ? 'legend.' : 'map.') + e.imageType.replace('image/', '');
+          saveAs(blob, name);
+        }, e.imageType, e.quality);
+      }
+    } else {
+      console.warn('No canvas to export');
+    }
+  });
+  // Print map attribution on canvas
+  const canvasAttributionControl = CanvasAttributionConst;
+  // Add a title control
+  const CanvasTitleControl = CanvasTitleConst;
+  // geo Location control
+  const geoLocControl = geolocationConst;
+  // Show position
+  var here = new ol.Overlay.Popup({ positioning: 'bottom-center' });
+
+  // All Controls
+  const mapControls = [
+    layerSwitcherControl, legendControl, attributionControl,
+    scaleLineControl, zoomToExtentControl, fullScreenControl,
+    printControl, CanvasTitleControl, canvasAttributionControl,
+    geoLocControl
+  ];
+
+  // 
 
   const adminLayers = new ol.layer.Group({
     title: 'Administrative Layers',
@@ -137,106 +148,17 @@ window.addEventListener('DOMContentLoaded', event => {
         baseLayer: false,
         title: "Waterbody",
       }),
-
-
     ]
   });
-
-  // Project Administrative Layer in vector format
-  function fillFunc(hexCode, Opacity) {
-
-    return new ol.style.Fill({
-      color: `${hexCode}`,
-      opacity: Opacity,
-    })
-  };
-
-  function strokeFunc(hexCode, Width, Opacity) {
-    return new ol.style.Stroke({
-      color: `${hexCode}`,
-      opacity: Opacity,
-      width: Width
-    })
-  };
-
-  function textFunc() {
-    return new ol.style.Text({
-      font: 'Arial',
-      text: 'Test Text',
-      scale: 1.3,
-      fill: new ol.style.Fill({
-        color: '#000000'
-      }),
-      stroke: new ol.style.Stroke({
-        color: '#FFFFFF',
-        width: 3.5
-      }),
-    })
-  }
-
-  const districtStyle = new ol.style.Style({
-    fill: fillFunc('#DCCAFC', 0.1),
-    stroke: strokeFunc('#000000', 0.4, 1),
-    text: textFunc(),
-  });
-
-  const adminLayersVector = new ol.layer.Group({
-    title: 'Project Region',
-    openInLayerSwitcher: true,
-    layers: [
-      // District Vector
-      districtVector = new ol.layer.Vector({
-        source: new ol.source.Vector({
-          url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Amh_district&outputFormat=application%2Fjson",
-          projection: 'EPSG:4326',
-          format: new ol.format.GeoJSON(),
-        }),
-        style: function (feature, resolution) {
-          // console.log(feature.get('dtncode'))
-          const dtncode = feature.get('dtncode');
-          return districtStyle
-          // return dtncode == '497' ? new ol.style.Style({
-          //   fill: new ol.style.Fill({
-          //     color: 'green',
-          //   }),
-          //   stroke: new ol.style.Stroke({
-          //     color: 'black',
-          //   }),
-          // }) : new ol.style.Style({
-          //   fill: new ol.style.Fill({
-          //     color: 'red',
-          //   }),
-          //   stroke: new ol.style.Stroke({
-          //     color: 'black',
-          //   }),
-          // }); // assuming these are created elsewhere
-        },
-
-        // style: new ol.style.Style({
-        //   // fill: new ol.style.Fill({
-        //   //   color: 'red',
-        //   // }),
-        //   stroke: new ol.style.Stroke({
-        //     color: 'black',
-        //   }),
-        // }),
-        visible: true,
-        baseLayer: false,
-        openInLayerSwitcher: true,
-        name: 'Project Districts'
-      }),
-
-    ]
-  })
 
   // Loader for display
-  districtVector.getSource().on("featuresloadstart", function (evt) {
-    document.getElementById("layer-loader").classList.add("loader");
-  });
+  // districtVector.getSource().on("featuresloadstart", function (evt) {
+  //   document.getElementById("layer-loader").classList.add("loader");
+  // });
 
-  districtVector.getSource().on("featuresloadend", function (evt) {
-    document.getElementById("layer-loader").classList.remove("loader");
-  });
+  // districtVector.getSource().on("featuresloadend", function (evt) {
+  //   document.getElementById("layer-loader").classList.remove("loader");
+  // });
 
   const activityLayersVector = new ol.layer.Group({
     title: 'Activity Layers',
@@ -277,7 +199,8 @@ window.addEventListener('DOMContentLoaded', event => {
         title: "NRM Structures",
       }),
     ]
-  })
+  });
+
   // A group layer for Administrative layers (WMS)
   const activityLayers = new ol.layer.Group({
     title: 'Activity Layers',
@@ -295,7 +218,7 @@ window.addEventListener('DOMContentLoaded', event => {
         }),
         visible: false,
         baseLayer: false,
-        title: "NRM Existing Structures",
+        title: "Existing Structures",
       }),
       new ol.layer.Tile({
         source: new ol.source.TileWMS({
@@ -310,9 +233,8 @@ window.addEventListener('DOMContentLoaded', event => {
         }),
         visible: false,
         baseLayer: false,
-        title: "NRM Project Structures",
+        title: "Project Structures",
       }),
-
     ]
   });
 
@@ -329,23 +251,43 @@ window.addEventListener('DOMContentLoaded', event => {
     }
   });
 
-  // The Map
-  const view = new ol.View({
-    center: [77.5, 18.95],
-    zoom: 7.2,
-    projection: 'EPSG:4326'
-  })
+  // Accessing global variable
+  var districtVector
+  var selectDistrict = document.getElementById('select-district');
+  selectDistrict.addEventListener("change", function () {
+    passValue(this.value);
 
-  // Initiating Map 
+    // getTaluka(this.value)
+  });
+
+  function passValue(districtCode) {
+    alert(districtCode);
+  }
+
+  // View for Mh
+  const view = viewCosnt;
+  // Map instance
   const Map = new ol.Map({
     view: view,
     target: 'pocra-dbt-nrm-map',
-    layers: [baseLayerGroup, adminLayers, activityLayers, adminLayersVector],
-    overlays: [popup],
+    layers: [baseLayerGroup, projectRegionLayerGroup, adminLayers, activityLayers,],
+    // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,
-    // controls: new ol.control.extend([scaleLineControl]),
-  })
+    // change of expression in V7
+    controls: ol.control.defaults.defaults({
+    })
+      // Adding new external controls on map
+      .extend(mapControls),
+  });
+  // View animation
+  view.animate({ center: [77, 18.95] }, { zoom: 7 });
+  // Geolocation (locate me)
+  Map.addOverlay(here);
+  geoLocControl.on('position', function (e) {
+    if (e.coordinate) here.show(e.coordinate, "You are<br/>here!");
+    else here.hide();
+  });
 
   // Changing mouse cursor style to Pinter
   Map.on('pointermove', function (e) {
@@ -354,40 +296,12 @@ window.addEventListener('DOMContentLoaded', event => {
     Map.getViewport().style.cursor = hit ? 'pointer' : '';
   });
 
-  // Vector source map of taluka
-  // loadMap1();
-  function loadMap1() {
-    if (geojson) {
-      Map.removeLayer(geojson);
-    }
-
-    var url =
-      "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Taluka&outputFormat=application/json";
-    var geojson = new ol.layer.Vector({
-      title: "Taluka",
-      source: new ol.source.Vector({
-        url: url,
-        format: new ol.format.GeoJSON(),
-      }),
-    });
-    geojson.getSource().on("addfeature", function () {
-      //alert(geojson.getSource().getExtent());
-      Map.getView().fit(geojson.getSource().getExtent(), {
-        duration: 1590,
-        size: Map.getSize() - 100,
-      });
-    });
-
-    Map.addLayer(geojson);
-  }
-
   // GeoJson Layer of NRM Project(PoCRA) Points
   const nrmProjectVectorSource = new ol.source.Vector({
     url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
     projection: 'EPSG:4326',
     format: new ol.format.GeoJSON(),
-  })
-
+  });
 
   // Adding Layer to Map
   Map.addLayer(new ol.layer.Vector({
@@ -448,7 +362,7 @@ window.addEventListener('DOMContentLoaded', event => {
         return styles;
       };
     })()
-  }))
+  }));
 
   // Control Select
   const selectClick = new ol.interaction.Select({});
@@ -544,100 +458,8 @@ window.addEventListener('DOMContentLoaded', event => {
     popup.hide();
   });
 
-
   // Controls on Map
-  // Extent of Map to use for zoomToExtent button(control)
-  // Add a ZoomToExtent control
-  Map.addControl(new ol.control.ZoomToExtent({
-    extent: [
-      73.19613063800134, 15.124338344890079,
-      81.80386936199866, 22.77566165510992
-    ]
-  })
-  );
 
-  // Print map canvas
-  Map.addControl(new ol.control.CanvasAttribution({ canvas: true }));
-
-  // Add a title control
-  Map.addControl(new ol.control.CanvasTitle({
-    title: '',
-    visible: false,
-    style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif' }) })
-  }));
-
-  // Layer Switcher Extention
-  const layerSwitcher = new ol.control.LayerSwitcher({
-    collapsed: true,
-    mouseover: true,
-    // extent: true
-
-  });
-  Map.addControl(layerSwitcher);
-
-  // Add control
-  var geoloc = new ol.control.GeolocationButton({
-    title: 'Where am I?',
-    delay: 10000 // 10s
-  });
-  Map.addControl(geoloc);
-  // Show position
-  var here = new ol.Overlay.Popup({ positioning: 'bottom-center' });
-  Map.addOverlay(here);
-  geoloc.on('position', function (e) {
-    if (e.coordinate) here.show(e.coordinate, "You are<br/>here!");
-    else here.hide();
-  });
-
-  // Add a ScaleLine control 
-  Map.addControl(new ol.control.CanvasScaleLine());
-
-  // Print control
-  var printControl = new ol.control.PrintDialog({
-    // target: document.querySelector('.info'),
-    // targetDialog: Map.getTargetElement() 
-    // save: false,
-    // copy: false,
-    // pdf: false
-  });
-  printControl.setSize('A4');
-  Map.addControl(printControl);
-
-  /* On print > save image file */
-  printControl.on(['print', 'error'], function (e) {
-    // Print success
-    if (e.image) {
-      if (e.pdf) {
-        // Export pdf using the print info
-        var pdf = new jsPDF({
-          orientation: e.print.orientation,
-          unit: e.print.unit,
-          format: e.print.size
-        });
-        pdf.addImage(e.image, 'JPEG', e.print.position[0], e.print.position[0], e.print.imageWidth, e.print.imageHeight);
-        pdf.save(e.print.legend ? 'legend.pdf' : 'map.pdf');
-      } else {
-        // Save image as file
-        e.canvas.toBlob(function (blob) {
-          var name = (e.print.legend ? 'legend.' : 'map.') + e.imageType.replace('image/', '');
-          saveAs(blob, name);
-        }, e.imageType, e.quality);
-      }
-    } else {
-      console.warn('No canvas to export');
-    }
-  });
-
-  // Legend Control Extention
   // Define a new legend
-  var legend = new ol.legend.Legend({
-    title: 'Legend',
-    margin: 5,
-    maxWidth: 300
-  });
-  var legendCtrl = new ol.control.Legend({
-    legend: legend,
-    collapsed: false
-  });
-  Map.addControl(legendCtrl);
+
 });

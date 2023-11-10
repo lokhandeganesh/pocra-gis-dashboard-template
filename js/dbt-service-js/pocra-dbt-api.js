@@ -66,7 +66,7 @@ function loadNrmActivity() {
 
 const renderDistricts = async () => {
   // (getDistrict) called from common api service JS file
-  const districts = await getDistrict;
+  const districts = await getDistrictList;
 
   // dropdown for District Selection
   var ele = document.getElementById("select-district");

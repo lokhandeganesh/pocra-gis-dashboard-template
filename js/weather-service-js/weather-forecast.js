@@ -3,8 +3,6 @@ window.addEventListener('DOMContentLoaded', event => {
 
   function loadMap() {
 
-    $("#day-params *").prop("disabled", true).off('click').addClass("disabled");
-
     // The Map
 
     // Initiating Map 
@@ -17,8 +15,8 @@ window.addEventListener('DOMContentLoaded', event => {
       ]
     });
 
-    const adminLayerGroup = new ol.layer.Group({
-      title: 'Admin Layers',
+    const projectRegionLayerGroup = new ol.layer.Group({
+      title: 'Project Region',
       openInLayerSwitcher: false,
       layers: [POCRA_DISTRICTS
       ]
@@ -50,7 +48,7 @@ window.addEventListener('DOMContentLoaded', event => {
     const Map = new ol.Map({
       view: view,
       target: 'pocra-weather-forecast-map',
-      layers: [baseLayerGroup, adminLayerGroup],
+      layers: [baseLayerGroup, projectRegionLayerGroup],
       // overlays: [popup],
       loadTilesWhileAnimating: true,
       loadTilesWhileInteracting: true,
@@ -63,53 +61,70 @@ window.addEventListener('DOMContentLoaded', event => {
 
     view.animate({ center: [77, 18.95] }, { zoom: 7 });
 
+
+
+    // Weather Parameter check logic
+
+    const forecastLayerGroup = new ol.layer.Group({
+      title: 'Weather Layers',
+      openInLayerSwitcher: true,
+      layers: []
+    });
+    Map.getLayers().extend([forecastLayerGroup]);
+
+    // console.log(forecastLayerGroup.getLayers())
+
+    // Disable Day parameter initialy if no weather parameter is checked
+    $("#day-params *").prop("disabled", true).addClass("disabled");
+    // if option is seleceted / change
     $('input[name="weather-forecast"]').change(() => {
       const $forecastRadioChecked = $('input[name="weather-forecast"]:checked').val();
 
-      console.log($forecastRadioChecked);
 
+      // console.log($forecastRadioChecked);
+      const title = $(`#${$forecastRadioChecked}`).next("span").text();
+
+      const CQL_FILTER = 1;
+      const mh = 'mh' // Layer Name (Day wise)
       // value of radio button is same as forecast style layer name in geoserver
-      $forecastStyle = $forecastRadioChecked;
-      funForecastStyle($forecastStyle);
-    });
+      var $forecastStyle = $forecastRadioChecked;
+      const forecastStyleLayer = $forecastStyle; // Forecast style layer name
 
-    function funForecastStyle($forecastStyle) {
-      return $forecastStyle;
-    }
-    // console.log(forecastStyle())
-
-    // console.log($('input[name="weather-forecast-day"]:checked').val())
-    $('input[name="weather-forecast-day"]').change(() => {
-      const $forecastDayRadioChecked = $('input[name="weather-forecast-day"]:checked').val();
-      console.log($forecastDayRadioChecked);
-    });
-
-    const CQL_FILTER = 1;
-    const mh = 'mh' // Layer Name (Day wise)
-    const forecastStyleLayer = 'forecast_rainfall'; // Forecast style layer name
-
-    const forecastLayers = new ol.layer.Group({
-      title: 'Weather Layers',
-      openInLayerSwitcher: false,
-      layers: [
-        new ol.layer.Tile({
-          // extent: extentforLayer,    
-          // type: type,
-          source: new ol.source.TileWMS({
-            url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
-            crossOrigin: 'Anonymous',
-            serverType: 'geoserver',
-            params: {
-              'LAYERS': `PoCRA_Dashboard_V2:imd_forecast_${mh}`,
-              'TILED': true,
-              'STYLES': `${forecastStyleLayer}`
-            }
-          }),
-          visible: true,
-          baseLayer: false,
-          title: "Max Temperature",
+      const forecastLayer = new ol.layer.Tile({
+        // extent: extentforLayer,    
+        // type: type,
+        source: new ol.source.TileWMS({
+          url: `${pocra_geoserver}/wms`,
+          crossOrigin: 'Anonymous',
+          serverType: 'geoserver',
+          params: {
+            'LAYERS': `PoCRA_Dashboard_V2:imd_forecast_${mh}`,
+            'TILED': true,
+            'STYLES': `${forecastStyleLayer}`
+          }
         }),
-      ]
+        visible: true,
+        baseLayer: false,
+        title: `${title}`,
+      })
+
+
+      if (forecastLayer) {
+        Map.removeLayer(forecastLayer);
+        forecastLayerGroup.getLayers().array_.push(forecastLayer);
+
+        // Map.addLayer(forecastLayer);
+      }
+
+      POCRA_DISTRICTS.setVisible(false);
+
+      // enable Day parameter if weather parameter is checked
+      $("#day-params *").prop("disabled", false).removeClass("disabled");
+      // Logic for checking Day parameter change
+      $('input[name="weather-forecast-day"]').change(() => {
+        const $forecastDayRadioChecked = $('input[name="weather-forecast-day"]:checked').val();
+        console.log($forecastDayRadioChecked);
+      });
     });
 
     // Loader for display

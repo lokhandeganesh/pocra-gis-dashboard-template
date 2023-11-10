@@ -1,7 +1,12 @@
 // getDistrict()
-const getDistrict = fetch('http://gis.mahapocra.gov.in/weatherservices/meta/districts')
+const getDistrictList = fetch('http://gis.mahapocra.gov.in/weatherservices/meta/districts')
   .then((response) => response.json())
   .then((data) => { return data.district })
+
+
+const getTalukaList = (dtncode) => fetch(`http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=${dtncode}`)
+  .then((response) => response.json())
+  .then((data) => { return data.taluka })
 
 // const renderDistricts = async () => {
 //   const districts = await getDistrict;
@@ -69,8 +74,9 @@ const POCRA_DISTRICTS = new ol.layer.Tile({
   baseLayer: false,
   title: "PoCRA Districts",
   extent: [72.64, 5.60, 80.89, 22.02],
-})
+});
 
+const MH_DISTRICTS = new ol.layer.Tile({});
 
 // Legend Control Extention
 // Define a new legend  
@@ -109,6 +115,25 @@ const zoomToExtConst = new ol.control.ZoomToExtent({
 });
 // Full Screen Control
 const fullScreenConst = new ol.control.FullScreen({});
+// Print control
+const printControlConst = new ol.control.PrintDialog({
+  // target: document.querySelector('.info'),
+  // targetDialog: Map.getTargetElement() 
+  // save: false,
+  // copy: false,
+  // pdf: false
+});
+const CanvasTitleConst = new ol.control.CanvasTitle({
+  title: '',
+  visible: false,
+  style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif' }) }),
+})
+// Canvas Attribution Control
+const CanvasAttributionConst = new ol.control.CanvasAttribution({ canvas: true })
+const geolocationConst = new ol.control.GeolocationButton({
+  title: 'Where am I?',
+  delay: 10000 // 10s
+});
 // View of Maharashtra
 const viewCosnt = new ol.View({
   center: [77.5, 18.95],
