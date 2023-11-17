@@ -626,15 +626,7 @@ window.addEventListener('DOMContentLoaded', event => {
         });
      */
 
-    // New legend associated with a POCRA_DISTRICTS layer    
-    const POCRA_DISTRICTS_Legend = new ol.legend.Legend({ layer: POCRA_DISTRICTS });
-    POCRA_DISTRICTS_Legend.addItem(new ol.legend.Image({
-      title: 'Districts',
-      // src: 'http://gis.mahapocra.gov.in/geoserver/wms?service=WMS&request=GetLegendGraphic&layer=PoCRA_Dashboard_V2:mh_district&FORMAT=image/png&legend_options=dpi:120'
-      src: `${POCRA_DISTRICTS.getSource().getLegendUrl()}&legend_options=dpi:120`,
-      // src: updateLegend(resolution, POCRA_DISTRICTS),
-    }));
-    LEGEND.addItem(POCRA_DISTRICTS_Legend);
+
 
     // time = 0;
     // for (var i = 0; i < 5; i++) {
