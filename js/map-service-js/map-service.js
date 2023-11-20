@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', event => {
     // const variables are imported from proca-gis-api.js
 
     const baseLayerGroup = new ol.layer.Group({
-      title: 'Base Layers',
+      title: "Base Map's",
       openInLayerSwitcher: false,
       layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
       ]
@@ -94,8 +94,7 @@ window.addEventListener('DOMContentLoaded', event => {
       loadTilesWhileAnimating: true,
       loadTilesWhileInteracting: true,
       // change of expression in V7
-      controls: ol.control.defaults.defaults({
-      })
+      controls: ol.control.defaults.defaults({ attribution: false })
         // Adding new external controls on map
         .extend(mapControls),
     });

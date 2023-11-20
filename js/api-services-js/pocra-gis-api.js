@@ -93,7 +93,7 @@ const POCRA_DISTRICTS = new ol.layer.Tile({
 // New legend associated with a layer POCRA_DISTRICTS
 const POCRA_DISTRICTS_Legend = new ol.legend.Legend({ layer: POCRA_DISTRICTS });
 POCRA_DISTRICTS_Legend.addItem(new ol.legend.Image({
-  title: "Project District's",
+  title: "Project Districts",
   src: `${POCRA_DISTRICTS.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, POCRA_DISTRICTS),
 }));
@@ -117,7 +117,7 @@ const MH_DISTRICTS = new ol.layer.Tile({
 // New legend associated with a layer MH_DISTRICTS
 const MH_DISTRICTS_Legend = new ol.legend.Legend({ layer: MH_DISTRICTS });
 MH_DISTRICTS_Legend.addItem(new ol.legend.Image({
-  title: "District's",
+  title: "",
   src: `${MH_DISTRICTS.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_DISTRICTS_Legend),
 }));
@@ -141,7 +141,7 @@ const MH_TALUKAS = new ol.layer.Tile({
 // New legend associated with a layer MH_TALUKAS
 const MH_TALUKAS_Legend = new ol.legend.Legend({ layer: MH_TALUKAS });
 MH_TALUKAS_Legend.addItem(new ol.legend.Image({
-  title: "Taluka's",
+  title: "",
   src: `${MH_TALUKAS.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_TALUKAS_Legend),
 }));
@@ -165,7 +165,7 @@ const MH_VILLAGES = new ol.layer.Tile({
 // New legend associated with a layer MH_VILLAGES
 const MH_VILLAGES_Legend = new ol.legend.Legend({ layer: MH_VILLAGES });
 MH_VILLAGES_Legend.addItem(new ol.legend.Image({
-  title: "Village's",
+  title: "",
   src: `${MH_VILLAGES.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_VILLAGES_Legend),
 }));
@@ -189,7 +189,7 @@ const MH_RIVERS_POLY = new ol.layer.Tile({
 // New legend associated with a layer MH_RIVERS_POLY
 const MH_RIVERS_POLY_Legend = new ol.legend.Legend({ layer: MH_RIVERS_POLY });
 MH_RIVERS_POLY_Legend.addItem(new ol.legend.Image({
-  title: "Major River",
+  title: "",
   src: `${MH_RIVERS_POLY.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_VILLAGES_Legend),
 }));
@@ -210,11 +210,10 @@ const MH_RIVERS = new ol.layer.Tile({
   baseLayer: false,
   title: "Rivers",
 });
-
 // New legend associated with a layer MH_RIVERS
 const MH_RIVERS_Legend = new ol.legend.Legend({ layer: MH_RIVERS });
 MH_RIVERS_Legend.addItem(new ol.legend.Image({
-  title: "River's",
+  title: "",
   src: `${MH_RIVERS.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_VILLAGES_Legend),
 }));
@@ -238,7 +237,7 @@ const MH_MAJOR_ROADS = new ol.layer.Tile({
 // New legend associated with a layer MH_MAJOR_ROADS
 const MH_MAJOR_ROADS_Legend = new ol.legend.Legend({ layer: MH_MAJOR_ROADS });
 MH_MAJOR_ROADS_Legend.addItem(new ol.legend.Image({
-  title: "Major Road's",
+  title: "",
   src: `${MH_MAJOR_ROADS.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_VILLAGES_Legend),
 }));
@@ -262,11 +261,11 @@ const MH_ROADS = new ol.layer.Tile({
 // New legend associated with a layer MH_MAJOR_ROADS
 const MH_ROADS_Legend = new ol.legend.Legend({ layer: MH_ROADS });
 MH_ROADS_Legend.addItem(new ol.legend.Image({
-  title: "Other Road",
+  title: "",
   src: `${MH_ROADS.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_VILLAGES_Legend),
 }));
-LEGEND.addItem(MH_ROADS_Legend);
+// LEGEND.addItem(MH_ROADS_Legend);
 
 // Layer Switcher Extention
 const layerSwitcherConst = new ol.control.LayerSwitcher({
@@ -307,7 +306,7 @@ const CanvasTitleConst = new ol.control.CanvasTitle({
   style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif' }) }),
 })
 // Canvas Attribution Control
-const CanvasAttributionConst = new ol.control.CanvasAttribution({ canvas: true })
+const CanvasAttributionConst = new ol.control.CanvasAttribution({ canvas: true });
 const geolocationConst = new ol.control.GeolocationButton({
   title: 'Where am I?',
   delay: 10000 // 10s

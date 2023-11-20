@@ -472,6 +472,13 @@ This following statements selects each category individually that contains an in
   left: 6em;
 }
 
-.ol-control.ol-legend {
+/* .ol-control.ol-legend {
   bottom: 2.5em;
+} */
+
+.ol-scale-bar {
+  position: absolute;
+  bottom: 2.5em;
+  right: 2em;
+  left: unset;
 }

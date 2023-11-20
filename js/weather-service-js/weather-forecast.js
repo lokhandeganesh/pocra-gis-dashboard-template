@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', event => {
     // const variables are imported from proca-gis-api.js
 
     const baseLayerGroup = new ol.layer.Group({
-      title: 'Base Layers',
+      title: "Base Map's",
       openInLayerSwitcher: false,
       layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
       ]
