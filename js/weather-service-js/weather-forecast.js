@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', event => {
     // Initiating Map 
     // const variables are imported from proca-gis-api.js
 
-    const baseLayerGroup = new ol.layer.Group({
+    const baseMapGroup = new ol.layer.Group({
       title: "Base Map's",
       openInLayerSwitcher: false,
       layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
@@ -48,7 +48,7 @@ window.addEventListener('DOMContentLoaded', event => {
     const Map = new ol.Map({
       view: view,
       target: 'pocra-weather-forecast-map',
-      layers: [baseLayerGroup, projectRegionLayerGroup],
+      layers: [baseMapGroup, projectRegionLayerGroup],
       // overlays: [popup],
       loadTilesWhileAnimating: true,
       loadTilesWhileInteracting: true,

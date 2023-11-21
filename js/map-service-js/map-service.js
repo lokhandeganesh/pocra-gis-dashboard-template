@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', event => {
     // Initiating Map 
     // const variables are imported from proca-gis-api.js
 
-    const baseLayerGroup = new ol.layer.Group({
+    const baseMapGroup = new ol.layer.Group({
       title: "Base Map's",
       openInLayerSwitcher: false,
       layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
@@ -25,8 +25,16 @@ window.addEventListener('DOMContentLoaded', event => {
     const adminLayerGroup = new ol.layer.Group({
       title: 'Admin Layers',
       openInLayerSwitcher: false,
-      layers: [MH_RIVERS_POLY, MH_RIVERS, MH_ROADS, MH_MAJOR_ROADS,
-        MH_VILLAGES, MH_TALUKAS, MH_DISTRICTS
+      layers: [
+        MH_VILLAGES, MH_TALUKAS, MH_DISTRICTS,
+      ]
+    });
+
+    const baseLayerGroup = new ol.layer.Group({
+      title: 'Base Layers',
+      openInLayerSwitcher: false,
+      layers: [MH_LULC_1516, MH_Settlement_1516, MH_Waterbody_1516,
+        MH_RIVERS_POLY, MH_RIVERS, MH_ROADS, MH_MAJOR_ROADS,
       ]
     });
 
@@ -89,7 +97,8 @@ window.addEventListener('DOMContentLoaded', event => {
     const Map = new ol.Map({
       view: view,
       target: 'pocra-map-export-map',
-      layers: [baseLayerGroup, adminLayerGroup, projectRegionLayerGroup,],
+      layers: [baseMapGroup, baseLayerGroup,
+        adminLayerGroup, projectRegionLayerGroup,],
       // overlays: [popup],
       loadTilesWhileAnimating: true,
       loadTilesWhileInteracting: true,

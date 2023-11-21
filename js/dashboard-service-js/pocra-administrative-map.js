@@ -4,14 +4,14 @@ function init() {
 
 
   const baseLayerGroup = new ol.layer.Group({
-    title: 'Base Layers',
+    title: "Base Map's",
     openInLayerSwitcher: false,
     layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
     ]
   });
 
-  const adminLayerGroup = new ol.layer.Group({
-    title: 'Admin Layers',
+  const projectRegionLayerGroup = new ol.layer.Group({
+    title: 'Project Region',
     openInLayerSwitcher: false,
     layers: [POCRA_DISTRICTS
     ]
@@ -43,7 +43,7 @@ function init() {
   const Map = new ol.Map({
     view: view,
     target: 'pocra-administrative-map',
-    layers: [baseLayerGroup, adminLayerGroup],
+    layers: [baseLayerGroup, projectRegionLayerGroup],
     // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,

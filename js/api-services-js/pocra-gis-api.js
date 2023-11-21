@@ -267,6 +267,79 @@ MH_ROADS_Legend.addItem(new ol.legend.Image({
 }));
 // LEGEND.addItem(MH_ROADS_Legend);
 
+// Maharashtra LULC 1516
+const MH_LULC_1516 = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:mh_lulc_1516_raster',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "Land Use Land Cover",
+});
+// New legend associated with a layer MH_LULC_1516
+const MH_LULC_1516_Legend = new ol.legend.Legend({ layer: MH_LULC_1516 });
+MH_LULC_1516_Legend.addItem(new ol.legend.Image({
+  title: "",
+  src: `${MH_LULC_1516.getSource().getLegendUrl()}&legend_options=dpi:120`,
+  // src: updateLegend(resolution, MH_LULC_1516),
+}));
+LEGEND.addItem(MH_LULC_1516_Legend);
+
+// Maharashtra Settlement 1516
+const MH_Settlement_1516 = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:mh_settlement_raster',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "Settlements",
+});
+// New legend associated with a layer MH_Settlement_1516
+const MH_Settlement_1516_Legend = new ol.legend.Legend({ layer: MH_Settlement_1516 });
+MH_Settlement_1516_Legend.addItem(new ol.legend.Image({
+  title: "",
+  src: `${MH_Settlement_1516.getSource().getLegendUrl()}&legend_options=dpi:120`,
+  // src: updateLegend(resolution, MH_Settlement_1516),
+}));
+LEGEND.addItem(MH_Settlement_1516_Legend);
+
+// Maharashtra Settlement 1516
+const MH_Waterbody_1516 = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:mh_waterbodies_raster',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "Waterbody",
+});
+// New legend associated with a layer MH_Waterbody_1516
+const MH_Waterbody_1516_Legend = new ol.legend.Legend({ layer: MH_Waterbody_1516 });
+MH_Waterbody_1516_Legend.addItem(new ol.legend.Image({
+  title: "",
+  src: `${MH_Waterbody_1516.getSource().getLegendUrl()}&legend_options=dpi:120`,
+  // src: updateLegend(resolution, MH_Waterbody_1516),
+}));
+LEGEND.addItem(MH_Waterbody_1516_Legend);
+
+
 // Layer Switcher Extention
 const layerSwitcherConst = new ol.control.LayerSwitcher({
   collapsed: true,
