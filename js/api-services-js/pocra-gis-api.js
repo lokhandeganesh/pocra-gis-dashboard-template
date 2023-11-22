@@ -1,5 +1,5 @@
 // getDistrict()
-const getDistrictList = fetch('http://gis.mahapocra.gov.in/weatherservices/meta/districts')
+const getDistrictList = () => fetch('http://gis.mahapocra.gov.in/weatherservices/meta/districts')
   .then((response) => response.json())
   .then((data) => { return data.district })
 
@@ -390,3 +390,143 @@ const viewCosnt = new ol.View({
   zoom: 7.2,
   projection: 'EPSG:4326'
 })
+
+// 
+var activitySelect = document.querySelector('.activity'),
+  districtSelect = document.querySelector('.district'),
+  talukaSelect = document.querySelector('.taluka'),
+  villageSelect = document.querySelector('.village')
+
+function loadNRM_Activity() {
+  // console.log(activityCode);
+  let apiEndPoint = "http://gis.mahapocra.gov.in/weatherservices/meta/getNrmActivities";
+  fetch(apiEndPoint)
+    .then((response) => response.json())
+    .then((data) => {
+      var nrmActivities = data.nrm_activity;
+      nrmActivities.forEach(activity => {
+        const option = document.createElement('option')
+        option.value = activity.activity_code;
+        option.textContent = activity.activity_name;
+        activitySelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Error Loading Activities:', error));
+};
+
+
+function getNrmActivityCode() {
+  const activityCode = activitySelect.value;
+  if (activityCode === '-1') {
+    alert('All Activity');
+  }
+  else {
+    console.log(activityCode);
+  }
+}
+
+
+function loadDistricts() {
+  let apiEndPoint = "http://gis.mahapocra.gov.in/weatherservices/meta/districts";
+  fetch(apiEndPoint)
+    .then((response) => response.json())
+    .then((data) => {
+      var districts = data.district;
+      districts.forEach(district => {
+        const option = document.createElement('option')
+        option.value = district.dtncode;
+        option.textContent = district.dtename;
+        districtSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Error Loading Districts:', error));
+
+  talukaSelect.disabled = true;
+  villageSelect.disabled = true;
+  talukaSelect.style.cursor = 'not-allowed';
+  villageSelect.style.cursor = 'not-allowed';
+};
+
+
+function loadTalukas() {
+  const dtncode = districtSelect.value;
+  if (dtncode === '-1') {
+    talukaSelect.disabled = true;
+    villageSelect.disabled = true;
+
+    talukaSelect.style.cursor = 'not-allowed';
+    villageSelect.style.cursor = 'not-allowed';
+
+    talukaSelect.innerHTML = '<option value="-1">-- Select Taluka --</option>' // for clearing the exting talukas
+    villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
+
+    alert('All District');
+  } else {
+    talukaSelect.disabled = false;
+    villageSelect.disabled = true;
+    talukaSelect.style.cursor = 'pointer';
+    villageSelect.style.cursor = 'not-allowed';
+
+    talukaSelect.innerHTML = '<option value="-1">-- All Talukas --</option>' // for clearing the exting talukas
+    villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
+
+
+    let apiEndPoint = `http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=${dtncode}`;
+
+    fetch(apiEndPoint)
+      .then((response) => response.json())
+      .then((data) => {
+        var talukas = data.taluka;
+        talukas.forEach(taluka => {
+          const option = document.createElement('option')
+          option.value = taluka.thncode;
+          option.textContent = taluka.thename;
+          talukaSelect.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error Loading Talukas:', error));
+  }
+};
+
+function loadVillages() {
+  const thncode = talukaSelect.value;
+  if (thncode === '-1') {
+    villageSelect.disabled = true;
+    villageSelect.style.cursor = 'not-allowed';
+
+    villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
+
+    alert('All Villages');
+  } else {
+
+    villageSelect.disabled = false;
+    villageSelect.style.cursor = 'pointer';
+
+    villageSelect.innerHTML = '<option value="-1">-- All Villages --</option>' // for clearing the exting villages
+
+    let apiEndPoint = `http://gis.mahapocra.gov.in/weatherservices/meta/village?thncode=${thncode}`;
+
+    fetch(apiEndPoint)
+      .then((response) => response.json())
+      .then((data) => {
+        var villages = data.village;
+        villages.forEach(village => {
+          const option = document.createElement('option')
+          option.value = village.vincode;
+          option.textContent = village.vinename;
+          villageSelect.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error Loading Villages:', error));
+  }
+};
+
+function getVillage() {
+  const vinCode = villageSelect.value;
+  if (vinCode !== '-1') {
+    console.log(vinCode);
+  } else {
+    alert('All Villages');
+  }
+
+}

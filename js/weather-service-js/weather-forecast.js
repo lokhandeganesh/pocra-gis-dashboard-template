@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', event => {
-  loadMap()
+  loadForecastMap()
 
-  function loadMap() {
+  function loadForecastMap() {
 
     // The Map
 
@@ -640,7 +640,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
 
 
-    // End loadMap()
+    // End loadForecastMap()
   }
   // End of init
 });

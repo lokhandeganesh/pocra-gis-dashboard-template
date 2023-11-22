@@ -8,17 +8,34 @@ window.addEventListener('DOMContentLoaded', event => {
   // Initiating Map 
   // const variables are imported from proca-gis-api.js
 
+  const baseMapGroup = new ol.layer.Group({
+    title: "Base Map's",
+    openInLayerSwitcher: false,
+    layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
+    ]
+  });
+  // baseMapGroup.set('openInLayerSwitcher', false);
+  const projectRegionLayerGroup = new ol.layer.Group({
+    title: 'Project Region',
+    openInLayerSwitcher: true,
+    layers: [POCRA_DISTRICTS
+    ]
+  });
+
+  const adminLayerGroup = new ol.layer.Group({
+    title: 'Admin Layers',
+    openInLayerSwitcher: false,
+    layers: [
+      MH_VILLAGES, MH_TALUKAS, MH_DISTRICTS,
+    ]
+  });
+
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
     openInLayerSwitcher: false,
-    layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP]
-  });
-  // baseLayerGroup.set('openInLayerSwitcher', false);
-
-  const projectRegionLayerGroup = new ol.layer.Group({
-    title: 'Project Region',
-    openInLayerSwitcher: false,
-    layers: [POCRA_DISTRICTS]
+    layers: [MH_LULC_1516, MH_Settlement_1516, MH_Waterbody_1516,
+      MH_RIVERS_POLY, MH_RIVERS, MH_ROADS, MH_MAJOR_ROADS,
+    ]
   });
 
   // Adding LayerGroup control to layer switcher
@@ -78,78 +95,6 @@ window.addEventListener('DOMContentLoaded', event => {
     geoLocControl
   ];
 
-  // 
-
-  const adminLayers = new ol.layer.Group({
-    title: 'Administrative Layers',
-    openInLayerSwitcher: false,
-    layers: [
-      new ol.layer.Tile({
-        // extent: extentforLayer,    
-        // type: type,
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-          params: {
-            'LAYERS': 'PoCRA:Settlement',
-            'TILED': true
-          }
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "Settlements",
-      }),
-      new ol.layer.Tile({
-        // extent: extentforLayer,    
-        // type: type,
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-          params: {
-            'LAYERS': 'PoCRA:Road',
-            'TILED': true
-          }
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "Roads",
-      }),
-      new ol.layer.Tile({
-        // extent: extentforLayer,    
-        // type: type,
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-          params: {
-            'LAYERS': 'PoCRA:River',
-            'TILED': true
-          }
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "Rivers",
-      }),
-      new ol.layer.Tile({
-        // extent: extentforLayer,    
-        // type: type,
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-          params: {
-            'LAYERS': 'PoCRA:Waterbody',
-            'TILED': true
-          }
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "Waterbody",
-      }),
-    ]
-  });
 
   // Loader for display
   // districtVector.getSource().on("featuresloadstart", function (evt) {
@@ -270,7 +215,8 @@ window.addEventListener('DOMContentLoaded', event => {
   const Map = new ol.Map({
     view: view,
     target: 'pocra-dbt-nrm-map',
-    layers: [baseLayerGroup, projectRegionLayerGroup, adminLayers, activityLayers,],
+    layers: [baseMapGroup, baseLayerGroup,
+      adminLayerGroup, projectRegionLayerGroup, activityLayers,],
     // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,
@@ -457,9 +403,5 @@ window.addEventListener('DOMContentLoaded', event => {
   selectClick.getFeatures().on(['remove'], function (evt) {
     popup.hide();
   });
-
-  // Controls on Map
-
-  // Define a new legend
 
 });

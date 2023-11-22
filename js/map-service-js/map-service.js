@@ -113,7 +113,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
 
 
-    // End loadMap()
+    // End loadMapExport()
   };
   // End of init
 });
