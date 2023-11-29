@@ -197,18 +197,6 @@ window.addEventListener('DOMContentLoaded', event => {
   });
 
   // Accessing global variable
-  var districtVector
-  var selectDistrict = document.getElementById('select-district');
-  selectDistrict.addEventListener("change", function () {
-    passValue(this.value);
-
-    // getTaluka(this.value)
-  });
-
-  function passValue(districtCode) {
-    alert(districtCode);
-  }
-
   // View for Mh
   const view = viewCosnt;
   // Map instance
@@ -216,7 +204,7 @@ window.addEventListener('DOMContentLoaded', event => {
     view: view,
     target: 'pocra-dbt-nrm-map',
     layers: [baseMapGroup, baseLayerGroup,
-      adminLayerGroup, projectRegionLayerGroup, activityLayers,],
+      adminLayerGroup, projectRegionLayerGroup, activityLayers, activityLayersVector],
     // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,
@@ -403,5 +391,87 @@ window.addEventListener('DOMContentLoaded', event => {
   selectClick.getFeatures().on(['remove'], function (evt) {
     popup.hide();
   });
+
+
+  // On Change event 
+  // declaring Global variable to empty on change event
+  var Geojson;
+  function getSelected(CODE, TYPE_NAME, FILTER) {
+    // Removing previous layer from layerGroup loaded on map
+    Map.removeLayer(projectRegionLayerGroup);
+
+    // removing previou layer loaded on map change event
+    if (Geojson) {
+      Map.removeLayer(Geojson);
+    };
+    // defining new vector layer to access its properties
+    Geojson = new ol.layer.Vector({
+      title: TYPE_NAME,
+      source: new ol.source.Vector({
+        // `${pocra_geoserver}/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson`
+        url: `${wfs_server}&typeName=${TYPE_NAME}&CQL_FILTER=${FILTER}+ILike+'${CODE}'`,
+        format: new ol.format.GeoJSON()
+      }),
+    });
+    // adding event from layer loading
+    Geojson.getSource().on('addfeature', function () {
+      Map.getView().fit(
+        Geojson.getSource().getExtent(), { duration: 1600, size: Map.getSize() - 200 }
+      );
+    });
+    // added vector layer
+    Map.addLayer(Geojson);
+  }
+
+  // defining global variable for dropdown 
+  var distCode, talCode, vinCode;
+  // On Change event for District Dropdown selection
+  $('#select-district').change(function () {
+    // console.log(this.value);
+    // accessing dropdown value
+    distCode = this.value;
+    // logic for if 'All' value selected
+    if (distCode === '-1') {
+      view.animate({ center: [77, 18.95] }, { zoom: 7 });
+      Map.removeLayer(Geojson);
+    }
+    // logic for if value selected
+    else {
+      getSelected(CODE = distCode, TYPE_NAME = 'mh_districts', FILTER = 'dtncode');
+    }
+  });
+
+  // On Change event for Taluka Dropdown selection
+  $('#select-taluka').change(function () {
+    // console.log(this.value);
+    // accessing dropdown value
+    talCode = this.value;
+    // logic for if 'All' value selected
+    if (talCode === '-1') {
+      // alert(distCode)
+      getSelected(CODE = distCode, TYPE_NAME = 'mh_districts', FILTER = 'dtncode');
+    }
+    // logic for if value selected
+    else {
+      getSelected(CODE = talCode, TYPE_NAME = 'mh_talukas', FILTER = 'thncode');
+    };
+  });
+  // On Change event for Village Dropdown selection
+  $('#select-village').change(function () {
+    // console.log(this.value);
+    // accessing dropdown value
+    vinCode = this.value;
+    // logic for if 'All' value selected
+    if (vinCode === '-1') {
+      // alert(distCode)
+      getSelected(CODE = talCode, TYPE_NAME = 'mh_talukas', FILTER = 'thncode');
+    }
+    // logic for if value selected
+    else {
+      getSelected(CODE = vinCode, TYPE_NAME = 'mh_villages', FILTER = 'vincode');
+
+    };
+  });
+
 
 });

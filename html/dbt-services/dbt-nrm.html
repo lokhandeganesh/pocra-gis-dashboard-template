@@ -380,11 +380,11 @@
                       <!-- Activity Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer"
+                          class="form-select cursor-pointer activity"
                           aria-label="Select Activity "
                           id="select-activity"
                           data-placeholder="--- Select Activity ---"
-                          onchange="getNrmActivity(this.value);"
+                          onchange="getNrmActivityCode()"
                         >
                           <option value="-1">
                             --- Select All Activity ---
@@ -395,43 +395,35 @@
                       <!-- District Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer"
+                          class="form-select cursor-pointer district"
                           aria-label="Select District"
                           id="select-district"
                           data-placeholder="--- Select District ---"
-                          onchange="getTaluka(this.value);"
+                          onchange="loadTalukas()"
                         >
-                          <option value="-1">--Select Alll District--</option>
+                          <option value="-1">-- All Districts --</option>
                         </select>
                       </div>
                       <!-- Taluka Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer"
+                          class="form-select cursor-pointer taluka"
                           aria-label="Select Taluka"
                           id="select-taluka"
-                          onchange="getVillage(this.value);"
+                          onchange="loadVillages();"
                         >
-                          <!-- <option selected value="-1">--Select Taluka--</option> -->
+                          <option value="-1">--Select Taluka--</option>
                         </select>
                       </div>
                       <!-- Village Dropdown -->
-                      <script>
-                        $("#select-district").change(function () {
-                          $("#select-village option:first").prop(
-                            "selected",
-                            "selected"
-                          );
-                        });
-                      </script>
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer"
+                          class="form-select cursor-pointer village"
                           aria-label="Select Village"
                           id="select-village"
-                          onchange="getVincode(this.value);"
+                          onchange="getVillage();"
                         >
-                          <!-- <option selected value="-1">--Select Village--</option> -->
+                          <option value="-1">--Select Village--</option>
                         </select>
                       </div>
                     </div>
@@ -679,9 +671,12 @@
   <script src="../../libs/ol-ext/ol-ext.js"></script>
   <!-- Internal JS file -->
   <script src="../../js/api-services-js/pocra-gis-api.js"></script>
-  <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script>
+  <!-- <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script> -->
   <script src="../../js/dbt-service-js/pocra-dbt-nrm-map.js"></script>
   <!-- Active js -->
   <script src="../../js/sidebarToggle.js"></script>
   <script src="../../js/openLayerCustom.js"></script>
+  <script>
+    (window.onload = loadNRM_Activity()), loadDistricts();
+  </script>
 </html>

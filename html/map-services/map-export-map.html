@@ -308,6 +308,70 @@
         <main>
           <div class="container-fluid px-4">
             <h5 class="mt-4">Export Map</h5>
+            <!-- Selection Menu -->
+            <div class="accordion mb-4" id="accordionSelectionMenu">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSelectionMenu">
+                  <button
+                    class="accordion-button fw-bold"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseSelectionMenu"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    Selection Menu
+                  </button>
+                </h2>
+                <div
+                  id="collapseSelectionMenu"
+                  class="accordion-collapse collapse show"
+                  aria-labelledby="headingSelectionMenu"
+                  data-bs-parent="#accordionSelectionMenu"
+                >
+                  <div class="accordion-body">
+                    <!-- Dropdown Div -->
+                    <div class="row">
+                      <!--  -->
+                      <!-- District Dropdown -->
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer district"
+                          aria-label="Select District"
+                          id="select-district"
+                          data-placeholder="--- Select District ---"
+                          onchange="loadTalukas()"
+                        >
+                          <option value="-1">-- All Districts --</option>
+                        </select>
+                      </div>
+                      <!-- Taluka Dropdown -->
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer taluka"
+                          aria-label="Select Taluka"
+                          id="select-taluka"
+                          onchange="loadVillages();"
+                        >
+                          <option value="-1">--Select Taluka--</option>
+                        </select>
+                      </div>
+                      <!-- Village Dropdown -->
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer village"
+                          aria-label="Select Village"
+                          id="select-village"
+                          onchange="getVillage();"
+                        >
+                          <option value="-1">--Select Village--</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- Map Div -->
             <div class="card mb-4">
               <div class="card-header" id="card-title">
@@ -360,4 +424,7 @@
   <script src="../../js/api-services-js/pocra-gis-api.js"></script>
   <!-- Map-Export JS file -->
   <script src="../../js/map-service-js/map-service.js"></script>
+  <script>
+    window.onload = loadDistricts();
+  </script>
 </html>

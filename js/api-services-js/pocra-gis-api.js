@@ -385,10 +385,11 @@ const geolocationConst = new ol.control.GeolocationButton({
   delay: 10000 // 10s
 });
 // View of Maharashtra
+const center = [77.50, 18.95];
+new ol.proj.useGeographic();
 const viewCosnt = new ol.View({
-  center: [77.5, 18.95],
+  center: center,
   zoom: 7.2,
-  projection: 'EPSG:4326'
 })
 
 // 
