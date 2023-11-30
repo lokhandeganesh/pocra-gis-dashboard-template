@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', event => {
   const projectRegionLayerGroup = new ol.layer.Group({
     title: 'Project Region',
     openInLayerSwitcher: true,
-    layers: [POCRA_DISTRICTS
+    layers: [POCRA_DISTRICTS, dbt_nrm_summery_all_dist
     ]
   });
 
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', event => {
             };
           })()
         }),
-        visible: true,
+        visible: false,
         baseLayer: false,
         title: "NRM Structures",
       }),

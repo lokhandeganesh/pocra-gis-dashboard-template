@@ -340,6 +340,22 @@ MH_Waterbody_1516_Legend.addItem(new ol.legend.Image({
 LEGEND.addItem(MH_Waterbody_1516_Legend);
 
 
+// DBT NRM Community Application
+const dbt_nrm_summery_all_dist = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:dbt_nrm_summery_all_dist',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "dbt_nrm_summery_all_dist",
+});
+
 // Layer Switcher Extention
 const layerSwitcherConst = new ol.control.LayerSwitcher({
   collapsed: true,
