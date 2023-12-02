@@ -1,32 +1,6 @@
-// getDistrict()
-const getDistrictList = () => fetch('http://gis.mahapocra.gov.in/weatherservices/meta/districts')
-  .then((response) => response.json())
-  .then((data) => { return data.district })
-
-
-const getTalukaList = (dtncode) => fetch(`http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=${dtncode}`)
-  .then((response) => response.json())
-  .then((data) => { return data.taluka })
-  .then((result) => { return result })
-
-// const renderDistricts = async () => {
-//   const districts = await getDistrict;
-
-//   // dropdown for District Selection
-//   var ele = '' //document.getElementById("select-district");
-
-//   console.log(districts)
-//   districts.forEach(result => {
-//     console.log(result);
-//     ele.innerHTML += `<option value= ${result.district[i]["dtncode"]}>${result.district[i]["dtename"]}</option>`;
-//     // Marathi District Name
-//     ele.innerHTML += `<option value=${result.district[i]["dtncode"]}>${result.district[i]["dtnname"]}</option>`;
-//   });
-// }
-
-// renderDistricts()
 
 // Map Service Constants
+// new ol.proj.useGeographic();
 // PoCRA Geoserver
 const pocra_geoserver = "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2"
 const wfs_server = `${pocra_geoserver}/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson`
@@ -375,8 +349,8 @@ const scaleLineControlConst = new ol.control.ScaleLine({
 // Zoom to Extent control
 const zoomToExtConst = new ol.control.ZoomToExtent({
   extent: [
-    73.19613063800134, 15.124338344890079,
-    81.80386936199866, 22.77566165510992
+    73.19, 15.12,
+    81.80, 22.77
   ]
 });
 // Full Screen Control
@@ -402,10 +376,10 @@ const geolocationConst = new ol.control.GeolocationButton({
 });
 // View of Maharashtra
 const center = [77.50, 18.95];
-new ol.proj.useGeographic();
 const viewCosnt = new ol.View({
   center: center,
   zoom: 7.2,
+  projection:'EPSG:4326'
 })
 
 // 
@@ -435,7 +409,7 @@ function loadNRM_Activity() {
 function getNrmActivityCode() {
   const activityCode = activitySelect.value;
   if (activityCode === '-1') {
-    alert('All Activity');
+    console.log('All Activity');    
   }
   else {
     console.log(activityCode);
@@ -512,8 +486,7 @@ function loadVillages() {
     villageSelect.style.cursor = 'not-allowed';
 
     villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
-
-    alert('All Villages');
+    // alert('All Villages');
   } else {
 
     villageSelect.disabled = false;
@@ -541,9 +514,8 @@ function loadVillages() {
 function getVillage() {
   const vinCode = villageSelect.value;
   if (vinCode !== '-1') {
-    console.log(vinCode);
+    console.log(vinCode);    
   } else {
-    alert('All Villages');
+    console.log('All Villages');
   }
-
 }

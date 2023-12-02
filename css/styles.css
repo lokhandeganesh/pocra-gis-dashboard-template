@@ -484,3 +484,7 @@ This following statements selects each category individually that contains an in
   right: 2em;
   left: unset;
 }
+
+.ol-legend {
+  border: 1px solid black;
+}
