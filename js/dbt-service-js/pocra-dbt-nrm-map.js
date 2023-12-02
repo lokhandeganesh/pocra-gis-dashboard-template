@@ -17,8 +17,8 @@ window.addEventListener('DOMContentLoaded', event => {
   // baseMapGroup.set('openInLayerSwitcher', false);
   const projectRegionLayerGroup = new ol.layer.Group({
     title: 'Project Region',
-    openInLayerSwitcher: true,
-    layers: [POCRA_DISTRICTS, dbt_nrm_summery_all_dist
+    openInLayerSwitcher: false,
+    layers: [POCRA_DISTRICTS, 
     ]
   });
 
@@ -36,6 +36,14 @@ window.addEventListener('DOMContentLoaded', event => {
     layers: [MH_LULC_1516, MH_Settlement_1516, MH_Waterbody_1516,
       MH_RIVERS_POLY, MH_RIVERS, MH_ROADS, MH_MAJOR_ROADS,
     ]
+  });
+
+  const activityLayerGroup = new ol.layer.Group({
+    title: 'Activities',
+    openInLayerSwitcher: true,
+    layers: [dbt_nrm_summery_all_dist_act_TEST, 
+    ]
+    
   });
 
   // Adding LayerGroup control to layer switcher
@@ -107,7 +115,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
   const activityLayersVector = new ol.layer.Group({
     title: 'Activity Layers',
-    openInLayerSwitcher: true,
+    openInLayerSwitcher: false,
     layers: [
       new ol.layer.Vector({
         source: new ol.source.Vector({
@@ -149,7 +157,7 @@ window.addEventListener('DOMContentLoaded', event => {
   // A group layer for Administrative layers (WMS)
   const activityLayers = new ol.layer.Group({
     title: 'Activity Layers',
-    openInLayerSwitcher: true,
+    openInLayerSwitcher: false,
     layers: [
       new ol.layer.Tile({
         source: new ol.source.TileWMS({
@@ -204,7 +212,7 @@ window.addEventListener('DOMContentLoaded', event => {
     view: view,
     target: 'pocra-dbt-nrm-map',
     layers: [baseMapGroup, baseLayerGroup,
-      adminLayerGroup, projectRegionLayerGroup, activityLayers, activityLayersVector],
+      adminLayerGroup, projectRegionLayerGroup, activityLayers, activityLayersVector, activityLayerGroup],
     // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,

@@ -330,6 +330,22 @@ const dbt_nrm_summery_all_dist = new ol.layer.Tile({
   title: "dbt_nrm_summery_all_dist",
 });
 
+// dbt_nrm_test
+const dbt_nrm_summery_all_dist_act_TEST = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:dbt_nrm_test',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "NRM Summery",
+});
+
 // Layer Switcher Extention
 const layerSwitcherConst = new ol.control.LayerSwitcher({
   collapsed: true,
