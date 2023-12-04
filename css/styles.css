@@ -356,6 +356,7 @@
   border: 1px solid #fff;
   overflow: hidden;
   float: left;
+  padding: 0;
 }
 
 .cat label {
@@ -397,6 +398,10 @@ This following statements selects each category individually that contains an in
 }
 
 .checkbox-checked input:checked + span {
+  background-color: #82d44e;
+}
+
+.abc {
   background-color: #82d44e;
 }
 

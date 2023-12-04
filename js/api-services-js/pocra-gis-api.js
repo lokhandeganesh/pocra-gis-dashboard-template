@@ -339,9 +339,12 @@ const dbt_nrm_summery_all_dist_act_TEST = new ol.layer.Tile({
     params: {
       'LAYERS': 'PoCRA_Dashboard_V2:dbt_nrm_test',
       'TILED': true,
+      'env': `nrm_summr_class:comm_appl_class;nrm_summr_mv:comm_appl_mv`//${forecast_for}`,
+      // comm_appl_class, tech_sanct_class, e_tend_class, work_ord_iss_class, comp_work_class, disburse_class
+      // 'viewparams': "forecast_date:" + forecastdate,
     }
   }),
-  visible: false,
+  visible: true,
   baseLayer: false,
   title: "NRM Summery",
 });
@@ -395,7 +398,7 @@ const center = [77.50, 18.95];
 const viewCosnt = new ol.View({
   center: center,
   zoom: 7.2,
-  projection:'EPSG:4326'
+  projection: 'EPSG:4326'
 })
 
 // 
@@ -425,7 +428,7 @@ function loadNRM_Activity() {
 function getNrmActivityCode() {
   const activityCode = activitySelect.value;
   if (activityCode === '-1') {
-    console.log('All Activity');    
+    console.log('All Activity');
   }
   else {
     console.log(activityCode);
@@ -530,7 +533,7 @@ function loadVillages() {
 function getVillage() {
   const vinCode = villageSelect.value;
   if (vinCode !== '-1') {
-    console.log(vinCode);    
+    console.log(vinCode);
   } else {
     console.log('All Villages');
   }

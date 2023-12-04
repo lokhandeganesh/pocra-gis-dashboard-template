@@ -18,9 +18,11 @@ window.addEventListener('DOMContentLoaded', event => {
   const projectRegionLayerGroup = new ol.layer.Group({
     title: 'Project Region',
     openInLayerSwitcher: false,
-    layers: [POCRA_DISTRICTS, 
+    layers: [POCRA_DISTRICTS,
     ]
   });
+  // Setting layer visibility
+  POCRA_DISTRICTS.setVisible(false)
 
   const adminLayerGroup = new ol.layer.Group({
     title: 'Admin Layers',
@@ -41,9 +43,9 @@ window.addEventListener('DOMContentLoaded', event => {
   const activityLayerGroup = new ol.layer.Group({
     title: 'Activities',
     openInLayerSwitcher: true,
-    layers: [dbt_nrm_summery_all_dist_act_TEST, 
+    layers: [dbt_nrm_summery_all_dist_act_TEST,
     ]
-    
+
   });
 
   // Adding LayerGroup control to layer switcher
@@ -479,6 +481,26 @@ window.addEventListener('DOMContentLoaded', event => {
       getSelected(CODE = vinCode, TYPE_NAME = 'mh_villages', FILTER = 'vincode');
 
     };
+  });
+
+  // Radio Button Click Event
+  var params = dbt_nrm_summery_all_dist_act_TEST.getSource().getParams();
+  // console.log(params);
+
+  // if option is seleceted / change
+  $('input[name="applicationStatus"]').change(() => {
+    const $applnStatusRadioChecked = $('input[name="applicationStatus"]:checked').val();
+    var summClassEnv = `${$applnStatusRadioChecked}_class`;
+    var labelEnv = `${$applnStatusRadioChecked}_mv`;
+    // console.log(summClassEnv, labelEnv);
+
+    $('input[name="applicationStatus"]').parent('div').addClass('abc');
+
+    Map.getView().setZoom(6.8);
+
+    dbt_nrm_summery_all_dist_act_TEST.getSource().updateParams({ 'env': `nrm_summr_class:${summClassEnv};nrm_summr_mv:${labelEnv}` });
+    // View animation
+    view.animate({ center: [77, 18.95] }, { zoom: 7.2 });
   });
 
 
