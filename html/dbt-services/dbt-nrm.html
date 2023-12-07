@@ -153,7 +153,15 @@
                   data-bs-parent="#sidenavAccordion"
                 >
                   <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="./dbt-farmer.html">
+                    <!-- <a
+                      class="nav-link"
+                      href="./dbt-farmer.html"
+                    > -->
+                    <a
+                      class="nav-link"
+                      href="http://gis.mahapocra.gov.in/pocra_dashboard/"
+                      target="_blank"
+                    >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-tractor"></i>
                       </div>
@@ -597,12 +605,99 @@
                 </div>
                 <div class="modal-body">
                   <!-- Image is loaded from API via source  -->
-                  <img
-                    id="modalImage"
-                    src=""
-                    alt="Activity Image"
-                    style="width: 100%"
-                  />
+                  <div>
+                    <div
+                      id="demo"
+                      class="carousel slide"
+                      data-bs-ride="carousel"
+                    >
+                      <!-- Indicators/dots -->
+                      <div class="carousel-indicators">
+                        <button
+                          type="button"
+                          data-bs-target="#demo"
+                          data-bs-slide-to="0"
+                          class="active"
+                        ></button>
+                        <button
+                          type="button"
+                          data-bs-target="#demo"
+                          data-bs-slide-to="1"
+                        ></button>
+                        <button
+                          type="button"
+                          data-bs-target="#demo"
+                          data-bs-slide-to="2"
+                        ></button>
+                      </div>
+                      <!-- The slideshow/carousel -->
+                      <div class="carousel-inner">
+                        <div class="carousel-item active thumbnail">
+                          <img
+                            id="modal-1"
+                            class="rounded float-start"
+                            style="
+                              width: 100%;
+                              border-radius: 5px;
+                              cursor: pointer;
+                              transition: 0.3s;
+                            "
+                            src=""
+                            data-bs-toggle="modal"
+                            data-bs-target="#enlargeImageModal"
+                          />
+                        </div>
+                        <div class="carousel-item thumbnail">
+                          <img
+                            id="modal-2"
+                            class="rounded float-start"
+                            style="
+                              width: 100%;
+
+                              border-radius: 5px;
+                              cursor: pointer;
+                              transition: 0.3s;
+                            "
+                            src=""
+                            data-bs-toggle="modal"
+                            data-bs-target="#enlargeImageModal"
+                          />
+                        </div>
+                        <div class="carousel-item thumbnail">
+                          <img
+                            id="modal-3"
+                            class="rounded float-start"
+                            style="
+                              width: 100%;
+                              border-radius: 5px;
+                              cursor: pointer;
+                              transition: 0.3s;
+                            "
+                            src=""
+                            data-bs-toggle="modal"
+                            data-bs-target="#enlargeImageModal"
+                          />
+                        </div>
+                      </div>
+                      <!-- Left and right controls/icons -->
+                      <button
+                        class="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#demo"
+                        data-bs-slide="prev"
+                      >
+                        <span class="carousel-control-prev-icon"></span>
+                      </button>
+                      <button
+                        class="carousel-control-next"
+                        type="button"
+                        data-bs-target="#demo"
+                        data-bs-slide="next"
+                      >
+                        <span class="carousel-control-next-icon"></span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

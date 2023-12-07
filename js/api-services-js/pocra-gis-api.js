@@ -393,6 +393,19 @@ const geolocationConst = new ol.control.GeolocationButton({
   title: 'Where am I?',
   delay: 10000 // 10s
 });
+
+// Popup overlay
+const popup = new ol.Overlay.Popup({
+  popupClass: "default", //"tooltips", "warning" "black" "default", "tips", "shadow",
+  closeBox: true,
+  // onshow: function () { console.log("You opened the box"); },
+  // onclose: function () { console.log("You close the box"); },
+  positioning: 'auto',
+  autoPan: {
+    animation: { duration: 250 }
+  }
+});
+
 // View of Maharashtra
 const center = [77.50, 18.95];
 const viewCosnt = new ol.View({
@@ -468,9 +481,7 @@ function loadTalukas() {
     villageSelect.style.cursor = 'not-allowed';
 
     talukaSelect.innerHTML = '<option value="-1">-- Select Taluka --</option>' // for clearing the exting talukas
-    villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
-
-    alert('All District');
+    villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages    
   } else {
     talukaSelect.disabled = false;
     villageSelect.disabled = true;
@@ -479,7 +490,6 @@ function loadTalukas() {
 
     talukaSelect.innerHTML = '<option value="-1">-- All Talukas --</option>' // for clearing the exting talukas
     villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
-
 
     let apiEndPoint = `http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=${dtncode}`;
 
@@ -505,7 +515,7 @@ function loadVillages() {
     villageSelect.style.cursor = 'not-allowed';
 
     villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
-    // alert('All Villages');
+
   } else {
 
     villageSelect.disabled = false;

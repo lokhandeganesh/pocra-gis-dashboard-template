@@ -40,10 +40,40 @@ window.addEventListener('DOMContentLoaded', event => {
     ]
   });
 
+
+  // Point Locations Data Source GeoJson
+  const dbt_nrm_application_data_source = new ol.source.Vector({
+    url: `${wfs_server}&typeName=dbt_nrm_application_data`,
+    projection: 'EPSG:4326',
+    format: new ol.format.GeoJSON(),
+  });
+
+  // NRM_Project_Locations Vector GeoJson Layer
+  const NRM_Project_Locations = new ol.layer.Vector({
+    source: dbt_nrm_application_data_source,
+    visible: false,
+    baseLayer: false,
+    title: 'NRM Application Locations',
+    style: (function () {
+      var freeStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: [0.5, 0.5],   // Default value is the icon center.
+          scale: 0.04,          // resize imge
+          color: '#99fc82',    // green
+          crossOrigin: 'anonymous',
+          src: '../../assets/img/com.svg'
+        })
+      });
+      var styles = [freeStyle];
+      return styles;
+    })()
+  });
+
+  // DBT NRM Layer Group
   const activityLayerGroup = new ol.layer.Group({
     title: 'Activities',
     openInLayerSwitcher: true,
-    layers: [dbt_nrm_summery_all_dist_act_TEST,
+    layers: [dbt_nrm_summery_all_dist_act_TEST, NRM_Project_Locations
     ]
 
   });
@@ -95,7 +125,7 @@ window.addEventListener('DOMContentLoaded', event => {
   // geo Location control
   const geoLocControl = geolocationConst;
   // Show position
-  var here = new ol.Overlay.Popup({ positioning: 'bottom-center' });
+  const here = new ol.Overlay.Popup({ positioning: 'bottom-center' });
 
   // All Controls
   const mapControls = [
@@ -115,96 +145,85 @@ window.addEventListener('DOMContentLoaded', event => {
   //   document.getElementById("layer-loader").classList.remove("loader");
   // });
 
-  const activityLayersVector = new ol.layer.Group({
-    title: 'Activity Layers',
-    openInLayerSwitcher: false,
-    layers: [
-      new ol.layer.Vector({
-        source: new ol.source.Vector({
-          url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
-          projection: 'EPSG:4326',
-          format: new ol.format.GeoJSON(),
-          style: (function (feature, resolution) {
-            var style = new ol.style.Style({
-              // image: new ol.style.Icon({
-              //   scale: 0.04,
-              //   src: '../../assets/img/com.svg',
-              // }),
-              text: new ol.style.Text({
-                text: 'Vector Label',
-                scale: 1.3,
-                fill: new ol.style.Fill({
-                  color: '#FF0000'
-                }),
-                stroke: new ol.style.Stroke({
-                  color: '#FFFF99',
-                  width: 3.5
-                })
-              })
-            });
-            var styles = [style];
-            return function (feature, resolution) {
-              style.getText().setText(feature.get("structure_type"));
-              return styles;
-            };
-          })()
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "NRM Structures",
-      }),
-    ]
-  });
+  // Old points data
+  // const activityLayersVector = new ol.layer.Group({
+  //   title: 'Activity Layers',
+  //   openInLayerSwitcher: false,
+  //   layers: [
+  //     new ol.layer.Vector({
+  //       source: new ol.source.Vector({
+  //         url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
+  //         projection: 'EPSG:4326',
+  //         format: new ol.format.GeoJSON(),
+  //         style: (function (feature, resolution) {
+  //           var style = new ol.style.Style({
+  //             // image: new ol.style.Icon({
+  //             //   scale: 0.04,
+  //             //   src: '../../assets/img/com.svg',
+  //             // }),
+  //             text: new ol.style.Text({
+  //               text: 'Vector Label',
+  //               scale: 1.3,
+  //               fill: new ol.style.Fill({
+  //                 color: '#FF0000'
+  //               }),
+  //               stroke: new ol.style.Stroke({
+  //                 color: '#FFFF99',
+  //                 width: 3.5
+  //               })
+  //             })
+  //           });
+  //           var styles = [style];
+  //           return function (feature, resolution) {
+  //             style.getText().setText(feature.get("structure_type"));
+  //             return styles;
+  //           };
+  //         })()
+  //       }),
+  //       visible: false,
+  //       baseLayer: false,
+  //       title: "NRM Structures",
+  //     }),
+  //   ]
+  // });
 
   // A group layer for Administrative layers (WMS)
-  const activityLayers = new ol.layer.Group({
-    title: 'Activity Layers',
-    openInLayerSwitcher: false,
-    layers: [
-      new ol.layer.Tile({
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-          params: {
-            'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_existing_structures',
-            'TILED': true,
-          }
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "Existing Structures",
-      }),
-      new ol.layer.Tile({
-        source: new ol.source.TileWMS({
-          url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
+  // const activityLayers = new ol.layer.Group({
+  //   title: 'Activity Layers',
+  //   openInLayerSwitcher: false,
+  //   layers: [
+  //     new ol.layer.Tile({
+  //       source: new ol.source.TileWMS({
+  //         url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
+  //         crossOrigin: 'Anonymous',
+  //         serverType: 'geoserver',
+  //         params: {
+  //           'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_existing_structures',
+  //           'TILED': true,
+  //         }
+  //       }),
+  //       visible: false,
+  //       baseLayer: false,
+  //       title: "Existing Structures",
+  //     }),
+  //     new ol.layer.Tile({
+  //       source: new ol.source.TileWMS({
+  //         url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
+  //         crossOrigin: 'Anonymous',
+  //         serverType: 'geoserver',
 
-          params: {
-            'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_pocra_structures',
-            'TILED': true,
-          }
-        }),
-        visible: false,
-        baseLayer: false,
-        title: "Project Structures",
-      }),
-    ]
-  });
+  //         params: {
+  //           'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_pocra_structures',
+  //           'TILED': true,
+  //         }
+  //       }),
+  //       visible: false,
+  //       baseLayer: false,
+  //       title: "Project Structures",
+  //     }),
+  //   ]
+  // });
 
-
-  // Popup overlay
-  var popup = new ol.Overlay.Popup({
-    popupClass: "default", //"tooltips", "warning" "black" "default", "tips", "shadow",
-    closeBox: true,
-    // onshow: function () { console.log("You opened the box"); },
-    // onclose: function () { console.log("You close the box"); },
-    positioning: 'auto',
-    autoPan: {
-      animation: { duration: 250 }
-    }
-  });
 
   // Accessing global variable
   // View for Mh
@@ -214,7 +233,8 @@ window.addEventListener('DOMContentLoaded', event => {
     view: view,
     target: 'pocra-dbt-nrm-map',
     layers: [baseMapGroup, baseLayerGroup,
-      adminLayerGroup, projectRegionLayerGroup, activityLayers, activityLayersVector, activityLayerGroup],
+      //activityLayers, activityLayersVector, 
+      activityLayerGroup, adminLayerGroup, projectRegionLayerGroup],
     // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,
@@ -223,6 +243,7 @@ window.addEventListener('DOMContentLoaded', event => {
     })
       // Adding new external controls on map
       .extend(mapControls),
+    overlays: [popup]
   });
   // View animation
   view.animate({ center: [77, 18.95] }, { zoom: 7 });
@@ -241,75 +262,77 @@ window.addEventListener('DOMContentLoaded', event => {
   });
 
   // GeoJson Layer of NRM Project(PoCRA) Points
-  const nrmProjectVectorSource = new ol.source.Vector({
-    url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
-    projection: 'EPSG:4326',
-    format: new ol.format.GeoJSON(),
-  });
+  // const nrmProjectVectorSource = new ol.source.Vector({
+  //   url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
+  //   projection: 'EPSG:4326',
+  //   format: new ol.format.GeoJSON(),
+  // });
 
   // Adding Layer to Map
-  Map.addLayer(new ol.layer.Vector({
-    name: 'NRM Project Locations',
-    source: nrmProjectVectorSource,
-    visible: false,
-    openInLayerSwitcher: true,
-    style: (function () {
+  // Map.addLayer(new ol.layer.Vector({
+  //   name: 'NRM Project Locations',
+  //   source: nrmProjectVectorSource,
+  //   visible: false,
+  //   openInLayerSwitcher: true,
+  //   style: (function () {
 
-      var stdStyle = new ol.style.Style({
-        image: new ol.style.Icon({
-          anchor: [0.5, 0.5],   // Default value is the icon center.
-          scale: 0.04,          // resize imge          
-          src: '../../assets/img/subscription-svgrepo-com.svg'
-        })
-      });
+  //     var stdStyle = new ol.style.Style({
+  //       image: new ol.style.Icon({
+  //         anchor: [0.5, 0.5],   // Default value is the icon center.
+  //         scale: 0.04,          // resize imge          
+  //         src: '../../assets/img/subscription-svgrepo-com.svg'
+  //       })
+  //     });
 
-      var freeStyle = new ol.style.Style({
-        image: new ol.style.Icon({
-          anchor: [0.5, 0.5],   // Default value is the icon center.
-          scale: 0.04,          // resize imge
-          color: '#49fc82',    // green
-          crossOrigin: 'anonymous',
-          src: '../../assets/img/com.svg'
-        })
-      });
+  //     var freeStyle = new ol.style.Style({
+  //       image: new ol.style.Icon({
+  //         anchor: [0.5, 0.5],   // Default value is the icon center.
+  //         scale: 0.04,          // resize imge
+  //         color: '#49fc82',    // green
+  //         crossOrigin: 'anonymous',
+  //         src: '../../assets/img/com.svg'
+  //       })
+  //     });
 
-      var style = new ol.style.Style({
-        // image: new ol.style.Icon({
-        //   anchor: [0.5, 0.5],   // Default value is the icon center.
-        //   scale: 0.04,          // resize imge
-        //   // color: '#49fc82',    // green
-        //   crossOrigin: 'anonymous',
-        //   src: '../../assets/img/subscription-svgrepo-com.svg'
-        // }),
-        text: new ol.style.Text({
-          textAlign: 'top',
-          textBaseline: 'bottom',
-          offsetX: 0,
-          offsetY: 0,
-          text: 'Vector Label',
-          scale: 1.3,
-          fill: new ol.style.Fill({
-            color: '#FF0000'
-          }),
-          stroke: new ol.style.Stroke({
-            color: '#FFFF99',
-            width: 3.5
-          })
-        })
-      });
-      var styles = [style];
-      return function (feature, resolution) {
-        // var activity_code = feature.get("activity_code")
-        // activity_code === 'A3.2.3' ? stdStyle : freeStyle
-        // console.log(feature.get("activity_code"))
-        style.getText().setText(feature.get("structure_type"));
-        return styles;
-      };
-    })()
-  }));
+  //     var style = new ol.style.Style({
+  //       // image: new ol.style.Icon({
+  //       //   anchor: [0.5, 0.5],   // Default value is the icon center.
+  //       //   scale: 0.04,          // resize imge
+  //       //   // color: '#49fc82',    // green
+  //       //   crossOrigin: 'anonymous',
+  //       //   src: '../../assets/img/subscription-svgrepo-com.svg'
+  //       // }),
+  //       text: new ol.style.Text({
+  //         textAlign: 'top',
+  //         textBaseline: 'bottom',
+  //         offsetX: 0,
+  //         offsetY: 0,
+  //         text: 'Vector Label',
+  //         scale: 1.3,
+  //         fill: new ol.style.Fill({
+  //           color: '#FF0000'
+  //         }),
+  //         stroke: new ol.style.Stroke({
+  //           color: '#FFFF99',
+  //           width: 3.5
+  //         })
+  //       })
+  //     });
+  //     var styles = [style];
+  //     return function (feature, resolution) {
+  //       // var activity_code = feature.get("activity_code")
+  //       // activity_code === 'A3.2.3' ? stdStyle : freeStyle
+  //       // console.log(feature.get("activity_code"))
+  //       style.getText().setText(feature.get("structure_type"));
+  //       return styles;
+  //     };
+  //   })()
+  // }));
+
+
 
   // Control Select
-  const selectClick = new ol.interaction.Select({});
+  const selectClick = new ol.interaction.Select({ condition: ol.events.condition.singleClick });
   Map.addInteraction(selectClick);
 
   // Select interaction on map
@@ -318,93 +341,183 @@ window.addEventListener('DOMContentLoaded', event => {
       evt.selected.forEach(function (feature) {
         // feature.getLayer(Map) imported from openLayerCustom.js
         var layer = feature.getLayer(Map);
+        // console.log(layer)
 
         // Fly to location on Map click event
         if (layer.get('name') == 'Project Districts') {
           var selectedFeatureExtent = feature.getGeometry().getExtent();
           Map.getView().fit(selectedFeatureExtent, { duration: 2000 });
-
         }
-
         // Custom content for pop-up on click event of nrm project location        
-        if (layer.get('name') == 'NRM Project Locations') {
-          var content = "";
-          content +=
-            `
-            <div class="container">
-              <div class="row">
-                <div class="">
-                  <table class="table table-striped ">
-                    <thead>
-                      <tr>
-                        <th>Attibutes</th>
-                        <th>Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th colspan="2" style="font-weight: normal;">Activity Name</th>
-                      </tr>
-                      <tr>
-                        <th colspan="2">${feature.get('activity_name')}</th>
-                      </tr>
-                      <tr>
-                        <td>Activity Code</td>
-                        <td>${feature.get('activity_code')}</td>
-                      </tr>
-                      <tr>
-                        <td>District</td>
-                        <td>${feature.get('district')}</td>
-                      </tr>
-                      <tr>
-                        <td>Taluka</td>
-                        <td>${feature.get('taluka')}</td>
-                      </tr>
-                      <tr>
-                        <td>Village</td>
-                        <td>${feature.get('village')} (${feature.get('vincode')})</td>
-                      </tr>
-                      <tr>
-                        <td>Application Number</td>
-                        <td>${feature.get('application_number')}</td>
-                      </tr>
-                      <tr>
-                        <th colspan="2">Activity Image</th>
-                      </tr>
-                      <tr>
-                        <th colspan="2">
-                          <img
-                            class="rounded float-start"
-                            style="width:100%; height: 200px;
-                            border-radius: 5px;  cursor: pointer;  transition: 0.3s;"
-                            src="${feature.get('img_url')}" data-bs-toggle="modal"
-                            data-bs-target="#enlargeImageModal"
-                          />
-                        </th>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          `
+        if (layer.get('title') == 'NRM Application Locations') {
+          // console.log(feature)
+          const FEAT_activity_name = feature.get('activity_name')
+          const FEAT_activity_code = feature.get('activity_code')
+          const FEAT_vincode = feature.get('vincode')
+          const FEAT_application_number = feature.get('application_number')
+          const FEAT_desk5_img = feature.get('desk5_img')
+          const FEAT_desk6_img = feature.get('desk6_img')
+          const FEAT_desk7_img = feature.get('desk7_img')
+          // console.log(content);
           // PopUp calling with content
+          content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img);
+          // console.log(feature.getGeometry().getFirstCoordinate());
           popup.show(feature.getGeometry().getFirstCoordinate(), content);
           // Setting parameters to Image Modal
-          $('#activityImageModalLabel').text(`Activity Name : ${feature.get('activity_name')}`);
-          $('#modalImage').attr('src', feature.get('img_url'));
+          $('#activityImageModalLabel').text(`Activity Name : ${FEAT_activity_name}`);
+          $('#modal-1').attr('src', FEAT_desk5_img);
+          $('#modal-2').attr('src', FEAT_desk6_img);
+          $('#modal-3').attr('src', FEAT_desk7_img);
         }
       });
     }
   });
+
   // hiding pop-up if pointer selection does not contain any feature
   selectClick.getFeatures().on(['remove'], function (evt) {
     popup.hide();
   });
+  // Function to show popup content on feature selection
+  function getPopUpTable(activity_name, activity_code, vincode, application_number, desk5_img, desk6_img, desk7_img) {
+    var PopUpContent = ''
+    PopUpContent +=
+      `
+      <div class="container">
+        <div class="row">
+          <div class="">
+            <table class="table table-striped ">
+              <thead>
+                <tr>
+                  <th>Attibutes</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th colspan="2" style="font-weight: normal;">Activity Name</th>
+                </tr>
+                <tr>
+                  <th colspan="2">${activity_name}</th>
+                </tr>
+                <tr>
+                  <td>Activity Code</td>
+                  <td>${activity_code}</td>
+                </tr>
+                <tr>
+                  <td>Village</td>
+                  <td>(${vincode})</td>
+                </tr>
+                <tr>
+                  <td>Application Number</td>
+                  <td>${application_number}</td>
+                </tr>
+                <tr>
+                  <th colspan="2">Activity Image</th>
+                </tr>
+                <tr>
+                  <th colspan="2">
+                    <div>
+                      <div id="selectPopUp" class="carousel slide" data-bs-ride="carousel">
+                        <!-- Indicators/dots -->
+                        <div class="carousel-indicators">
+                          <button
+                            type="button"
+                            data-bs-target="#selectPopUp"
+                            data-bs-slide-to="0"
+                            class="active"
+                          ></button>
+                          <button
+                            type="button"
+                            data-bs-target="#selectPopUp"
+                            data-bs-slide-to="1"
+                          ></button>
+                          <button
+                            type="button"
+                            data-bs-target="#selectPopUp"
+                            data-bs-slide-to="2"
+                          ></button>
+                        </div>
+                        <!-- The slideshow/carousel -->
+                        <div class="carousel-inner">
+                          <div class="carousel-item active thumbnail">
+                            <img
+                              class="rounded float-start"
+                              style="
+                                width: 100%;
+                                height: 200px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                transition: 0.3s;
+                              "
+                              src="${desk5_img}"
+                              data-bs-toggle="modal"
+                              data-bs-target="#enlargeImageModal"
+                            />
+                          </div>
+                          <div class="carousel-item thumbnail">
+                            <img
+                              class="rounded float-start"
+                              style="
+                                width: 100%;
+                                height: 200px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                transition: 0.3s;
+                              "
+                              src="${desk6_img}"
+                              data-bs-toggle="modal"
+                              data-bs-target="#enlargeImageModal"
+                            />
+                          </div>
+                          <div class="carousel-item thumbnail">
+                            <img
+                              class="rounded float-start"
+                              style="
+                                width: 100%;
+                                height: 200px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                transition: 0.3s;
+                              "
+                              src="${desk7_img}"
+                              data-bs-toggle="modal"
+                              data-bs-target="#enlargeImageModal"
+                            />
+                          </div>
+                        </div>
+                        <!-- Left and right controls/icons -->
+                        <button
+                          class="carousel-control-prev"
+                          type="button"
+                          data-bs-target="#selectPopUp"
+                          data-bs-slide="prev"
+                        >
+                          <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button
+                          class="carousel-control-next"
+                          type="button"
+                          data-bs-target="#selectPopUp"
+                          data-bs-slide="next"
+                        >
+                          <span class="carousel-control-next-icon"></span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `
 
+    return PopUpContent
+  }
 
   // On Change event 
-  // declaring Global variable to empty on change event
+  // Declaring Global variable to empty on change event
   var Geojson;
   function getSelected(CODE, TYPE_NAME, FILTER) {
     // Removing previous layer from layerGroup loaded on map
@@ -428,13 +541,18 @@ window.addEventListener('DOMContentLoaded', event => {
       Map.getView().fit(
         Geojson.getSource().getExtent(), { duration: 1600, size: Map.getSize() - 200 }
       );
+
+      // Once Map is loaded and fit to extent we will remove GeoJson Feature
+      Map.removeLayer(Geojson);
     });
     // added vector layer
     Map.addLayer(Geojson);
+
+
   }
 
   // defining global variable for dropdown 
-  var distCode, talCode, vinCode;
+  var distCode, talCode, vinCode, summClassEnv = 'comm_appl_class', labelEnv = 'comm_appl_mv';
   // On Change event for District Dropdown selection
   $('#select-district').change(function () {
     // console.log(this.value);
@@ -449,6 +567,8 @@ window.addEventListener('DOMContentLoaded', event => {
     else {
       getSelected(CODE = distCode, TYPE_NAME = 'mh_districts', FILTER = 'dtncode');
     }
+    // Accessing Radio Button Value
+    console.log(summClassEnv);
   });
 
   // On Change event for Taluka Dropdown selection
@@ -490,18 +610,20 @@ window.addEventListener('DOMContentLoaded', event => {
   // if option is seleceted / change
   $('input[name="applicationStatus"]').change(() => {
     const $applnStatusRadioChecked = $('input[name="applicationStatus"]:checked').val();
-    var summClassEnv = `${$applnStatusRadioChecked}_class`;
-    var labelEnv = `${$applnStatusRadioChecked}_mv`;
-    // console.log(summClassEnv, labelEnv);
+    summClassEnv = `${$applnStatusRadioChecked}_class`;
+    labelEnv = `${$applnStatusRadioChecked}_mv`;
 
-    $('input[name="applicationStatus"]').parent('div').addClass('abc');
+    updateNRMParams(summClassEnv, labelEnv);
+    // dbt_nrm_summery_all_dist_act_TEST.getSource().updateParams({ 'env': `nrm_summr_class:${summClassEnv};nrm_summr_mv:${labelEnv}` });
 
+  });
+
+  function updateNRMParams(summClassEnv, labelEnv) {
     Map.getView().setZoom(6.8);
-
     dbt_nrm_summery_all_dist_act_TEST.getSource().updateParams({ 'env': `nrm_summr_class:${summClassEnv};nrm_summr_mv:${labelEnv}` });
     // View animation
     view.animate({ center: [77, 18.95] }, { zoom: 7.2 });
-  });
+  }
 
 
 });
