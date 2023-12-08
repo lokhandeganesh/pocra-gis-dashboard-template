@@ -355,12 +355,13 @@ window.addEventListener('DOMContentLoaded', event => {
           const FEAT_activity_code = feature.get('activity_code')
           const FEAT_vincode = feature.get('vincode')
           const FEAT_application_number = feature.get('application_number')
+          const FEAT_survey_no = feature.get('survey_no')
           const FEAT_desk5_img = feature.get('desk5_img')
           const FEAT_desk6_img = feature.get('desk6_img')
           const FEAT_desk7_img = feature.get('desk7_img')
           // console.log(content);
           // PopUp calling with content
-          content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img);
+          content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img, FEAT_survey_no);
           // console.log(feature.getGeometry().getFirstCoordinate());
           popup.show(feature.getGeometry().getFirstCoordinate(), content);
           // Setting parameters to Image Modal
@@ -378,7 +379,7 @@ window.addEventListener('DOMContentLoaded', event => {
     popup.hide();
   });
   // Function to show popup content on feature selection
-  function getPopUpTable(activity_name, activity_code, vincode, application_number, desk5_img, desk6_img, desk7_img) {
+  function getPopUpTable(activity_name, activity_code, vincode, application_number, desk5_img, desk6_img, desk7_img, survey_no) {
     var PopUpContent = ''
     PopUpContent +=
       `
@@ -394,22 +395,30 @@ window.addEventListener('DOMContentLoaded', event => {
               </thead>
               <tbody>
                 <tr>
-                  <th colspan="2" style="font-weight: normal;">Activity Name</th>
+                  <td>District :-</td>
+                  <td class="tbl-bold">(${vincode})</td>
                 </tr>
                 <tr>
-                  <th colspan="2">${activity_name}</th>
+                  <td>Taluka :-</td>
+                  <td class="tbl-bold">(${vincode})</td>
                 </tr>
                 <tr>
-                  <td>Activity Code</td>
-                  <td>${activity_code}</td>
+                  <td>Village :-</td>
+                  <td class="tbl-bold">(XYZ)(${vincode})</td>
                 </tr>
                 <tr>
-                  <td>Village</td>
-                  <td>(${vincode})</td>
+                  <th colspan="2" style="font-weight: normal;">Activity Name :-</th>
                 </tr>
                 <tr>
-                  <td>Application Number</td>
-                  <td>${application_number}</td>
+                  <th colspan="2">${activity_name}(${activity_code})</th>
+                </tr>
+                <tr>
+                  <td>Application Number :-</td>
+                  <td class="tbl-bold">${application_number}</td>
+                </tr>
+                <tr class="tr-box">
+                  <td>Survey (Gat) No. :-</td>
+                  <td class="tbl-bold">${survey_no}</td>
                 </tr>
                 <tr>
                   <th colspan="2">Activity Image</th>
@@ -441,14 +450,7 @@ window.addEventListener('DOMContentLoaded', event => {
                         <div class="carousel-inner">
                           <div class="carousel-item active thumbnail">
                             <img
-                              class="rounded float-start"
-                              style="
-                                width: 100%;
-                                height: 200px;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                transition: 0.3s;
-                              "
+                              class="rounded float-start carasoul-popup-img"                              
                               src="${desk5_img}"
                               data-bs-toggle="modal"
                               data-bs-target="#enlargeImageModal"
@@ -456,14 +458,7 @@ window.addEventListener('DOMContentLoaded', event => {
                           </div>
                           <div class="carousel-item thumbnail">
                             <img
-                              class="rounded float-start"
-                              style="
-                                width: 100%;
-                                height: 200px;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                transition: 0.3s;
-                              "
+                              class="rounded float-start carasoul-popup-img"                              
                               src="${desk6_img}"
                               data-bs-toggle="modal"
                               data-bs-target="#enlargeImageModal"
@@ -471,14 +466,7 @@ window.addEventListener('DOMContentLoaded', event => {
                           </div>
                           <div class="carousel-item thumbnail">
                             <img
-                              class="rounded float-start"
-                              style="
-                                width: 100%;
-                                height: 200px;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                transition: 0.3s;
-                              "
+                              class="rounded float-start carasoul-popup-img"                              
                               src="${desk7_img}"
                               data-bs-toggle="modal"
                               data-bs-target="#enlargeImageModal"

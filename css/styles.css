@@ -418,6 +418,36 @@ This following statements selects each category individually that contains an in
   background: linear-gradient(to left, #1a2980 0%, #26d0ce 100%);
 }
 
+/* Modal Carasoul Caption */
+.carasoul-modal-img {
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.caption-title {
+  color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+/* PopUp Carasoul */
+.carasoul-popup-img {
+  width: 100%;
+  height: 200px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tr-box {
+  inline-size: 150px;
+  overflow-wrap: break-word;
+}
+.tbl-bold {
+  font-weight: bold;
+}
+
 /* Loader animation gif */
 .loader {
   content: "";
