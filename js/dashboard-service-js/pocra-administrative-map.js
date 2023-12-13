@@ -3,19 +3,39 @@ window.onload = init;
 function init() {
 
 
-  const baseLayerGroup = new ol.layer.Group({
+  // Initiating Map 
+  // const variables are imported from proca-gis-api.js
+
+  const baseMapGroup = new ol.layer.Group({
     title: "Base Map's",
     openInLayerSwitcher: false,
     layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
     ]
   });
-
+  // baseMapGroup.set('openInLayerSwitcher', false);
   const projectRegionLayerGroup = new ol.layer.Group({
     title: 'Project Region',
     openInLayerSwitcher: false,
-    layers: [POCRA_DISTRICTS
+    layers: [POCRA_DISTRICTS,
     ]
   });
+
+  const adminLayerGroup = new ol.layer.Group({
+    title: 'Admin Layers',
+    openInLayerSwitcher: false,
+    layers: [
+      MH_VILLAGES, MH_TALUKAS, MH_DISTRICTS,
+    ]
+  });
+
+  const baseLayerGroup = new ol.layer.Group({
+    title: 'Base Layers',
+    openInLayerSwitcher: false,
+    layers: [MH_LULC_1516, MH_Settlement_1516, MH_Waterbody_1516,
+      MH_RIVERS_POLY, MH_RIVERS, MH_ROADS, MH_MAJOR_ROADS,
+    ]
+  });
+
 
   // Adding LayerGroup control to layer switcher
   // Define a new legend  
@@ -43,7 +63,9 @@ function init() {
   const Map = new ol.Map({
     view: view,
     target: 'pocra-administrative-map',
-    layers: [baseLayerGroup, projectRegionLayerGroup],
+    layers: [baseMapGroup, baseLayerGroup,
+      // activityLayerGroup, 
+      adminLayerGroup, projectRegionLayerGroup],
     // overlays: [popup],
     loadTilesWhileAnimating: true,
     loadTilesWhileInteracting: true,
