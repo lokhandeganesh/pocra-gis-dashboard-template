@@ -75,7 +75,6 @@ window.addEventListener('DOMContentLoaded', event => {
     openInLayerSwitcher: true,
     layers: [dbt_nrm_summery_all_dist_act_TEST, NRM_Project_Locations
     ]
-
   });
 
   // Adding LayerGroup control to layer switcher

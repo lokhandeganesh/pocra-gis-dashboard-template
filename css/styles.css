@@ -489,6 +489,7 @@ This following statements selects each category individually that contains an in
 .administrative-map,
 /* weather pages */
 .weather-forecast-map,
+.weather-realtime-map,
 /* dbt pages */
 .dbt-farmer-map,
 .dbt-nrm-map {
