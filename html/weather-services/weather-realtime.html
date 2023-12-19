@@ -359,6 +359,23 @@
                   <div class="accordion-body">
                     <!-- Dropdown Div -->
                     <div class="row">
+                      <!-- Weather Parameter Dropdown -->
+                      <div class="col-xl-3 col-md-6">
+                        <select
+                          class="form-select cursor-pointer"
+                          aria-label="Select Weather Parameter"
+                          id="select-weather-param"
+                          data-placeholder="Rainfall"
+                        >
+                          <option value="realtime-rainfall">Rainfall</option>
+                          <option value="realtime-temp-max">
+                            Maximum Temperature
+                          </option>
+                          <option value="realtime-temp-min">
+                            Minimum Temperature
+                          </option>
+                        </select>
+                      </div>
                       <!-- District Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
@@ -401,45 +418,69 @@
                         <label class="cursor-pointer fw-bold">
                           <input
                             type="radio"
-                            id="commApplCheck"
-                            value="comm_appl"
-                            name="applicationStatus"
-                            for="community-application"
+                            id="lastDayCheck"
+                            value="last_day"
+                            name="weatherRealtime"
+                            for="on-last-day"
                             checked="checked"
-                          /><span>On Last Day (2023-12-13)</span>
+                          /><span
+                            >On Last Day (<span
+                              style="display: inline"
+                              id="last-day-span"
+                              >2023-12-13</span
+                            >)</span
+                          >
                         </label>
                       </div>
                       <div class="cat checkbox-checked col-xl-2 col-md-4">
                         <label class="cursor-pointer fw-bold">
                           <input
                             type="radio"
-                            id="techSancCheck"
-                            value="tech_sanct"
-                            name="applicationStatus"
-                            for="technical-sanction"
-                          /><span>Last Week (2023-12-07 to 2023-12-13)</span>
+                            id="lastWeekCheck"
+                            value="last-week"
+                            name="weatherRealtime"
+                            for="on-last-week"
+                          /><span
+                            >Last Week (<span
+                              style="display: inline"
+                              id="last-week-span"
+                              >2023-12-07 to 2023-12-13</span
+                            >)
+                          </span>
                         </label>
                       </div>
                       <div class="cat checkbox-checked col-xl-2 col-md-4">
                         <label class="cursor-pointer fw-bold">
                           <input
                             type="radio"
-                            id="eTenderCheck"
-                            value="e_tend"
-                            name="applicationStatus"
-                            for="e-tendering"
-                          /><span>Last Month (November)</span>
+                            id="lastMonthCheck"
+                            value="last-month"
+                            name="weatherRealtime"
+                            for="on-last-month"
+                          /><span
+                            >Last Month (<span
+                              style="display: inline"
+                              id="last-month-span"
+                              >November</span
+                            >)</span
+                          >
                         </label>
                       </div>
                       <div class="cat checkbox-checked col-xl-2 col-md-4">
                         <label class="cursor-pointer fw-bold">
                           <input
                             type="radio"
-                            id="workOrderCheck"
-                            value="work_ord_iss"
-                            name="applicationStatus"
-                            for="work-order-issued"
-                          /><span>Till Day (2023-12-13) (Cumulative)</span>
+                            id="tillDayCheck"
+                            value="till-day"
+                            name="weatherRealtime"
+                            for="on-till-day"
+                          /><span
+                            >Till Day (Cumulative) (<span
+                              style="display: inline"
+                              id="till-day-span"
+                              >2023-12-13</span
+                            >)</span
+                          >
                         </label>
                       </div>
                     </div>
@@ -458,6 +499,19 @@
                 id="pocra-weather-realtime-map"
                 class="weather-realtime-map"
               ></div>
+            </div>
+            <!-- Content of the menu -->
+            <div id="menu">
+              <h1>Menu</h1>
+              <p style="border-bottom: 1px solid #999">
+                <i>ol.control.Overlay</i> can be used to display a menu or
+                information on the top of the map.
+              </p>
+              <div class="data"></div>
+            </div>
+            <!-- Popover info of map feature -->
+            <div class="popover-information">
+              <p class="popover-text-hover" id="popover-text"></p>
             </div>
           </div>
           <!-- Loader Animation -->

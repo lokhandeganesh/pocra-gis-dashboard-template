@@ -591,9 +591,6 @@ window.addEventListener('DOMContentLoaded', event => {
   });
 
   // Radio Button Click Event
-  var params = dbt_nrm_summery_all_dist_act_TEST.getSource().getParams();
-  // console.log(params);
-
   // if option is seleceted / change
   $('input[name="applicationStatus"]').change(() => {
     const $applnStatusRadioChecked = $('input[name="applicationStatus"]:checked').val();

@@ -12,6 +12,10 @@ window.addEventListener('DOMContentLoaded', event => {
       layers: [SATELLITE_MAP, STANDARD_MAP, WORLD_TOPO_MAP
       ]
     });
+
+    // Setting layer visibility
+    STANDARD_MAP.setVisible(false);
+
     // baseMapGroup.set('openInLayerSwitcher', false);
     const projectRegionLayerGroup = new ol.layer.Group({
       title: 'Project Region',
@@ -29,6 +33,9 @@ window.addEventListener('DOMContentLoaded', event => {
         MH_VILLAGES, MH_TALUKAS, MH_DISTRICTS,
       ]
     });
+    // Setting layer visibility
+    MH_DISTRICTS.setVisible(true);
+    MH_DISTRICTS.setOpacity(0.5);
 
     const baseLayerGroup = new ol.layer.Group({
       title: 'Base Layers',
@@ -67,10 +74,6 @@ window.addEventListener('DOMContentLoaded', event => {
       })()
     });
 
-
-
-
-
     // Maharashtra Weather Last Day Rainfall Raster
     const weather_rainfall_last_day = new ol.layer.Tile({
       source: new ol.source.TileWMS({
@@ -82,7 +85,7 @@ window.addEventListener('DOMContentLoaded', event => {
           'TILED': true,
         }
       }),
-      visible: true,
+      visible: false,
       baseLayer: false,
       title: "Last Day Rainfall",
     });
@@ -142,145 +145,8 @@ window.addEventListener('DOMContentLoaded', event => {
         .extend(mapControls),
     });
 
-    view.animate({ center: [77, 18.95] }, { zoom: 7 });
+    view.animate({ center: [77, 18.95] }, { zoom: 7.2 });
 
-
-
-
-
-
-    // Weather Parameter check logic
-    // const forecastLayerGroup = new ol.layer.Group({
-    //   title: 'Weather Layers',
-    //   openInLayerSwitcher: true,
-    //   layers: []
-    // });
-    // Map.getLayers().extend([forecastLayerGroup]);
-
-    // console.log(forecastLayerGroup.getLayers())
-
-    // Disable Day parameter initialy if no weather parameter is checked
-    $("#day-params *").prop("disabled", true).addClass("disabled");
-    // if option is seleceted / change
-    $('input[name="weather-forecast"]').change(() => {
-      const $forecastRadioChecked = $('input[name="weather-forecast"]:checked').val();
-
-
-      // console.log($forecastRadioChecked);
-      const title = $(`#${$forecastRadioChecked}`).next("span").text();
-
-      const CQL_FILTER = 1;
-      const mh = 'mh' // Layer Name (Day wise)
-      // value of radio button is same as forecast style layer name in geoserver
-      var $forecastStyle = $forecastRadioChecked;
-      const forecastStyleLayer = $forecastStyle; // Forecast style layer name
-
-      const forecastLayer = new ol.layer.Tile({
-        // extent: extentforLayer,    
-        // type: type,
-        source: new ol.source.TileWMS({
-          url: `${pocra_geoserver}/wms`,
-          crossOrigin: 'Anonymous',
-          serverType: 'geoserver',
-          params: {
-            'LAYERS': `PoCRA_Dashboard_V2:imd_forecast_${mh}`,
-            'TILED': true,
-            'STYLES': `${forecastStyleLayer}`
-          }
-        }),
-        visible: true,
-        baseLayer: false,
-        title: `${title}`,
-      })
-
-
-      if (forecastLayer) {
-        Map.removeLayer(forecastLayer);
-        forecastLayerGroup.getLayers().array_.push(forecastLayer);
-
-        // Map.addLayer(forecastLayer);
-      }
-
-      POCRA_DISTRICTS.setVisible(false);
-
-      // enable Day parameter if weather parameter is checked
-      $("#day-params *").prop("disabled", false).removeClass("disabled");
-      // Logic for checking Day parameter change
-      $('input[name="weather-forecast-day"]').change(() => {
-        const $forecastDayRadioChecked = $('input[name="weather-forecast-day"]:checked').val();
-        console.log($forecastDayRadioChecked);
-      });
-    });
-
-    // Loader for display
-    // Start loader
-    // wmsSource.on("featuresloadstart", (evt) => {
-    //   document.getElementById("layer-loader").classList.add("loader");
-    // });
-    // Stop loader
-    // wmsSource.on("featuresloadend", (evt) => {
-    //   document.getElementById("layer-loader").classList.remove("loader");
-    // });
-
-
-
-
-
-
-    // View Zoom Animation
-    // talukaVectorLayer.getSource().on("addfeature", function () {
-    //   //alert(geojson.getSource().getExtent());
-    //   Map.getView().fit(talukaVectorLayer.getSource().getExtent(), {
-    //     duration: 1590,
-    //     size: Map.getSize() - 100,
-    //   });
-    // });
-
-    // Hide table and graph div default 
-    const $forecastInfoDiv = $("#forecast-info-div");
-    $forecastInfoDiv.hide();
-    // Close icon logic
-    $('.close-icon').on('click', () => {
-      $forecastInfoDiv.hide('slow', () => { $forecastInfoDiv.hide(); });
-    });
-
-    {/* <a href="#forecat-info-div"></a> */ }
-    // To bind event on Map click
-    Map.on('singleclick', (evt) => {
-      // Checking if feature is present then get information of it
-      let isFeatureAtPixel = Map.hasFeatureAtPixel(evt.pixel);
-      // const viewResolution = (view.getResolution());
-
-      // const url = wmsSource.getFeatureInfoUrl(
-      //   evt.coordinate,
-      //   viewResolution,
-      //   { 'INFO_FORMAT': 'application/json' }
-      // );
-      // if (url) {
-      //   fetch(url)
-      //     .then((response) => console.log(response.text()))
-      //     .then((html) => {
-      //       document.getElementById('info').innerHTML = html;
-      //     });
-      // }
-
-      if (isFeatureAtPixel) {
-        Map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-          // Accessing feature properties
-          // console.log(feature);
-          const featureTalukaName = feature.get('thname');
-          const start_date = '{testDate}';
-          const end_date = '{testDate}';
-          // Passing values to function
-          getTableInfo(featureTalukaName, start_date, end_date);
-        })
-      }
-      // No feature is present on map click then go to Home Navigation.
-      else {
-        console.log("No Feature at Pixel");
-        $forecastInfoDiv.hide('slow', () => { $forecastInfoDiv.hide(); });
-      }
-    });
 
     // Feature :hover logic
     const popoverTextElement = $('#popover-text').get(0)  //document.getElementById('popover-text');  
@@ -292,13 +158,13 @@ window.addEventListener('DOMContentLoaded', event => {
 
     Map.addOverlay(popoverTextLayer);
 
-    // Changing cursor style & adding taluka name on pointer move
+    // Changing cursor style & adding rain_circle info on pointer move
     Map.on('pointermove', (evt) => {
       let isFeatureAtPixel = Map.hasFeatureAtPixel(evt.pixel);
 
       if (isFeatureAtPixel) {
         let featureAtPixel = Map.getFeaturesAtPixel(evt.pixel);
-        let featureName = featureAtPixel[0].get('thname');
+        let featureName = featureAtPixel[0].get('rain_circle');
         popoverTextLayer.setPosition(evt.coordinate);
         popoverTextElement.innerHTML = featureName;
       } else {
@@ -312,420 +178,91 @@ window.addEventListener('DOMContentLoaded', event => {
 
     });
 
-    function getTableInfo(featureTalukaName, start_date, end_date) {
-      $forecastInfoDiv.show();
+    // rain_circle
 
-      // 5 days forecast chart 
-      const data = {
-        'Date': ['11Oct2023', '12Oct2023', '13Oct2023', '14Oct2023', '15Oct2023'],
-        'TempMax': [17.5, 16.9, 19.5, 25.5, 28.2],
-        'TempMin': [7.0, 6.9, 9.5, 14.5, 18.2],
-        'Rainfall': [49.9, 71.5, 106.4, 129.2, 144.0]
-      };
-      // Chart
-      Highcharts.chart('container_forecast', {
-        chart: {
-          zoomType: 'xy'
-        },
-        title: {
-          text: `Weather Forecast of ${featureTalukaName}`,
-          align: 'left'
-        },
-        subtitle: {
-          text: `For Date: ${start_date} to ${end_date}`,
-          align: 'left'
-        },
-        xAxis: [{
-          categories: data['Date'],
-          crosshair: true
-        }],
-        yAxis: [{ // Primary yAxis
-          labels: {
-            format: '{value}°C',
-            style: {
-              color: Highcharts.getOptions().colors[1]
-            }
-          },
-          title: {
-            text: 'Temperature',
-            style: {
-              color: Highcharts.getOptions().colors[1]
-            }
-          },
-          opposite: true
+    // Overlay
+    var menu = new ol.control.Overlay({
+      closeBox: true,
+      className: "slide-left menu",
+      content: $("#menu").get(0)
+    });
+    Map.addControl(menu);
 
-        }, { // Secondary yAxis
-          gridLineWidth: 0,
-          title: {
-            text: 'Rainfall',
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
-          },
-          labels: {
-            format: '{value} mm',
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
+    // A toggle control to show/hide the menu
+    var t = new ol.control.Toggle({
+      html: '<i class="fa fa-bars" ></i>',
+      className: "menu",
+      title: "Menu",
+      onToggle: function () { menu.toggle(); }
+    });
+    Map.addControl(t);
+
+
+    const selectClick = new ol.interaction.Select({ condition: ol.events.condition.singleClick });
+    Map.addInteraction(selectClick);
+
+    // Select interaction on map
+    selectClick.on('select', function (evt) {
+      if (evt.selected.length > 0) {
+        evt.selected.forEach(function (feature) {
+          // feature.getLayer(Map) imported from openLayerCustom.js
+          var layer = feature.getLayer(Map);
+          // console.log(layer)
+
+          // Custom content for pop-up on click event of nrm project location        
+          if (layer.get('title') == 'Weather Stations') {
+            // console.log(feature)
+
+
+            const FEAT_rain_circle = feature.get('rain_circle')
+            console.log(FEAT_rain_circle);
+
+            // const FEAT_activity_code = feature.get('activity_code')
+            // const FEAT_vincode = feature.get('vincode')
+            // const FEAT_application_number = feature.get('application_number')
+            // const FEAT_survey_no = feature.get('survey_no')
+            // const FEAT_desk5_img = feature.get('desk5_img')
+            // const FEAT_desk6_img = feature.get('desk6_img')
+            // const FEAT_desk7_img = feature.get('desk7_img')
+            // // console.log(content);
+            // // PopUp calling with content
+            // content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img, FEAT_survey_no);
+            // // console.log(feature.getGeometry().getFirstCoordinate());
+            // popup.show(feature.getGeometry().getFirstCoordinate(), content);
+            // // Setting parameters to Image Modal
+            // $('#activityImageModalLabel').text(`Activity Name : ${FEAT_activity_name}`);
+            // $('#modal-1').attr('src', FEAT_desk5_img);
+            // $('#modal-2').attr('src', FEAT_desk6_img);
+            // $('#modal-3').attr('src', FEAT_desk7_img);
           }
-
-        }
-        ],
-        tooltip: {
-          shared: true
-        },
-        legend: {
-          layout: 'vertical',
-          align: 'left',
-          x: 80,
-          verticalAlign: 'top',
-          y: 55,
-          floating: true,
-          backgroundColor:
-            Highcharts.defaultOptions.legend.backgroundColor || // theme
-            'rgba(255,255,255,0.25)'
-        },
-        series: [{
-          name: 'Rainfall',
-          type: 'column',
-          yAxis: 1,
-          data: data['Rainfall'],
-          tooltip: {
-            valueSuffix: ' mm'
-          }
-
-        }, {
-          name: 'Max. Temperature',
-          type: 'spline',
-          data: data['TempMax'],
-          color: Highcharts.getOptions().colors[3],
-          tooltip: {
-            valueSuffix: ' °C'
-          }
-        },
-        {
-          name: 'Min. Temperature',
-          type: 'spline',
-          data: data['TempMin'],
-          color: Highcharts.getOptions().colors[1],
-          marker: {
-            enabled: false
-          },
-          dashStyle: 'longdashdot',
-          tooltip: {
-            valueSuffix: '°C'
-          }
-        }],
-        responsive: {
-          rules: [{
-            condition: {
-              maxWidth: 500
-            },
-            chartOptions: {
-              legend: {
-                floating: false,
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom',
-                x: 0,
-                y: 0
-              },
-              yAxis: [{
-                labels: {
-                  align: 'right',
-                  x: 0,
-                  y: -6
-                },
-                showLastLabel: false
-              }, {
-                labels: {
-                  align: 'left',
-                  x: 0,
-                  y: -6
-                },
-                showLastLabel: false
-              }, {
-                visible: false
-              }]
-            }
-          }]
-        }
-      });
-
-      // 5 days forecast table
-      const forecastTabBody =
-        `
-      <h4 class="card-title">
-        Weather Forecast of ${featureTalukaName}
-      </h4>
-      <p class="card-description">
-        For Date: ${start_date} to ${end_date}
-      </p>
-      `;
-
-      const forecastTable =
-        $('#forecast-table')
-          .html(forecastTabBody)
-          .append(
-            `
-            <div class="table-responsive">
-              <table id="forecast-data-table" class="table table-striped align-middle">
-                <tbody>
-                  <tr class="td-days">
-                    <th scope="row" class="header-left">
-                      <span class="legend-left">Day & Date</span>
-                      <span class="legend-right">
-                        <i class="fa-regular fa-calendar-days"></i>
-                      </span>
-                    </th>
-                    <td class="sticky-title-wrapper" data-day="2023-10-11">
-                      <div class="sticky-title" data-daydiv="2023-10-11">
-                        Wednesday 11
-                      </div>
-                    </td>
-                    <td class="sticky-title-wrapper" data-day="2023-10-12">
-                      <div class="sticky-title" data-daydiv="2023-10-12">
-                        Thursday 12
-                      </div>
-                    </td>
-                    <td class="sticky-title-wrapper" data-day="2023-10-13">
-                      <div class="sticky-title" data-daydiv="2023-10-13">Friday 13</div>
-                    </td>
-                    <td class="sticky-title-wrapper" data-day="2023-10-14">
-                      <div class="sticky-title" data-daydiv="2023-10-14">
-                        Saturday 14
-                      </div>
-                    </td>
-                    <td class="sticky-title-wrapper" data-day="2023-10-15">
-                      <div class="sticky-title" data-daydiv="2023-10-15">Sunday 15</div>
-                    </td>
-                  </tr>
-                  <tr class="td-icon">
-                    <th scope="row" class="header-left"></th>
-                    <td>
-                      <img
-                        src="../../assets/weather_icon/windy_1.png"
-                        srcset="../../assets/weather_icon/windy_1.png 2x"
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src="../../assets/weather_icon/windy_2.png"
-                        srcset="../../assets/weather_icon/windy_2.png 2x"
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src="../../assets/weather_icon/windy_3.png"
-                        srcset="../../assets/weather_icon/windy_3.png 2x"
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src="../../assets/weather_icon/windy_1.png"
-                        srcset="../../assets/weather_icon/windy_1.png 2x"
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src="../../assets/weather_icon/windy_2.png"
-                        srcset="../../assets/weather_icon/windy_2.png 2x"
-                      />
-                    </td>
-                  </tr>
-                  <tr class="td-rain">
-                    <th scope="row" class="header-left">
-                      <span class="legend-left">Rainfall</span
-                      ><span class="legend-right metric-clickable">
-                        (mm) <i class="fa-solid fa-cloud-rain"></i
-                      ></span>
-                    </th>
-                    <td class="day-end">1</td>
-                    <td class="day-end">2</td>
-                    <td class="day-end">3</td>
-                    <td class="day-end">4</td>
-                    <td class="day-end">5</td>
-                  </tr>
-                  <tr class="td-tempMax">
-                    <th scope="row" class="header-left">
-                      <span class="legend-left">Temp. Max</span
-                      ><span class="legend-right metric-clickable">
-                        (°C) <i class="fa-solid fa-temperature-high"></i
-                      ></span>
-                    </th>
-                    <td class="day-end">22°</td>
-                    <td class="day-end">22°</td>
-                    <td class="day-end">20°</td>
-                    <td class="day-end">21°</td>
-                    <td class="day-end">21°</td>
-                  </tr>
-                  <tr class="td-tempMin">
-                    <th scope="row" class="header-left">
-                      <span class="legend-left">Temp. Min</span
-                      ><span class="legend-right metric-clickable">
-                        (°C) <i class="fa-solid fa-temperature-high"></i
-                      ></span>
-                    </th>
-                    <td>4</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>0</td>
-                  </tr>
-
-                  <tr class="td-windSpeed">
-                    <th scope="row" class="header-left">
-                      <span class="legend-left">Wind</span
-                      ><span class="legend-right">
-                        (m/s) <i class="fa-solid fa-wind"></i
-                      ></span>
-                    </th>
-                    <td
-                      style="
-                        background: linear-gradient(
-                          to right,
-                          rgb(0, 211, 224),
-                          rgb(0, 224, 172),
-                          rgb(23, 205, 254)
-                        );
-                      "
-                    >
-                      9
-                    </td>
-
-                    <td
-                      style="
-                        background: linear-gradient(
-                          to right,
-                          rgb(0, 211, 224),
-                          rgb(0, 224, 172),
-                          rgb(23, 205, 254)
-                        );
-                      "
-                    >
-                      8
-                    </td>
-                    <td
-                      style="
-                        background: linear-gradient(
-                          to right,
-                          rgb(0, 211, 224),
-                          rgb(0, 224, 172),
-                          rgb(23, 205, 254)
-                        );
-                      "
-                    >
-                      5
-                    </td>
-                    <td
-                      style="
-                        background: linear-gradient(
-                          to right,
-                          rgb(0, 211, 224),
-                          rgb(0, 224, 172),
-                          rgb(23, 205, 254)
-                        );
-                      "
-                    >
-                      7
-                    </td>
-                    <td
-                      style="
-                        background: linear-gradient(
-                          to right,
-                          rgb(0, 211, 224),
-                          rgb(0, 224, 172),
-                          rgb(23, 205, 254)
-                        );
-                      "
-                    >
-                      7
-                    </td>
-                  </tr>
-                  <tr class="td-windDir">
-                    <th scope="row" class="header-left">
-                      <span class="legend-left">Wind Dir.</span
-                      ><span class="legend-right">
-                        <i class="fa-solid fa-flag"></i
-                      ></span>
-                    </th>
-                    <!-- Data -->
-                    <td>
-                      <div class="">
-                        <i
-                          class="fa-solid fa-right-long"
-                          data-fa-transform="rotate--50"
-                        ></i>
-                      </div>
-                    </td>
-                    <td>
-                      <div
-                        style="transform: rotate(2deg); -webkit-transform: rotate(2deg)"
-                      >
-                        4
-                      </div>
-                    </td>
-                    <td>
-                      <div
-                        style="transform: rotate(1deg); -webkit-transform: rotate(1deg)"
-                      >
-                        4
-                      </div>
-                    </td>
-                    <td>
-                      <div
-                        style="transform: rotate(1deg); -webkit-transform: rotate(1deg)"
-                      >
-                        4
-                      </div>
-                    </td>
-                    <td>
-                      <div
-                        style="transform: rotate(1deg); -webkit-transform: rotate(1deg)"
-                      >
-                        4
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          `
-          );
-    };
-
-    /*
-        // As a legend can be responsive to the scale it is updated on every change of the resolution.
-        const updateLegend = function (resolution, layer) {
-          const graphicUrl = layer.getSource().getLegendUrl(resolution);
-          return graphicUrl;
-        };
-        // Initial legend
-        const resolution = Map.getView().getResolution();
-        updateLegend(resolution, layer = POCRA_DISTRICTS);
-    
-        // Update the legend when the resolution changes
-        Map.getView().on('change:resolution', function (event) {
-          const resolution = event.target.getResolution();
-          updateLegend(resolution, layer = POCRA_DISTRICTS);
         });
-     */
+      }
+    });
+
+    // hiding pop-up if pointer selection does not contain any feature
+    selectClick.getFeatures().on(['remove'], function (evt) {
+      $(".data").html("");
+    });
 
 
 
-    // time = 0;
-    // for (var i = 0; i < 5; i++) {
-    //   time += 5000;
-    //   setTimeout(function (j) {
-    //     return function () {
-    //       console.log("var is now", j);
-    //     }
-    //   }(i), time);
-    // }
 
 
 
-    // End loadForecastMap()
+    // defining global variable for dropdown 
+    var distCode = '-1', talCode = '-1', vinCode = '-1', weatherParam = 'rainfall', realtimeEnv = 'last_day';
+    // if option is seleceted / change
+    $('input[name="weatherRealtime"]').change(() => {
+      const $weatherRealtimeRadioChecked = $('input[name="weatherRealtime"]:checked').val();
+      realtimeEnv = $weatherRealtimeRadioChecked;
+      console.log(realtimeEnv);
+      // dbt_nrm_summery_all_dist_act_TEST.getSource().updateParams({ 'env': `nrm_summr_class:${summClassEnv};nrm_summr_mv:${labelEnv}` });
+    });
+
+
+
+
+    // End loadRealtimeWeatherMap()
   }
   // End of init
 });
