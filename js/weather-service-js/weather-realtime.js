@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', event => {
     // NRM_Project_Locations Vector GeoJson Layer
     const weather_station_current_day = new ol.layer.Vector({
       source: weather_station_current_day_source,
-      visible: true,
+      visible: false,
       baseLayer: false,
       title: 'Weather Stations',
       style: (function () {
@@ -81,13 +81,15 @@ window.addEventListener('DOMContentLoaded', event => {
         crossOrigin: 'Anonymous',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'PoCRA_Dashboard_V2:weather_rainfall_last_day',
+          'LAYERS': 'PoCRA_Dashboard_V2:rainfall_last_day',
+          // 'LAYERS': 'PoCRA_Dashboard_V2:weather_temp_max_last_day',
+          // 'LAYERS': 'PoCRA_Dashboard_V2:min_temp_last_day',
           'TILED': true,
         }
       }),
       visible: false,
       baseLayer: false,
-      title: "Last Day Rainfall",
+      title: "Rainfall Interpolation",
     });
     // New legend associated with a layer MH_Waterbody_1516
     const weather_rainfall_last_day_Legend = new ol.legend.Legend({ layer: weather_rainfall_last_day });
@@ -161,7 +163,6 @@ window.addEventListener('DOMContentLoaded', event => {
     // Changing cursor style & adding rain_circle info on pointer move
     Map.on('pointermove', (evt) => {
       let isFeatureAtPixel = Map.hasFeatureAtPixel(evt.pixel);
-
       if (isFeatureAtPixel) {
         let featureAtPixel = Map.getFeaturesAtPixel(evt.pixel);
         let featureName = featureAtPixel[0].get('rain_circle');
@@ -169,13 +170,10 @@ window.addEventListener('DOMContentLoaded', event => {
         popoverTextElement.innerHTML = featureName;
       } else {
         popoverTextLayer.setPosition(undefined);
-
       };
-
       // Changing cursor style for feature to 'pointer'
       let viewPortStyle = Map.getViewport().style
       isFeatureAtPixel ? viewPortStyle.cursor = 'pointer' : viewPortStyle.cursor = ''
-
     });
 
     // rain_circle
