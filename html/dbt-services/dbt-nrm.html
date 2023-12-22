@@ -48,6 +48,11 @@
     <link href="../../css/customBootstrap.css" rel="stylesheet" />
     <link href="../../css/styles.css" rel="stylesheet" />
     <!-- All functions of bootstrap are declared in custom styles.css, so no need to call additonal bootstrap.css -->
+    <link
+      href="../../libs/select2-4.0.6/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <script src="../../libs/select2-4.0.6/js/select2.min.js"></script>
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
@@ -369,10 +374,11 @@
                       <!-- Activity Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer activity"
+                          class="form-select cursor-pointer activity select2"
                           aria-label="Select Activity "
                           id="select-activity"
                           data-placeholder="--- Select Activity ---"
+                          data-live-search="true"
                           onchange="getNrmActivityCode()"
                         >
                           <option value="-1">
@@ -384,10 +390,11 @@
                       <!-- District Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer district"
+                          class="form-select cursor-pointer district select2"
                           aria-label="Select District"
                           id="select-district"
                           data-placeholder="--- Select District ---"
+                          data-live-search="true"
                           onchange="loadTalukas()"
                         >
                           <option value="-1">-- All Districts --</option>
@@ -396,9 +403,10 @@
                       <!-- Taluka Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer taluka"
+                          class="form-select cursor-pointer taluka select2"
                           aria-label="Select Taluka"
                           id="select-taluka"
+                          data-live-search="true"
                           onchange="loadVillages();"
                         >
                           <option value="-1">--Select Taluka--</option>
@@ -407,9 +415,10 @@
                       <!-- Village Dropdown -->
                       <div class="col-xl-3 col-md-6">
                         <select
-                          class="form-select cursor-pointer village"
+                          class="form-select cursor-pointer village select2"
                           aria-label="Select Village"
                           id="select-village"
+                          data-live-search="true"
                           onchange="getVillage();"
                         >
                           <option value="-1">--Select Village--</option>
@@ -727,5 +736,6 @@
   <script src="../../js/openLayerCustom.js"></script>
   <script>
     (window.onload = loadNRM_Activity()), loadDistricts();
+    $(".select2").select2();
   </script>
 </html>

@@ -352,6 +352,9 @@ window.addEventListener('DOMContentLoaded', event => {
           // console.log(feature)
           const FEAT_activity_name = feature.get('activity_name')
           const FEAT_activity_code = feature.get('activity_code')
+          const FEAT_dtname = feature.get('dtname')
+          const FEAT_thname = feature.get('thname')
+          const FEAT_vlname = feature.get('vlname')
           const FEAT_vincode = feature.get('vincode')
           const FEAT_application_number = feature.get('application_number')
           const FEAT_survey_no = feature.get('survey_no')
@@ -360,7 +363,7 @@ window.addEventListener('DOMContentLoaded', event => {
           const FEAT_desk7_img = feature.get('desk7_img')
           // console.log(content);
           // PopUp calling with content
-          content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img, FEAT_survey_no);
+          content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_dtname, FEAT_thname, FEAT_vlname, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img, FEAT_survey_no);
           // console.log(feature.getGeometry().getFirstCoordinate());
           popup.show(feature.getGeometry().getFirstCoordinate(), content);
           // Setting parameters to Image Modal
@@ -378,7 +381,7 @@ window.addEventListener('DOMContentLoaded', event => {
     popup.hide();
   });
   // Function to show popup content on feature selection
-  function getPopUpTable(activity_name, activity_code, vincode, application_number, desk5_img, desk6_img, desk7_img, survey_no) {
+  function getPopUpTable(activity_name, activity_code, dtname, thname, vlname, vincode, application_number, desk5_img, desk6_img, desk7_img, survey_no) {
     var PopUpContent = ''
     PopUpContent +=
       `
@@ -395,15 +398,15 @@ window.addEventListener('DOMContentLoaded', event => {
               <tbody>
                 <tr>
                   <td>District :-</td>
-                  <td class="tbl-bold">(${vincode})</td>
+                  <td class="tbl-bold">${dtname}</td>
                 </tr>
                 <tr>
                   <td>Taluka :-</td>
-                  <td class="tbl-bold">(${vincode})</td>
+                  <td class="tbl-bold">${thname}</td>
                 </tr>
                 <tr>
                   <td>Village :-</td>
-                  <td class="tbl-bold">(XYZ)(${vincode})</td>
+                  <td class="tbl-bold">${vlname} (${vincode})</td>
                 </tr>
                 <tr>
                   <th colspan="2" style="font-weight: normal;">Activity Name :-</th>

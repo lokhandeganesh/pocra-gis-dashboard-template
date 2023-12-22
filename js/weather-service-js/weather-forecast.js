@@ -133,7 +133,7 @@ window.addEventListener('DOMContentLoaded', event => {
       document.getElementById('info').innerHTML = '';
       const url = forecastLayer.getSource().getFeatureInfoUrl(
         evt.coordinate, viewResolution, viewProjection,
-        { 'INFO_FORMAT': 'text/html' }
+        { 'INFO_FORMAT': 'application/json' }
       );
       if (url) {
         fetch(url)
@@ -153,29 +153,6 @@ window.addEventListener('DOMContentLoaded', event => {
       Map.getTargetElement().style.cursor = hit ? 'pointer' : '';
     });
 
-    // Loader for display
-    // Start loader
-    // wmsSource.on("featuresloadstart", (evt) => {
-    //   document.getElementById("layer-loader").classList.add("loader");
-    // });
-    // Stop loader
-    // wmsSource.on("featuresloadend", (evt) => {
-    //   document.getElementById("layer-loader").classList.remove("loader");
-    // });
-
-
-
-
-
-
-    // View Zoom Animation
-    // talukaVectorLayer.getSource().on("addfeature", function () {
-    //   //alert(geojson.getSource().getExtent());
-    //   Map.getView().fit(talukaVectorLayer.getSource().getExtent(), {
-    //     duration: 1590,
-    //     size: Map.getSize() - 100,
-    //   });
-    // });
 
     // Hide table and graph div default 
     const $forecastInfoDiv = $("#forecast-info-div");
@@ -187,7 +164,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
     {/* <a href="#forecat-info-div"></a> */ }
     // To bind event on Map click
-    Map.on('singleclick', (evt) => {
+    Map.on('doubleclick', (evt) => {
       // Checking if feature is present then get information of it
       let isFeatureAtPixel = Map.hasFeatureAtPixel(evt.pixel);
       // const viewResolution = (view.getResolution());
@@ -634,24 +611,6 @@ window.addEventListener('DOMContentLoaded', event => {
           `
           );
     };
-
-    /*
-        // As a legend can be responsive to the scale it is updated on every change of the resolution.
-        const updateLegend = function (resolution, layer) {
-          const graphicUrl = layer.getSource().getLegendUrl(resolution);
-          return graphicUrl;
-        };
-        // Initial legend
-        const resolution = Map.getView().getResolution();
-        updateLegend(resolution, layer = POCRA_DISTRICTS);
-    
-        // Update the legend when the resolution changes
-        Map.getView().on('change:resolution', function (event) {
-          const resolution = event.target.getResolution();
-          updateLegend(resolution, layer = POCRA_DISTRICTS);
-        });
-     */
-
 
 
     // time = 0;
