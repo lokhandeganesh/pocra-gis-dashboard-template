@@ -3,6 +3,9 @@
 
 window.addEventListener('DOMContentLoaded', event => {
 
+  var act_category = 'nrm'
+  loadDBT_Activities(act_category = act_category);
+
   // The Map
 
   // Initiating Map 

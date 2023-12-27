@@ -420,17 +420,17 @@ var activitySelect = document.querySelector('.activity'),
   talukaSelect = document.querySelector('.taluka'),
   villageSelect = document.querySelector('.village')
 
-function loadNRM_Activity() {
+function loadDBT_Activities(act_category) {
   // console.log(activityCode);
-  let apiEndPoint = "http://gis.mahapocra.gov.in/weatherservices/meta/getNrmActivities";
+  let apiEndPoint = `http://gis.mahapocra.gov.in/weatherservices/meta/get_dbt_act_list?act_category=${act_category}`
   fetch(apiEndPoint)
     .then((response) => response.json())
     .then((data) => {
-      var nrmActivities = data.nrm_activity;
-      nrmActivities.forEach(activity => {
+      var ActivitiesList = data.activity_list;
+      ActivitiesList.forEach(activity => {
         const option = document.createElement('option')
-        option.value = activity.activity_code;
-        option.textContent = activity.activity_name;
+        option.value = activity.act_id;
+        option.textContent = activity.act_name;
         activitySelect.appendChild(option);
       });
     })

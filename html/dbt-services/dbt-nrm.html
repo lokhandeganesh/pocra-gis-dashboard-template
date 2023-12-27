@@ -730,12 +730,12 @@
   <!-- Internal JS file -->
   <script src="../../js/api-services-js/pocra-gis-api.js"></script>
   <!-- <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script> -->
-  <script src="../../js/dbt-service-js/pocra-dbt-nrm-map.js"></script>
+  <script src="../../js/dbt-service-js/pocra-dbt-nrm-service.js"></script>
   <!-- Active js -->
   <script src="../../js/sidebarToggle.js"></script>
   <script src="../../js/openLayerCustom.js"></script>
   <script>
-    (window.onload = loadNRM_Activity()), loadDistricts();
+    window.onload = loadDistricts();
     $(".select2").select2();
   </script>
 </html>
