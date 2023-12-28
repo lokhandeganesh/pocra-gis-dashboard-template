@@ -30,7 +30,7 @@ const SATELLITE_MAP = new ol.layer.Tile({
 });
 const STANDARD_MAP = new ol.layer.Tile({
   source: new ol.source.OSM(),
-  visible: true,
+  visible: false,
   baseLayer: false,
   title: 'Standard Map'
 });
@@ -42,7 +42,7 @@ const WORLD_TOPO_MAP = new ol.layer.Tile({
       'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
     crossOrigin: 'Anonymous',
   }),
-  visible: false,
+  visible: true,
   baseLayer: false,
   title: 'World Topo Map',
   type: 'base',

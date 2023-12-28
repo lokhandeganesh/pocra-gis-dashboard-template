@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
     // Setting layer visibility
-    STANDARD_MAP.setVisible(false);
+    WORLD_TOPO_MAP.setVisible(false);
 
     // baseMapGroup.set('openInLayerSwitcher', false);
     const projectRegionLayerGroup = new ol.layer.Group({
@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', event => {
     // NRM_Project_Locations Vector GeoJson Layer
     const weather_station_current_day = new ol.layer.Vector({
       source: weather_station_current_day_source,
-      visible: false,
+      visible: true,
       baseLayer: false,
       title: 'Weather Stations',
       style: (function () {
