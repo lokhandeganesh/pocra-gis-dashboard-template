@@ -345,7 +345,8 @@
   color: black !important;
   font-size: 20px;
 }
-.tabs .nav-link.active {
+.tabs .nav-link.active,
+.fnt-bold {
   font-weight: bold;
 }
 

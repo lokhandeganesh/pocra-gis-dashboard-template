@@ -1,9 +1,22 @@
-
 // Map Service Constants
 // new ol.proj.useGeographic();
 // PoCRA Geoserver
+
+// Local Apache Server
+// const pocra_geoserver = "https://test-gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2"
+
+// Windows Apache Server
 const pocra_geoserver = "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2"
+
+// Linux Apache Server
+// const pocra_geoserver = "https://pocragis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/"
+
+// Geoserver WFS
 const wfs_server = `${pocra_geoserver}/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson`
+const webservice_api_base = "http://gis.mahapocra.gov.in/weatherservices/meta"
+
+// const pocra_geoserver_linux = "https://pocragis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2"
+// const wfs_server_linux = `${pocra_geoserver_linux}/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson`
 
 // Legend Control Extention
 // Define a new legend  
@@ -57,7 +70,8 @@ const POCRA_DISTRICTS = new ol.layer.Tile({
     params: {
       'LAYERS': 'PoCRA_Dashboard_V2:mh_project_districts',
       'TILED': true,
-    }
+    },
+
   }),
   visible: true,
   baseLayer: false,
@@ -96,6 +110,23 @@ MH_DISTRICTS_Legend.addItem(new ol.legend.Image({
   // src: updateLegend(resolution, MH_DISTRICTS_Legend),
 }));
 LEGEND.addItem(MH_DISTRICTS_Legend);
+
+
+// Maharashtra Districts
+const MH_DISTRICTS_BASE = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:mh_districts',
+      'TILED': true,
+    }
+  }),
+  visible: true,
+  baseLayer: true,
+  title: "Maharashtra Districts",
+});
 
 // Maharashtra Talukas
 const MH_TALUKAS = new ol.layer.Tile({
@@ -313,8 +344,85 @@ MH_Waterbody_1516_Legend.addItem(new ol.legend.Image({
 }));
 LEGEND.addItem(MH_Waterbody_1516_Legend);
 
+// DBT Layers
 
-// DBT NRM Community Application
+// NRM Exsting Vasundhara Activities
+const NRM_Existing_Locations = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_existing_structures',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "Existing Structures",
+});
+
+// New legend associated with a layer NRM Exsting Vasundhara Activities
+const NRM_Existing_Locations_Legend = new ol.legend.Legend({ layer: NRM_Existing_Locations });
+NRM_Existing_Locations_Legend.addItem(new ol.legend.Image({
+  title: "NRM Structures",
+  src: `${NRM_Existing_Locations.getSource().getLegendUrl()}&legend_options=dpi:120`,
+  // src: updateLegend(resolution, MH_Waterbody_1516),
+}));
+LEGEND.addItem(NRM_Existing_Locations_Legend);
+
+// NRM Exsting Vasundhara Activities
+const NRM_Pocra_Locations = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_pocra_structures',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "Project Structures",
+});
+
+// New legend associated with a layer NRM Exsting Vasundhara Activities
+const NRM_Pocra_Locations_Legend = new ol.legend.Legend({ layer: NRM_Pocra_Locations });
+NRM_Pocra_Locations_Legend.addItem(new ol.legend.Image({
+  title: "Project Structures",
+  src: `${NRM_Pocra_Locations.getSource().getLegendUrl()}&legend_options=dpi:120`,
+  // src: updateLegend(resolution, MH_Waterbody_1516),
+}));
+// LEGEND.addItem(NRM_Pocra_Locations_Legend);
+
+
+// DBT NRM Area Treatment Application
+const NRM_AREA_TREATMENT = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:dbt_nrm_area_treatment',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "NRM Area Treatment",
+});
+
+// New legend associated with a layer NRM_AREA_TREATMENT
+const NRM_AREA_TREATMENT_Legend = new ol.legend.Legend({ layer: NRM_AREA_TREATMENT });
+NRM_AREA_TREATMENT_Legend.addItem(new ol.legend.Image({
+  title: "Area Treatment Activities",
+  src: `${NRM_AREA_TREATMENT.getSource().getLegendUrl()}&legend_options=dpi:120`,
+  // src: updateLegend(resolution, MH_Waterbody_1516),
+}));
+LEGEND.addItem(NRM_AREA_TREATMENT_Legend);
+
+// DBT NRM Community Application Summery
 const dbt_nrm_summery_all_dist = new ol.layer.Tile({
   source: new ol.source.TileWMS({
     url: `${pocra_geoserver}/wms`,
@@ -330,7 +438,7 @@ const dbt_nrm_summery_all_dist = new ol.layer.Tile({
   title: "dbt_nrm_summery_all_dist",
 });
 
-// dbt_nrm_test
+// DBT NRM Community Application Summery Activity Status wise
 const dbt_nrm_summery_all_dist_act_TEST = new ol.layer.Tile({
   source: new ol.source.TileWMS({
     url: `${pocra_geoserver}/wms`,
@@ -339,9 +447,7 @@ const dbt_nrm_summery_all_dist_act_TEST = new ol.layer.Tile({
     params: {
       'LAYERS': 'PoCRA_Dashboard_V2:dbt_nrm_test',
       'TILED': true,
-      'env': `nrm_summr_class:comm_appl_class;nrm_summr_mv:comm_appl_mv`//${forecast_for}`,
-      // comm_appl_class, tech_sanct_class, e_tend_class, work_ord_iss_class, comp_work_class, disburse_class
-      // 'viewparams': "forecast_date:" + forecastdate,
+      'env': `nrm_summr_class:comm_appl_class;nrm_summr_mv:comm_appl_mv`,
     }
   }),
   visible: true,
@@ -422,7 +528,7 @@ var activitySelect = document.querySelector('.activity'),
 
 function loadDBT_Activities(act_category) {
   // console.log(activityCode);
-  let apiEndPoint = `http://gis.mahapocra.gov.in/weatherservices/meta/get_dbt_act_list?act_category=${act_category}`
+  let apiEndPoint = `${webservice_api_base}/get_dbt_act_list?act_category=${act_category}`
   fetch(apiEndPoint)
     .then((response) => response.json())
     .then((data) => {
@@ -450,7 +556,7 @@ function getNrmActivityCode() {
 
 
 function loadDistricts() {
-  let apiEndPoint = "http://gis.mahapocra.gov.in/weatherservices/meta/districts";
+  let apiEndPoint = `${webservice_api_base}/districts`;
   fetch(apiEndPoint)
     .then((response) => response.json())
     .then((data) => {
@@ -491,7 +597,7 @@ function loadTalukas() {
     talukaSelect.innerHTML = '<option value="-1">-- All Talukas --</option>' // for clearing the exting talukas
     villageSelect.innerHTML = '<option value="-1">-- Select Village --</option>' // for clearing the exting villages
 
-    let apiEndPoint = `http://gis.mahapocra.gov.in/weatherservices/meta/dtaluka?dtncode=${dtncode}`;
+    let apiEndPoint = `${webservice_api_base}/dtaluka?dtncode=${dtncode}`;
 
     fetch(apiEndPoint)
       .then((response) => response.json())
@@ -523,7 +629,7 @@ function loadVillages() {
 
     villageSelect.innerHTML = '<option value="-1">-- All Villages --</option>' // for clearing the exting villages
 
-    let apiEndPoint = `http://gis.mahapocra.gov.in/weatherservices/meta/village?thncode=${thncode}`;
+    let apiEndPoint = `${webservice_api_base}/village?thncode=${thncode}`;
 
     fetch(apiEndPoint)
       .then((response) => response.json())

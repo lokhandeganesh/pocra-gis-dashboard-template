@@ -11569,7 +11569,7 @@ body {
   padding: 1.75rem 1rem 0.75rem;
   font-size: 0.95rem;
   font-weight: bold;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 .sb-sidenav .sb-sidenav-menu .nav .nav-link {
   display: flex;

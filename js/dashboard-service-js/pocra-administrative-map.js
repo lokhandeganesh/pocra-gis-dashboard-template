@@ -13,9 +13,10 @@ function init() {
     ]
   });
   // baseMapGroup.set('openInLayerSwitcher', false);
+
   const projectRegionLayerGroup = new ol.layer.Group({
     title: 'Project Region',
-    openInLayerSwitcher: false,
+    openInLayerSwitcher: true,
     layers: [POCRA_DISTRICTS,
     ]
   });
@@ -27,6 +28,12 @@ function init() {
       MH_VILLAGES, MH_TALUKAS, MH_DISTRICTS,
     ]
   });
+
+  const DBT_ActivitiesLayerGroup = new ol.layer.Group({
+    title: 'DBT Activities',
+    openInLayerSwitcher: false,
+    layers: [NRM_AREA_TREATMENT, NRM_Pocra_Locations, NRM_Existing_Locations,]
+  })
 
   const baseLayerGroup = new ol.layer.Group({
     title: 'Base Layers',
@@ -64,7 +71,7 @@ function init() {
     view: view,
     target: 'pocra-administrative-map',
     layers: [baseMapGroup, baseLayerGroup,
-      // activityLayerGroup, 
+      DBT_ActivitiesLayerGroup,
       adminLayerGroup, projectRegionLayerGroup],
     // overlays: [popup],
     loadTilesWhileAnimating: true,

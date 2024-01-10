@@ -56,15 +56,13 @@ window.addEventListener('DOMContentLoaded', event => {
     source: dbt_nrm_application_data_source,
     visible: false,
     baseLayer: false,
-    title: 'NRM Application Locations',
+    title: 'Project Strunctures',
     style: (function () {
       var freeStyle = new ol.style.Style({
         image: new ol.style.Icon({
-          anchor: [0.5, 0.5],   // Default value is the icon center.
-          scale: 0.04,          // resize imge
-          color: '#99fc82',    // green
+          anchor: [0.5, 0.5],   // Default value is the icon center.          
           crossOrigin: 'anonymous',
-          src: '../../assets/img/com.svg'
+          src: '../../assets/img/NRM_Icons/106.svg'
         })
       });
       var styles = [freeStyle];
@@ -72,11 +70,16 @@ window.addEventListener('DOMContentLoaded', event => {
     })()
   });
 
+
+  // NRM Exsting Vasundhara Activities
+  // NRM_Existing_Locations // Imported from common js page
+
   // DBT NRM Layer Group
   const activityLayerGroup = new ol.layer.Group({
     title: 'Activities',
     openInLayerSwitcher: true,
-    layers: [dbt_nrm_summery_all_dist_act_TEST, NRM_Project_Locations
+    layers: [dbt_nrm_summery_all_dist_act_TEST, NRM_Existing_Locations,
+      NRM_Project_Locations
     ]
   });
 
@@ -351,7 +354,7 @@ window.addEventListener('DOMContentLoaded', event => {
           Map.getView().fit(selectedFeatureExtent, { duration: 2000 });
         }
         // Custom content for pop-up on click event of nrm project location        
-        if (layer.get('title') == 'NRM Application Locations') {
+        if (layer.get('title') == 'Project Strunctures') {
           // console.log(feature)
           const FEAT_activity_name = feature.get('activity_name')
           const FEAT_activity_code = feature.get('activity_code')

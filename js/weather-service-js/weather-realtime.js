@@ -33,9 +33,8 @@ window.addEventListener('DOMContentLoaded', event => {
         MH_VILLAGES, MH_TALUKAS, MH_DISTRICTS,
       ]
     });
-    // Setting layer visibility
-    MH_DISTRICTS.setVisible(true);
-    MH_DISTRICTS.setOpacity(0.5);
+
+
 
     const baseLayerGroup = new ol.layer.Group({
       title: 'Base Layers',
@@ -134,7 +133,7 @@ window.addEventListener('DOMContentLoaded', event => {
     const Map = new ol.Map({
       view: view,
       target: 'pocra-weather-realtime-map',
-      layers: [baseMapGroup, baseLayerGroup,
+      layers: [MH_DISTRICTS_BASE, baseMapGroup, baseLayerGroup,
         weatherLayerGroup,
         adminLayerGroup, projectRegionLayerGroup],
       // overlays: [popup],
