@@ -78,8 +78,8 @@ window.addEventListener('DOMContentLoaded', event => {
   const activityLayerGroup = new ol.layer.Group({
     title: 'Activities',
     openInLayerSwitcher: true,
-    layers: [dbt_nrm_summery_all_dist_act_TEST, NRM_Existing_Locations,
-      NRM_Project_Locations
+    layers: [dbt_nrm_summery_all_dist_act_TEST,
+      NRM_Project_Locations, NRM_Existing_Locations,
     ]
   });
 

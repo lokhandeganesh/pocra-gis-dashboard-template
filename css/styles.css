@@ -139,6 +139,7 @@
 /* Hide element on extra small devices */
 .title-bar {
   width: 100%;
+  height: 120%;
   --bs-gutter-x: none;
   align-items: center;
   /* background: linear-gradient(
@@ -178,10 +179,12 @@
 
 #title {
   color: blue;
+  font-size: 1.8rem;
 }
 
 #sub-title {
   color: black;
+  font-size: 1.2rem;
 }
 /* card for PoCRA Juridiction count */
 .center {
