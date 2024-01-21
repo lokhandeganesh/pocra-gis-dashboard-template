@@ -371,7 +371,7 @@ NRM_Existing_Locations_Legend.addItem(new ol.legend.Image({
 }));
 LEGEND.addItem(NRM_Existing_Locations_Legend);
 
-// NRM Exsting Vasundhara Activities
+// NRM PoCRA Activities from Local Edited file
 const NRM_Pocra_Locations = new ol.layer.Tile({
   source: new ol.source.TileWMS({
     url: `${pocra_geoserver}/wms`,
@@ -394,7 +394,32 @@ NRM_Pocra_Locations_Legend.addItem(new ol.legend.Image({
   src: `${NRM_Pocra_Locations.getSource().getLegendUrl()}&legend_options=dpi:120`,
   // src: updateLegend(resolution, MH_Waterbody_1516),
 }));
-// LEGEND.addItem(NRM_Pocra_Locations_Legend);
+LEGEND.addItem(NRM_Pocra_Locations_Legend);
+
+// NRM Project Activities from DBT Server
+const NRM_Project_Locations = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: `${pocra_geoserver}/wms`,
+    crossOrigin: 'Anonymous',
+    serverType: 'geoserver',
+    params: {
+      'LAYERS': 'PoCRA_Dashboard_V2:dbt_nrm_project_application_data',
+      'TILED': true,
+    }
+  }),
+  visible: false,
+  baseLayer: false,
+  title: "Project Structures",
+});
+
+// New legend associated with a layer NRM Exsting Vasundhara Activities
+const NRM_Project_Locations_Legend = new ol.legend.Legend({ layer: NRM_Project_Locations });
+NRM_Project_Locations_Legend.addItem(new ol.legend.Image({
+  title: "Project Structures",
+  src: `${NRM_Project_Locations.getSource().getLegendUrl()}&legend_options=dpi:120`,
+  // src: updateLegend(resolution, MH_Waterbody_1516),
+}));
+LEGEND.addItem(NRM_Project_Locations_Legend);
 
 
 // DBT NRM Area Treatment Application

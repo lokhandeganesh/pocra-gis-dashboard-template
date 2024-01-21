@@ -43,34 +43,6 @@ window.addEventListener('DOMContentLoaded', event => {
     ]
   });
 
-
-  // Point Locations Data Source GeoJson
-  const dbt_nrm_application_data_source = new ol.source.Vector({
-    url: `${wfs_server}&typeName=dbt_nrm_application_data`,
-    projection: 'EPSG:4326',
-    format: new ol.format.GeoJSON(),
-  });
-
-  // NRM_Project_Locations Vector GeoJson Layer
-  const NRM_Project_Locations = new ol.layer.Vector({
-    source: dbt_nrm_application_data_source,
-    visible: false,
-    baseLayer: false,
-    title: 'Project Strunctures',
-    style: (function () {
-      var freeStyle = new ol.style.Style({
-        image: new ol.style.Icon({
-          anchor: [0.5, 0.5],   // Default value is the icon center.          
-          crossOrigin: 'anonymous',
-          src: '../../assets/img/NRM_Icons/106.svg'
-        })
-      });
-      var styles = [freeStyle];
-      return styles;
-    })()
-  });
-
-
   // NRM Exsting Vasundhara Activities
   // NRM_Existing_Locations // Imported from common js page
 
@@ -140,96 +112,6 @@ window.addEventListener('DOMContentLoaded', event => {
     geoLocControl
   ];
 
-
-  // Loader for display
-  // districtVector.getSource().on("featuresloadstart", function (evt) {
-  //   document.getElementById("layer-loader").classList.add("loader");
-  // });
-
-  // districtVector.getSource().on("featuresloadend", function (evt) {
-  //   document.getElementById("layer-loader").classList.remove("loader");
-  // });
-
-  // Old points data
-  // const activityLayersVector = new ol.layer.Group({
-  //   title: 'Activity Layers',
-  //   openInLayerSwitcher: false,
-  //   layers: [
-  //     new ol.layer.Vector({
-  //       source: new ol.source.Vector({
-  //         url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
-  //         projection: 'EPSG:4326',
-  //         format: new ol.format.GeoJSON(),
-  //         style: (function (feature, resolution) {
-  //           var style = new ol.style.Style({
-  //             // image: new ol.style.Icon({
-  //             //   scale: 0.04,
-  //             //   src: '../../assets/img/com.svg',
-  //             // }),
-  //             text: new ol.style.Text({
-  //               text: 'Vector Label',
-  //               scale: 1.3,
-  //               fill: new ol.style.Fill({
-  //                 color: '#FF0000'
-  //               }),
-  //               stroke: new ol.style.Stroke({
-  //                 color: '#FFFF99',
-  //                 width: 3.5
-  //               })
-  //             })
-  //           });
-  //           var styles = [style];
-  //           return function (feature, resolution) {
-  //             style.getText().setText(feature.get("structure_type"));
-  //             return styles;
-  //           };
-  //         })()
-  //       }),
-  //       visible: false,
-  //       baseLayer: false,
-  //       title: "NRM Structures",
-  //     }),
-  //   ]
-  // });
-
-  // A group layer for Administrative layers (WMS)
-  // const activityLayers = new ol.layer.Group({
-  //   title: 'Activity Layers',
-  //   openInLayerSwitcher: false,
-  //   layers: [
-  //     new ol.layer.Tile({
-  //       source: new ol.source.TileWMS({
-  //         url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
-  //         crossOrigin: 'Anonymous',
-  //         serverType: 'geoserver',
-  //         params: {
-  //           'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_existing_structures',
-  //           'TILED': true,
-  //         }
-  //       }),
-  //       visible: false,
-  //       baseLayer: false,
-  //       title: "Existing Structures",
-  //     }),
-  //     new ol.layer.Tile({
-  //       source: new ol.source.TileWMS({
-  //         url: 'http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/wms',
-  //         crossOrigin: 'Anonymous',
-  //         serverType: 'geoserver',
-
-  //         params: {
-  //           'LAYERS': 'PoCRA_Dashboard_V2:nrm_point_data_pocra_structures',
-  //           'TILED': true,
-  //         }
-  //       }),
-  //       visible: false,
-  //       baseLayer: false,
-  //       title: "Project Structures",
-  //     }),
-  //   ]
-  // });
-
-
   // Accessing global variable
   // View for Mh
   const view = viewCosnt;
@@ -260,132 +142,85 @@ window.addEventListener('DOMContentLoaded', event => {
   });
 
   // Changing mouse cursor style to Pinter
-  Map.on('pointermove', function (e) {
-    var pixel = Map.getEventPixel(e.originalEvent);
-    var hit = Map.hasFeatureAtPixel(pixel);
-    Map.getViewport().style.cursor = hit ? 'pointer' : '';
+  Map.on('pointermove', function (evt) {
+    if (evt.dragging) {
+      return;
+    }
+    const data = NRM_Project_Locations.get('visible') ?  
+            NRM_Project_Locations.getData(evt.pixel) : 
+            dbt_nrm_summery_all_dist_act_TEST.getData(evt.pixel);
+    
+    const hit = data && data[3] > 0; // transparent pixels have zero for data[3]
+    Map.getTargetElement().style.cursor = hit ? 'pointer' : '';
   });
 
-  // GeoJson Layer of NRM Project(PoCRA) Points
-  // const nrmProjectVectorSource = new ol.source.Vector({
-  //   url: "http://gis.mahapocra.gov.in/geoserver/PoCRA_Dashboard_V2/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=PoCRA_Dashboard_V2%3Anrm_point_data_pocra_structures&outputFormat=application%2Fjson",
-  //   projection: 'EPSG:4326',
-  //   format: new ol.format.GeoJSON(),
-  // });
-
-  // Adding Layer to Map
-  // Map.addLayer(new ol.layer.Vector({
-  //   name: 'NRM Project Locations',
-  //   source: nrmProjectVectorSource,
-  //   visible: false,
-  //   openInLayerSwitcher: true,
-  //   style: (function () {
-
-  //     var stdStyle = new ol.style.Style({
-  //       image: new ol.style.Icon({
-  //         anchor: [0.5, 0.5],   // Default value is the icon center.
-  //         scale: 0.04,          // resize imge          
-  //         src: '../../assets/img/subscription-svgrepo-com.svg'
-  //       })
-  //     });
-
-  //     var freeStyle = new ol.style.Style({
-  //       image: new ol.style.Icon({
-  //         anchor: [0.5, 0.5],   // Default value is the icon center.
-  //         scale: 0.04,          // resize imge
-  //         color: '#49fc82',    // green
-  //         crossOrigin: 'anonymous',
-  //         src: '../../assets/img/com.svg'
-  //       })
-  //     });
-
-  //     var style = new ol.style.Style({
-  //       // image: new ol.style.Icon({
-  //       //   anchor: [0.5, 0.5],   // Default value is the icon center.
-  //       //   scale: 0.04,          // resize imge
-  //       //   // color: '#49fc82',    // green
-  //       //   crossOrigin: 'anonymous',
-  //       //   src: '../../assets/img/subscription-svgrepo-com.svg'
-  //       // }),
-  //       text: new ol.style.Text({
-  //         textAlign: 'top',
-  //         textBaseline: 'bottom',
-  //         offsetX: 0,
-  //         offsetY: 0,
-  //         text: 'Vector Label',
-  //         scale: 1.3,
-  //         fill: new ol.style.Fill({
-  //           color: '#FF0000'
-  //         }),
-  //         stroke: new ol.style.Stroke({
-  //           color: '#FFFF99',
-  //           width: 3.5
-  //         })
-  //       })
-  //     });
-  //     var styles = [style];
-  //     return function (feature, resolution) {
-  //       // var activity_code = feature.get("activity_code")
-  //       // activity_code === 'A3.2.3' ? stdStyle : freeStyle
-  //       // console.log(feature.get("activity_code"))
-  //       style.getText().setText(feature.get("structure_type"));
-  //       return styles;
-  //     };
-  //   })()
-  // }));
-
-
-
-  // Control Select
-  const selectClick = new ol.interaction.Select({ condition: ol.events.condition.singleClick });
-  Map.addInteraction(selectClick);
-
-  // Select interaction on map
-  selectClick.on('select', function (evt) {
-    if (evt.selected.length > 0) {
-      evt.selected.forEach(function (feature) {
-        // feature.getLayer(Map) imported from openLayerCustom.js
-        var layer = feature.getLayer(Map);
-        // console.log(layer)
-
-        // Fly to location on Map click event
-        if (layer.get('name') == 'Project Districts') {
-          var selectedFeatureExtent = feature.getGeometry().getExtent();
-          Map.getView().fit(selectedFeatureExtent, { duration: 2000 });
-        }
-        // Custom content for pop-up on click event of nrm project location        
-        if (layer.get('title') == 'Project Strunctures') {
-          // console.log(feature)
-          const FEAT_activity_name = feature.get('activity_name')
-          const FEAT_activity_code = feature.get('activity_code')
-          const FEAT_dtname = feature.get('dtname')
-          const FEAT_thname = feature.get('thname')
-          const FEAT_vlname = feature.get('vlname')
-          const FEAT_vincode = feature.get('vincode')
-          const FEAT_application_number = feature.get('application_number')
-          const FEAT_survey_no = feature.get('survey_no')
-          const FEAT_desk5_img = feature.get('desk5_img')
-          const FEAT_desk6_img = feature.get('desk6_img')
-          const FEAT_desk7_img = feature.get('desk7_img')
-          // console.log(content);
-          // PopUp calling with content
-          content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_dtname, FEAT_thname, FEAT_vlname, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img, FEAT_survey_no);
-          // console.log(feature.getGeometry().getFirstCoordinate());
-          popup.show(feature.getGeometry().getFirstCoordinate(), content);
-          // Setting parameters to Image Modal
-          $('#activityImageModalLabel').text(`Activity Name : ${FEAT_activity_name}`);
-          $('#modal-1').attr('src', FEAT_desk5_img);
-          $('#modal-2').attr('src', FEAT_desk6_img);
-          $('#modal-3').attr('src', FEAT_desk7_img);
-        }
-      });
+  // Add an event handler for the Map "singleclick" event
+  Map.on('singleclick', function(evt) {
+      // Hide existing popup and reset it's offset
+    popup.hide();
+    popup.setOffset([0, 0]);
+    
+    let coordinate = evt.coordinate;
+    let viewResolution = view.getResolution();
+    let projection = view.getProjection();
+    let format = {'INFO_FORMAT': 'application/json'};
+       
+    var source = NRM_Project_Locations.get('visible') ? 
+        NRM_Project_Locations.getSource() : 
+        dbt_nrm_summery_all_dist_act_TEST.getSource();
+    
+    const url  = source.getFeatureInfoUrl(coordinate, viewResolution, projection, format);
+    if (url) {      
+      $.ajax({ url: url, crossOrigin: '*',
+          dataType: 'json', jsonpCallback: 'parseResponse'
+      })
+      .then(function (data) {
+        if (data.features.length > 0) {
+          //Do something with data.features          
+          // console.log(data);
+          var feature = data.features[0];
+          const featureTitle = feature.id.split(".")[0]
+          // console.log(featureTitle);
+          var props = feature.properties;        
+          // console.log(props);
+        
+          switch(featureTitle) {
+            case 'dbt_nrm_project_application_data':
+              // Custom content for pop-up on click event of nrm project location              
+              // console.log(feature)
+              const FEAT_activity_name = props['maj_act_name']
+              const FEAT_activity_code = props['act_code']
+              const FEAT_dtname = props['dtname']
+              const FEAT_thname = props['thname']
+              const FEAT_vlname = props['vlname']
+              const FEAT_vincode = props['vincode']
+              const FEAT_application_number = props['appl_num']
+              const FEAT_survey_no = props['pin']
+              const FEAT_desk5_img = props['desk5_img']
+              const FEAT_desk6_img = props['desk6_img']
+              const FEAT_desk7_img = props['desk7_img']
+              
+              // PopUp calling with content
+              content = getPopUpTable(FEAT_activity_name, FEAT_activity_code, FEAT_dtname, FEAT_thname, FEAT_vlname, FEAT_vincode, FEAT_application_number, FEAT_desk5_img, FEAT_desk6_img, FEAT_desk7_img, FEAT_survey_no);
+              popup.show(coordinate, content);
+              // Setting parameters to Image Modal
+              $('#activityImageModalLabel').text(`Activity Name : ${FEAT_activity_name}`);
+              $('#modal-1').attr('src', FEAT_desk5_img);
+              $('#modal-2').attr('src', FEAT_desk6_img);
+              $('#modal-3').attr('src', FEAT_desk7_img);
+              break;
+            case 'dbt_nrm_test':
+              var info = "<h2>" + props.dtname + "</h2><p>" + props.dtncode + "</p>";
+              popup.show(coordinate, info);
+              break;
+            default:
+              // code block
+          }
+      }
+      })
     }
   });
-
-  // hiding pop-up if pointer selection does not contain any feature
-  selectClick.getFeatures().on(['remove'], function (evt) {
-    popup.hide();
-  });
+  
   // Function to show popup content on feature selection
   function getPopUpTable(activity_name, activity_code, dtname, thname, vlname, vincode, application_number, desk5_img, desk6_img, desk7_img, survey_no) {
     var PopUpContent = ''
