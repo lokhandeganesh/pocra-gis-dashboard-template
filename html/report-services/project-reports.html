@@ -9,48 +9,20 @@
     />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>PoCRA GIS Dashboard</title>    
+    <title>PoCRA GIS Dashboard</title>
     <!-- Favicon for page -->
     <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
-    <!-- JQuery and Bootstrap -->
+    <!-- JQuery and Bootstrap -->    
     <script
       type="text/javascript"
       src="../../libs/jquery/code.jquery.com_jquery-3.7.1.min.js"
-    ></script>
-    <script src="../../libs/bootstrap-5.0.2-dist/js/bootstrap.js"></script>
-    <!-- font awesome -->
-    <link rel="stylesheet" href="../../css/all_font-awesome.min.css" />
-    <!-- Open Layer CSS Library -->
-    <link rel="stylesheet" href="../../libs/ol/ol.css" />
-    <!-- Open Layer Extention CSS -->
-    <link rel="stylesheet" href="../../libs/ol-ext/ol-ext.css" />
-    <!-- Highchart -->
-    <script
-      language="javascript"
-      type="text/javascript"
-      src="../../libs/highcharts/highcharts.js"
-    ></script>
-    <script
-      language="javascript"
-      type="text/javascript"
-      src="../../libs/highcharts/modules/exporting.js"
-    ></script>
-    <script src="../../libs/highcharts/modules/export-data.js"></script>
-    <script src="../../libs/highcharts/modules/accessibility.js"></script>
-    <!--  -->
-    <script
-      src="../../libs/plotly/plotly-2.26.0.min.js"
-      charset="utf-8"
-    ></script>
+    ></script>    
     <!-- Custom CSS file -->
     <link href="../../css/customBootstrap.css" rel="stylesheet" />
     <link href="../../css/styles.css" rel="stylesheet" />
     <!-- All functions of bootstrap are declared in custom styles.css, so no need to call additonal bootstrap.css -->
-    <link
-      href="../../libs/select2-4.0.6/css/select2.min.css"
-      rel="stylesheet"
-    />
-    <script src="../../libs/select2-4.0.6/js/select2.min.js"></script>
+    <!-- font awesome -->
+    <link rel="stylesheet" href="../../css/all_font-awesome.min.css" />
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
@@ -131,7 +103,7 @@
                 Dashboard
               </a>
               <!-- DBT Pages -->
-              <div class="dbt-pages">                
+              <div class="dbt-pages">
                 <a
                   class="nav-link collapsed fnt-bold"
                   href="#"
@@ -169,13 +141,16 @@
                       </div>
                       Farmer Category
                     </a>
-                    <a class="nav-link" href="./dbt-nrm.html">
+                    <a class="nav-link" href="./dbt-services/dbt-nrm.html">
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-people-group"></i>
                       </div>
                       NRM Category
                     </a>
-                    <a class="nav-link" href="./dbt-fpc-fpo.html">
+                    <a
+                      class="nav-link"
+                      href="./dbt-services/dbt-fpc-fpo.html"
+                    >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-industry"></i>
                       </div>
@@ -185,7 +160,7 @@
                 </div>
               </div>
               <!-- Weather Pages -->
-              <div class="weather-pages">                
+              <div class="weather-pages">
                 <a
                   class="nav-link collapsed fnt-bold"
                   href="#"
@@ -231,7 +206,7 @@
                 </div>
               </div>
               <!-- Soil Pages -->
-              <div class="soil-pages">                
+              <div class="soil-pages">
                 <a
                   class="nav-link collapsed fnt-bold"
                   href="#"
@@ -268,7 +243,7 @@
                 </div>
               </div>
               <!-- Make My Map Pages -->
-              <div class="make-my-map-pages">                
+              <div class="make-my-map-pages">
                 <a
                   class="nav-link collapsed fnt-bold"
                   href="#"
@@ -305,14 +280,26 @@
                 </div>
               </div>
               <!-- Project Report Pages -->
-              <div class="report-pages">
-                <a class="nav-link fnt-bold" href="../report-services/project-reports.html">
+              <div class="report-pages">                
+                <a class="nav-link fnt-bold" href="./project-reports.html">
                   <div class="sb-nav-link-icon">
                     <!-- <i class="fas fa-chart-area"></i> -->
                     <i class="fa-solid fa-magnifying-glass-chart"></i>
                   </div>
                   Project Reports
-                </a>                
+                </a>
+                <a class="nav-link" href="charts.html">
+                  <div class="sb-nav-link-icon">
+                    <i class="fas fa-chart-area"></i>
+                  </div>
+                  Charts
+                </a>
+                <a class="nav-link" href="tables.html">
+                  <div class="sb-nav-link-icon">
+                    <i class="fas fa-table"></i>
+                  </div>
+                  Tables
+                </a>
               </div>
             </div>
           </div>
@@ -322,48 +309,117 @@
           </div>
         </nav>
       </div>
-
+      <!-- Page content -->
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h4 class="mt-4 fnt-bold">DBT- FPC/FPO Dashboard</h4>
-            <!-- Selection Menu -->
-            <div class="accordion mb-4" id="accordionSelectionMenu">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingSelectionMenu">
-                  <button
-                    class="accordion-button fw-bold"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseSelectionMenu"
-                    aria-expanded="true"
-                    aria-controls="collapseOne"
-                  >
-                    Selection Menu
-                  </button>
-                </h2>
-                <div
-                  id="collapseSelectionMenu"
-                  class="accordion-collapse collapse show"
-                  aria-labelledby="headingSelectionMenu"
-                  data-bs-parent="#accordionSelectionMenu"
-                ></div>
-              </div>
-            </div>
+            <h5 class="mt-4">Project Reports</h5>
+            <!-- Ifram section -->
+            <div class="mb-4" id="bannerContainer">
+              <div class="banner container">
+                <style>
+                  .tabs .nav-link {
+                    color: black !important;
 
-            <!-- Map Div -->
-            <div class="card mb-4">
-              <div class="card-header" id="card-title">
-                <i class="fa-regular fa-map"></i>
-                Project Juridiction
-              </div>
-              <div id="pocra-dbt-fpo-map" class="dbt-fpo-map">
-                <h2 style="color: red">Under Developement</h2>
+                    font-size: 20px;
+                  }
+                  .tabs .nav-link.active {
+                    font-weight: bold;
+                  }
+                </style>
+
+                <ul class="nav nav-tabs tabs">
+                  <li class="nav-item pbi-item">
+                    <a
+                      id="tab1"
+                      class="nav-link active"
+                      data-toggle="tab"
+                      aria-current="page"
+                      href="#content-1"
+                      >प्रकल्प अर्थसहाय्य</a
+                    >
+                  </li>
+                  <li class="nav-item pbi-item">
+                    <a
+                      id="tab2"
+                      class="nav-link"
+                      data-toggle="tab"
+                      aria-current="page"
+                      href="#content-2"
+                      >वैयक्तिक घटक</a
+                    >
+                  </li>
+                  <li class="nav-item pbi-item">
+                    <a
+                      id="tab3"
+                      class="nav-link"
+                      href="#content-3"
+                      data-toggle="tab"
+                      >कृषि व्यवसाय घटक</a
+                    >
+                  </li>
+                </ul>
+                <!-- tab-content -->
+                <div class="tab-content">
+                  <div class="tab-pane active" id="content-1">
+                    <div class="banner">
+                      <iframe
+                        height="750px"
+                        width="100%"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiOTE4MDZkNGEtZmU3Mi00Zjc1LTljYjItNzcwNjQxODVjNWI1IiwidCI6IjFlZmQ0Yzk2LWVlZjQtNGEyZS1iNDcyLTBlZDQzZDk0MDQ0YiJ9"
+                        title="प्रकल्प अर्थसहाय्य"
+                      ></iframe>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="content-2">
+                    <div class="banner">
+                      <iframe
+                        height="750px"
+                        width="100%"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiMzUyOWJkZDctY2RmMy00MTc0LTk0YmUtMjBmMmI3ZDViNWI5IiwidCI6IjFlZmQ0Yzk2LWVlZjQtNGEyZS1iNDcyLTBlZDQzZDk0MDQ0YiJ9"
+                        title="Farmers dashboard"
+                      ></iframe>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="content-3">
+                    <div class="banner">
+                      <iframe
+                        height="750px"
+                        width="100%"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiN2U2ODViNjUtYWNhMS00YjExLTk5YzgtYmM1ZjY0ODJiMDNhIiwidCI6IjFlZmQ0Yzk2LWVlZjQtNGEyZS1iNDcyLTBlZDQzZDk0MDQ0YiJ9"
+                        title="FPC"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+            <!-- end Ifram section -->
+
+            <!-- click event JQuery -->
+            <script>
+              $(".pbi-item").on("click", "a", function () {
+                //$(this).addClass("active").siblings().removeClass("active");
+                $(".pbi-item a.active").removeClass("active");
+                $(this).addClass("active");
+
+                //Handling <!-- tab-content -->
+                if ($(this).prop("id") === "tab1") {
+                  $(".tab-content #content-2").removeClass("active");
+                  $(".tab-content #content-3").removeClass("active");
+                  $(".tab-content #content-1").addClass("active");
+                } else if ($(this).prop("id") === "tab2") {
+                  $(".tab-content #content-1").removeClass("active");
+                  $(".tab-content #content-3").removeClass("active");
+                  $(".tab-content #content-2").addClass("active");
+                } else if ($(this).prop("id") === "tab3") {
+                  $(".tab-content #content-1").removeClass("active");
+                  $(".tab-content #content-2").removeClass("active");
+                  $(".tab-content #content-3").addClass("active");
+                }
+              });
+            </script>
           </div>
-          <!-- Loader Animation -->
-          <div id="layer-loader"></div>
         </main>
         <!-- Footer -->
         <footer class="py-4 bg-light mt-auto">
@@ -391,23 +447,13 @@
         </footer>
       </div>
     </div>
+    <!-- external JS files -->
+    <!-- external JS files -->
+    <!-- Bootstrap 5 JS -->
+    <script src="./libs/bootstrap-5.0.2-dist/js/bootstrap.js"></script>
+    <!-- Internal JS file -->
+    <script src="./js/sidebarToggle.js"></script>
+    <!-- Active js -->
+    <script src="./js/project-report-js/project-report.js"></script>
   </body>
-  <!-- external JS files -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-  <!-- Internal JS file -->
-  <!-- Adding OpenLayer library -->
-  <script src="../../libs/ol/dist/ol.js"></script>
-  <!-- Adding OpenLayer Extention -->
-  <script src="../../libs/ol-ext/ol-ext.js"></script>
-  <!-- Internal JS file -->
-  <script src="../../js/api-services-js/pocra-gis-api.js"></script>
-  <!-- DBT-NRM JS file -->
-  <script src="../../js/dbt-service-js/pocra-dbt-nrm-service.js"></script>
-  <!-- Active js -->
-  <script src="../../js/sidebarToggle.js"></script>
-  <script src="../../js/openLayerCustom.js"></script>
-  <script>
-    window.onload = loadDistricts();
-    $(".select2").select2();
-  </script>
 </html>

@@ -25,23 +25,14 @@
     />
     <!-- font awesome -->
     <link rel="stylesheet" href="css/all_font-awesome.min.css" />
-    <!-- Openlayer Style -->
+    <!-- Open Layer CSS Library -->
     <link rel="stylesheet" href="libs/ol/ol.css" />
-    <!-- Openlayer Extension Style -->
+    <!-- Open Layer Extention CSS -->
     <link rel="stylesheet" href="libs/ol-ext/ol-ext.css" />
-    <!-- Custom Style -->
-    <!-- Bootstrap 5 Style -->
+   <!-- Custom CSS file -->
     <link href="css/customBootstrap.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
-    <!-- All functions of bootstrap are declared in custom styles.css, so no need to call additonal bootstrap.css -->
-
-    <!-- Bootstrap 5 Style -->
-    <!-- 
-      <link
-      rel="stylesheet"
-      href="./libs/bootstrap-5.0.2-dist/css/bootstrap.css"
-    /> 
-    -->
+    <!-- All functions of bootstrap are declared in custom styles.css, so no need to call additonal bootstrap.css -->    
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
@@ -107,7 +98,6 @@
           </ul>
         </div>
       </div>
-
       <!-- Navbar-->
     </nav>
     <div id="layoutSidenav">
@@ -115,18 +105,17 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
           <div class="sb-sidenav-menu">
             <div class="nav">
-              <div class="sb-sidenav-menu-heading">Core</div>
-              <a class="nav-link" href="index.html">
+              <div class="sb-sidenav-menu-heading">PoCRA Activities</div>
+              <a class="nav-link fnt-bold" href="index.html">
                 <div class="sb-nav-link-icon">
                   <i class="fas fa-tachometer-alt"></i>
                 </div>
                 Dashboard
               </a>
               <!-- DBT Pages -->
-              <div class="dbt-pages">
-                <div class="sb-sidenav-menu-heading">DBT</div>
+              <div class="dbt-pages">                
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-DBT"
@@ -181,10 +170,9 @@
                 </div>
               </div>
               <!-- Weather Pages -->
-              <div class="weather-pages">
-                <div class="sb-sidenav-menu-heading">Weather</div>
+              <div class="weather-pages">                
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-weather"
@@ -237,9 +225,8 @@
               </div>
               <!-- Soil Pages -->
               <div class="soil-pages">
-                <div class="sb-sidenav-menu-heading">Soil</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-soil"
@@ -274,10 +261,9 @@
                 </div>
               </div>
               <!-- Make My Map Pages -->
-              <div class="make-my-map-pages">
-                <div class="sb-sidenav-menu-heading">Make My Map</div>
+              <div class="make-my-map-pages">                
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-make-map"
@@ -312,27 +298,14 @@
                 </div>
               </div>
               <!-- Project Report Pages -->
-              <div class="report-pages">
-                <div class="sb-sidenav-menu-heading">Other Reports</div>
-                <a class="nav-link" href="project-reports.html">
+              <div class="report-pages">                
+                <a class="nav-link fnt-bold" href="./html/report-services/project-reports.html">
                   <div class="sb-nav-link-icon">
                     <!-- <i class="fas fa-chart-area"></i> -->
                     <i class="fa-solid fa-magnifying-glass-chart"></i>
                   </div>
                   Project Reports
-                </a>
-                <a class="nav-link" href="charts.html">
-                  <div class="sb-nav-link-icon">
-                    <i class="fas fa-chart-area"></i>
-                  </div>
-                  Charts
-                </a>
-                <a class="nav-link" href="tables.html">
-                  <div class="sb-nav-link-icon">
-                    <i class="fas fa-table"></i>
-                  </div>
-                  Tables
-                </a>
+                </a>               
               </div>
             </div>
           </div>
@@ -346,7 +319,7 @@
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h5 class="mt-4">Dashboard</h5>
+            <h4 class="mt-4 fnt-bold">Dashboard</h4>
             <!-- PoCRA Count Area -->
             <div class="row">
               <div class="col-xl-3 col-md-6">
@@ -432,15 +405,11 @@
             </div>
             <!-- Administrative Map -->
             <div class="card mb-4">
-              <div class="card-header">
+              <div class="card-header" id="card-title">
                 <i class="fa-regular fa-map"></i>
-                PoCRA Juridiction
-              </div>
-              <div id="map-div" class="map"></div>
-              <div
-                id="pocra-administrative-map"
-                class="administrative-map"
-              ></div>
+                Project Juridiction
+              </div>              
+              <div id="pocra-administrative-map" class="administrative-map"></div>
             </div>
             <!-- Chart Area -->
             <div class="row">
@@ -639,7 +608,6 @@
   <script src="libs/bootstrap-5.0.2-dist/js/bootstrap.js"></script>
   <!-- Internal JS file -->
   <script src="js/sidebarToggle.js"></script>
-
   <!-- JQuery JS file -->
   <script
     type="text/javascript"
@@ -651,6 +619,6 @@
   <!-- Adding OpenLayer Extention -->
   <script src="libs/ol-ext/ol-ext.js"></script>
   <!-- Internal JS file -->
-  <script src="js/dashboard-service-js/pocra-administrative-map.js"></script>
   <script src="js/api-services-js/pocra-gis-api.js"></script>
+  <script src="js/dashboard-service-js/pocra-administrative-map.js"></script>  
 </html>

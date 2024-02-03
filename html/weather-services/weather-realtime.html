@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>PoCRA GIS Dashboard</title>
-    <!--  -->
-    <!-- <base href="" /> -->
+    <title>PoCRA GIS Dashboard</title>    
     <!-- Favicon for page -->
     <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
     <!-- JQuery and Bootstrap -->
@@ -125,8 +119,8 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
           <div class="sb-sidenav-menu">
             <div class="nav">
-              <div class="sb-sidenav-menu-heading">Core</div>
-              <a class="nav-link" href="../../index.html">
+              <div class="sb-sidenav-menu-heading">PoCRA Activities</div>
+              <a class="nav-link fnt-bold" href="../../index.html">
                 <div class="sb-nav-link-icon">
                   <i class="fas fa-tachometer-alt"></i>
                 </div>
@@ -134,9 +128,8 @@
               </a>
               <!-- DBT Pages -->
               <div class="dbt-pages">
-                <div class="sb-sidenav-menu-heading">DBT</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-DBT"
@@ -160,7 +153,7 @@
                   <nav class="sb-sidenav-menu-nested nav">
                     <!-- <a
                       class="nav-link"
-                      href="./dbt-farmer.html"
+                      href="../dbt-services/dbt-farmer.html"
                     > -->
                     <a
                       class="nav-link"
@@ -189,9 +182,8 @@
               </div>
               <!-- Weather Pages -->
               <div class="weather-pages">
-                <div class="sb-sidenav-menu-heading">Weather</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-weather"
@@ -213,13 +205,19 @@
                   data-bs-parent="#sidenavAccordion"
                 >
                   <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="./weather-forecast.html">
-                      <div class="sb-nav-link-icon">
-                        <i class="fa-solid fa-cloud-sun-rain"></i>
-                      </div>
-                      Weather Forecast</a
-                    >
-                    <a class="nav-link" href="./weather-realtime.html">
+                    <a
+                    class="nav-link"
+                    href="../weather-services/weather-forecast.html"
+                  >
+                    <div class="sb-nav-link-icon">
+                      <i class="fa-solid fa-cloud-sun-rain"></i>
+                    </div>
+                    Weather Forecast</a
+                  >
+                  <a
+                    class="nav-link"
+                    href="../weather-services/weather-realtime.html"
+                  >
                       <div class="sb-nav-link-icon">
                         <i class="fa-solid fa-cloud-showers-water"></i>
                       </div>
@@ -230,9 +228,8 @@
               </div>
               <!-- Soil Pages -->
               <div class="soil-pages">
-                <div class="sb-sidenav-menu-heading">Soil</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-soil"
@@ -268,9 +265,8 @@
               </div>
               <!-- Make My Map Pages -->
               <div class="make-my-map-pages">
-                <div class="sb-sidenav-menu-heading">Make My Map</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-make-map"
@@ -305,27 +301,14 @@
                 </div>
               </div>
               <!-- Project Report Pages -->
-              <div class="report-pages">
-                <div class="sb-sidenav-menu-heading">Other Reports</div>
-                <a class="nav-link" href="../../project-reports.html">
+              <div class="report-pages">                
+                <a class="nav-link fnt-bold" href="../report-services/project-reports.html">
                   <div class="sb-nav-link-icon">
                     <!-- <i class="fas fa-chart-area"></i> -->
                     <i class="fa-solid fa-magnifying-glass-chart"></i>
                   </div>
                   Project Reports
-                </a>
-                <a class="nav-link" href="../../charts.html">
-                  <div class="sb-nav-link-icon">
-                    <i class="fas fa-chart-area"></i>
-                  </div>
-                  Charts
-                </a>
-                <a class="nav-link" href="../../tables.html">
-                  <div class="sb-nav-link-icon">
-                    <i class="fas fa-table"></i>
-                  </div>
-                  Tables
-                </a>
+                </a>                
               </div>
             </div>
           </div>
@@ -339,7 +322,7 @@
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h5 class="mt-4">Weather - Realtime Dashboard</h5>
+            <h4 class="mt-4 fnt-bold">Weather - Realtime Dashboard</h4>
             <!-- Selection Menu -->
             <div class="accordion mb-4" id="accordionSelectionMenu">
               <div class="accordion-item">
@@ -432,13 +415,7 @@
                             name="weatherRealtime"
                             for="on-last-day"
                             checked="checked"
-                          /><span
-                            >On Last Day (<span
-                              style="display: inline"
-                              id="last-day-span"
-                              >2023-12-13</span
-                            >)</span
-                          >
+                          /><span>On Last Day</span>
                         </label>
                       </div>
                       <div class="cat checkbox-checked col-xl-2 col-md-4">
@@ -449,13 +426,7 @@
                             value="last-week"
                             name="weatherRealtime"
                             for="on-last-week"
-                          /><span
-                            >Last Week (<span
-                              style="display: inline"
-                              id="last-week-span"
-                              >2023-12-07 to 2023-12-13</span
-                            >)
-                          </span>
+                          /><span>Last Week</span>
                         </label>
                       </div>
                       <div class="cat checkbox-checked col-xl-2 col-md-4">
@@ -467,11 +438,7 @@
                             name="weatherRealtime"
                             for="on-last-month"
                           /><span
-                            >Last Month (<span
-                              style="display: inline"
-                              id="last-month-span"
-                              >November</span
-                            >)</span
+                            >Last Month</span
                           >
                         </label>
                       </div>
@@ -484,25 +451,20 @@
                             name="weatherRealtime"
                             for="on-till-day"
                           /><span
-                            >Till Day (Cumulative) (<span
-                              style="display: inline"
-                              id="till-day-span"
-                              >2023-12-13</span
-                            >)</span
+                            >Till Day (Cumulative)</span
                           >
                         </label>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <!--  -->
+              </div>              
             </div>
             <!-- Map Div -->
             <div class="card mb-4">
               <div class="card-header" id="card-title">
                 <i class="fa-regular fa-map"></i>
-                Project Juridiction
+                Weather Services
               </div>
               <div
                 id="pocra-weather-realtime-map"
@@ -523,6 +485,7 @@
               <p class="popover-text-hover" id="popover-text"></p>
             </div>
           </div>
+
           <!-- Loader Animation -->
           <div id="layer-loader"></div>
         </main>
@@ -552,9 +515,7 @@
         </footer>
       </div>
     </div>
-  </body>
-  <!-- external JS files -->
-
+  </body> 
   <!-- Internal JS file -->
   <!-- Adding OpenLayer library -->
   <script src="../../libs/ol/dist/ol.js"></script>
@@ -562,7 +523,7 @@
   <script src="../../libs/ol-ext/ol-ext.js"></script>
   <!-- Internal JS file -->
   <script src="../../js/api-services-js/pocra-gis-api.js"></script>
-  <!-- <script src="../../js/dbt-service-js/pocra-dbt-api.js"></script> -->
+  <!-- Realtime Weather JS file -->
   <script src="../../js/weather-service-js/weather-realtime.js"></script>
   <!-- Active js -->
   <script src="../../js/sidebarToggle.js"></script>

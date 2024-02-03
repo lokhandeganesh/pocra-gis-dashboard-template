@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>PoCRA GIS Dashboard</title>
-    <!--  -->
+    <title>PoCRA GIS Dashboard</title>    
     <!-- Favicon for page -->
     <link rel="icon" type="image/x-icon" href="../../assets/logo/favicon.ico" />
     <!-- JQuery and Bootstrap -->
@@ -24,6 +23,7 @@
     <!-- Custom CSS file -->
     <link href="../../css/customBootstrap.css" rel="stylesheet" />
     <link href="../../css/styles.css" rel="stylesheet" />
+    <!-- All functions of bootstrap are declared in custom styles.css, so no need to call additonal bootstrap.css -->
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
@@ -96,18 +96,17 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
           <div class="sb-sidenav-menu">
             <div class="nav">
-              <div class="sb-sidenav-menu-heading">Core</div>
-              <a class="nav-link" href="../../index.html">
+              <div class="sb-sidenav-menu-heading">PoCRA Activities</div>
+              <a class="nav-link fnt-bold" href="../../index.html">
                 <div class="sb-nav-link-icon">
                   <i class="fas fa-tachometer-alt"></i>
                 </div>
                 Dashboard
               </a>
               <!-- DBT Pages -->
-              <div class="dbt-pages">
-                <div class="sb-sidenav-menu-heading">DBT</div>
-                <a
-                  class="nav-link collapsed"
+              <div class="dbt-pages">                
+                  <a
+                    class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-DBT"
@@ -160,9 +159,8 @@
               </div>
               <!-- Weather Pages -->
               <div class="weather-pages">
-                <div class="sb-sidenav-menu-heading">Weather</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-weather"
@@ -207,9 +205,8 @@
               </div>
               <!-- Soil Pages -->
               <div class="soil-pages">
-                <div class="sb-sidenav-menu-heading">Soil</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-soil"
@@ -245,9 +242,8 @@
               </div>
               <!-- Make My Map Pages -->
               <div class="make-my-map-pages">
-                <div class="sb-sidenav-menu-heading">Make My Map</div>
                 <a
-                  class="nav-link collapsed"
+                  class="nav-link collapsed fnt-bold"
                   href="#"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseLayouts-make-map"
@@ -283,26 +279,13 @@
               </div>
               <!-- Project Report Pages -->
               <div class="report-pages">
-                <div class="sb-sidenav-menu-heading">Other Reports</div>
-                <a class="nav-link" href="project-reports.html">
+                <a class="nav-link fnt-bold" href="../report-services/project-reports.html">
                   <div class="sb-nav-link-icon">
                     <!-- <i class="fas fa-chart-area"></i> -->
                     <i class="fa-solid fa-magnifying-glass-chart"></i>
                   </div>
                   Project Reports
-                </a>
-                <a class="nav-link" href="charts.html">
-                  <div class="sb-nav-link-icon">
-                    <i class="fas fa-chart-area"></i>
-                  </div>
-                  Charts
-                </a>
-                <a class="nav-link" href="tables.html">
-                  <div class="sb-nav-link-icon">
-                    <i class="fas fa-table"></i>
-                  </div>
-                  Tables
-                </a>
+                </a>                
               </div>
             </div>
           </div>
@@ -312,10 +295,11 @@
           </div>
         </nav>
       </div>
+
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h5 class="mt-4">Weather - Forecast Dashboard</h5>
+            <h4 class="mt-4 fnt-bold">Weather - Forecast Dashboard</h4>
             <!-- Weather Status Checkbox -->
             <div class="accordion mb-4" id="accordionSelectionMenu">
               <div class="accordion-item">
@@ -800,6 +784,10 @@
   <script src="../../libs/ol/dist/ol.js"></script>
   <!-- Adding OpenLayer Extention -->
   <script src="../../libs/ol-ext/ol-ext.js"></script>
+   <!-- Internal JS file -->
+   <script src="../../js/api-services-js/pocra-gis-api.js"></script>  
+   <!-- Forecast JS file -->
+  <script src="../../js/weather-service-js/weather-forecast.js"></script>
   <!-- Active js -->
   <script src="../../js/sidebarToggle.js"></script>
   <script src="../../js/openLayerCustom.js"></script>
@@ -815,11 +803,5 @@
     src="../../libs/highcharts/modules/exporting.js"
   ></script>
   <script src="../../libs/highcharts/modules/export-data.js"></script>
-  <script src="../../libs/highcharts/modules/accessibility.js"></script>
-  <!--  -->
-
-  <!-- constant services -->
-  <script src="../../js/api-services-js/pocra-gis-api.js"></script>
-  <!-- Forecast JS file -->
-  <script src="../../js/weather-service-js/weather-forecast.js"></script>
+  <script src="../../libs/highcharts/modules/accessibility.js"></script>  
 </html>
